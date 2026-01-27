@@ -1,0 +1,108 @@
+---
+title: "SIR Module Rough Draft"
+format:
+  html:
+    toc: true
+editor: visual
+---
+
+## Introduction and Course Learning Objectives
+
+
+## Epidemiology Terms
+
+Be Able To:
+
+- Define basic terms in epidemiology.
+
+There are a few basic terms in epidemiology that this learning module will make use of:
+
+- Latent Period: The time between the infection of an individual and that individual being able to transmit the disease to another person.
+
+- Infectious Period: The time during which an infected individual can transmit (spread) the disease to another non-infected individual. 
+
+- Susceptible Period: The time during which an individual is not infected with the disease and can still be infected by it (has no immunity to infection).
+
+- Recovered Period: The time during which an individual, who was previously infected, shows no more symptoms and is immune to further infection by the same disease. 
+
+- Incubation Period: The time between the infection of an individual and that individual showing symptoms of infection; also known as the "asymptomatic" period, as the infected individual during this time experiences no outward sign of infection.
+
+- Disease Period: The time during which an infected individual exhibits symptoms of the disease. 
+
+- Serial Interval: The average length of time between an individual being infected and them infecting another individual, including the intermediate time it takes for vector transmission to occur.
+
+(PLACE GRAPH HERE OF ALL THESE PERIODS)
+
+## Introducing Compartmental Models
+
+Be Able To:
+
+- Identify which differential equation models can be called compartmental models.
+
+
+## The Classic Epidemic Model
+
+Be Able To
+
+- Recall the classic epidemic model's equations.
+
+- Identify the assumptions made in the formulation of a classic epidemic model, specifically in relation to how its parameters were obtained / formulated. 
+
+- Recall what parameters go into the construction of the classic epidemic model, including the typical symbols for each. 
+
+- Explain how the classic epidemic model deviates from reality in relation to the assumptions it makes. 
+
+- Differentiate situations where an empirically deduced transmission rate is more accurate and beneficial to one calculated based on first principles. 
+
+- Discern what situations are best modeled by frequency or density dependent transmission rates, or a combination of both. 
+
+### Formulating Tranmission Rate
+
+### Obtaining Other Parameters
+
+## Solving SIR Equations
+
+Be Able To:
+
+- Solve basic SIR model equations using either mathematical or computational techniques.
+
+- Identify the difference between common methods of solving SIR models, including Euler's method and the deSolve package in R. 
+
+## Basic and Effective Reproduction Numbers
+
+Be Able To:
+
+- Define what the basic and effective reproduction number is and recall primary differences between the two. 
+
+- Interpret the basic and effective reproduction number in context.
+
+- Derive the formula for the basic and effective reproduction number based on their definitions.
+
+## Example of the Classic Epidemic Model 
+
+Be Able To: 
+
+- Identify examples of situations where the classic epidemic model is a useful tool for modeling.
+
+## The Classic Endemic Model
+
+Be Able To: 
+
+- Recall the classic endemic model's equations.
+
+- Differentiate the classic endemic model from the epidemic model. 
+
+## Disease Free and Endemic Equilibrium
+
+Be Able To:
+
+- Define what an equilibrium is the context of a system of differential equations. 
+
+- Find the values where the disease-free and endemic equilibrium occur. 
+
+- Recall when each equilibrium type occurs in relation to R0 and justify it based on the definition of R0. 
+
+
+
+
+
