@@ -35,6 +35,35 @@ ul.task-list li input[type="checkbox"] {
 <link href="SIR_Module_RD_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="SIR_Module_RD_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -48,10 +77,13 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#introduction-and-course-learning-objectives" id="toc-introduction-and-course-learning-objectives" class="nav-link active" data-scroll-target="#introduction-and-course-learning-objectives">Introduction and Course Learning Objectives</a></li>
   <li><a href="#epidemiology-terms" id="toc-epidemiology-terms" class="nav-link" data-scroll-target="#epidemiology-terms">Epidemiology Terms</a></li>
-  <li><a href="#introducing-compartmental-models" id="toc-introducing-compartmental-models" class="nav-link" data-scroll-target="#introducing-compartmental-models">Introducing Compartmental Models</a></li>
-  <li><a href="#the-classic-epidemic-model" id="toc-the-classic-epidemic-model" class="nav-link" data-scroll-target="#the-classic-epidemic-model">The Classic Epidemic Model</a>
+  <li><a href="#introducing-compartmental-models" id="toc-introducing-compartmental-models" class="nav-link" data-scroll-target="#introducing-compartmental-models">Introducing Compartmental Models</a>
   <ul class="collapse">
-  <li><a href="#formulating-tranmission-rate" id="toc-formulating-tranmission-rate" class="nav-link" data-scroll-target="#formulating-tranmission-rate">Formulating Tranmission Rate</a></li>
+  <li><a href="#learning-assessment" id="toc-learning-assessment" class="nav-link" data-scroll-target="#learning-assessment">Learning Assessment:</a></li>
+  </ul></li>
+  <li><a href="#the-classic-sir-epidemic-model" id="toc-the-classic-sir-epidemic-model" class="nav-link" data-scroll-target="#the-classic-sir-epidemic-model">The Classic SIR Epidemic Model</a>
+  <ul class="collapse">
+  <li><a href="#formulating-the-force-of-infection" id="toc-formulating-the-force-of-infection" class="nav-link" data-scroll-target="#formulating-the-force-of-infection">Formulating the Force of Infection</a></li>
   <li><a href="#obtaining-other-parameters" id="toc-obtaining-other-parameters" class="nav-link" data-scroll-target="#obtaining-other-parameters">Obtaining Other Parameters</a></li>
   </ul></li>
   <li><a href="#solving-sir-equations" id="toc-solving-sir-equations" class="nav-link" data-scroll-target="#solving-sir-equations">Solving SIR Equations</a></li>
@@ -88,42 +120,206 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="epidemiology-terms" class="level2">
 <h2 class="anchored" data-anchor-id="epidemiology-terms">Epidemiology Terms</h2>
-<p>Be Able To:</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the end of this section, you should be able to:</p>
 <ul>
 <li>Define basic terms in epidemiology.</li>
 </ul>
-<p>There are a few basic terms in epidemiology that this learning module will make use of:</p>
+</div>
+</div>
+<p>For the purposes of mathematical models in epidemiology, such as the SIR model, individuals are classified based solely on their ability to transmit a pathogen, not their diseased status (whether or not they exhibit symptoms). For the purposes of epidemiological models, individuals are generally classified into four primary categories:</p>
 <ul>
-<li><p>Latent Period: The time between the infection of an individual and that individual being able to transmit the disease to another person.</p></li>
-<li><p>Infectious Period: The time during which an infected individual can transmit (spread) the disease to another non-infected individual.</p></li>
-<li><p>Susceptible Period: The time during which an individual is not infected with the disease and can still be infected by it (has no immunity to infection).</p></li>
-<li><p>Recovered Period: The time during which an individual, who was previously infected, shows no more symptoms and is immune to further infection by the same disease.</p></li>
-<li><p>Incubation Period: The time between the infection of an individual and that individual showing symptoms of infection; also known as the “asymptomatic” period, as the infected individual during this time experiences no outward sign of infection.</p></li>
-<li><p>Disease Period: The time during which an infected individual exhibits symptoms of the disease.</p></li>
-<li><p>Serial Interval: The average length of time between an individual being infected and them infecting another individual, including the intermediate time it takes for vector transmission to occur.</p></li>
+<li><p><strong>Susceptible:</strong> No pathogen is present in the individual. The individual only has a low level of non-specific immunity to incoming infection.</p></li>
+<li><p><strong>Exposed:</strong> The individual has encountered an infected individual and is infected with the pathogen. The levels of pathogen in this individual are too low to allow them to transmit the disease to another person. This individual is hence considered “exposed” to the pathogen but not yet able to infect others with it.</p></li>
+<li><p><strong>Infectious:</strong> The individual has surpassed the exposed stage and the pathogen levels within them are high enough to allow for transmission. This individual is no longer just exposed to the pathogen, but can actively spread it now.</p></li>
+<li><p><strong>Recovered:</strong> The individual has surpassed the infectious stage, their immune system has cleared enough of the pathogen that they can no longer transmit it. This individual has some amount of immunity to the pathogen now, but for how long this immunity lasts depends on the specific pathogen.</p></li>
 </ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The individual can still exhibit symptoms of the disease while in the recovered category, so it is best to think of this category as individuals who have “recovered” from their ability to spread the infection but not necessarily all symptomatic implications of that infection.</p>
+</div>
+</div>
+<p>These categories are not exhaustive, and individuals can be classified into further categories based on their stage of infection or immunity status, just to name a few. These four categories are highlighted since they come up most often while discussing SIR models and epidemiological models in general. It is important to note that, at the same time individuals fall into these categories, they can also be classified based on whether or not they exhibit symptoms of infection:</p>
+<ul>
+<li><p><strong>Incubation Period:</strong> The individual has been infected with the pathogen but does not show disease symptoms. This is also commonly refferred to as the <em>asymptomatic period</em>.</p></li>
+<li><p><strong>Diseased period:</strong> The individual has surpassed the incubation period and begins to show symptoms of the disease.</p></li>
+</ul>
+<p>Although these classifications are more commonly used in a medical, rather than an epidemiological, contexts, we still provide them here to clarify the fact that an individual can still be infectious while in the incubation period and showing no symptoms of the disease. Similarly, an individual can still be in the diseased period and show lingering symptoms of infection while being recovered since their immune system has cleared enough of the pathogen that they are not longer infectious.</p>
 <p>(PLACE GRAPH HERE OF ALL THESE PERIODS)</p>
+<p>CITATION FOR ENTIRE SECTION: Keeling and Rohani</p>
 </section>
 <section id="introducing-compartmental-models" class="level2">
 <h2 class="anchored" data-anchor-id="introducing-compartmental-models">Introducing Compartmental Models</h2>
-<p>Be Able To:</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the end of this section, you should be able to:</p>
 <ul>
+<li>Define what a compartmental model is.</li>
 <li>Identify which differential equation models can be called compartmental models.</li>
 </ul>
+</div>
+</div>
+<p>Generally speaking, compartmental models are a way to represent the flow of populations between different states, known as compartments, using differential equations. Compartmental models show up in a wide variety of fields, not just epidemiology. Any field that can benefit from knowing how information flows between states can benefit from compartmental models.</p>
+<p>In the epidemiological context, compartmental models are analyzing how people flow through the four categories, which will be refferred to simply as “compartments” from now on, introduced in the previous section: susceptible, exposed, infectious, and recovered. The relationships between these compartments are often represented using flowcharts like the one seen below.</p>
+<p>(INSERT IMAGE OF SEIR FLOWCHART THAT SPECIFICALLY SHOWS LAMBDA INSTEAD OF BETA AS THE FLOW RATE BETWEEN S AND E)</p>
+<p>The arrows between these compartments represent the direction of flow (susceptible individuals becoming exposed, exposed individuals becoming infectious, etc.) and the symbols above each arrow represent the <em>flow rate</em> between these compartments with respect to time.</p>
+<p>It’s easiest to understand this conceptually through an example. Say in a very large population with the established presence of a pathogen, on average, 300 new people become exposed to a pathogen every day. Of those that are exposed to the pathogen, on average, 50 of them reach pathogen levels high enough to become infectious per day. Then, of those that are infectious and able to transmit the pathogen, on average, 40 of them recover from the pathogen (in the sense that they can no longer transmit it). We can model this specific example with the modified flowchart below:</p>
+<p>Which compartments we choose to include depends on the specific pathogen and disease we are modeling. Models where the exposed period is so small it can be considered negligible, or is ommited for the sake of simplicity, are specifically known as <em>SIR models</em> (standing for the three different compartments included in the model: susceptible, infectious, and recovered).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Some sources will refer generally to any compartmental epidemiological model as an “SIR model,” but in our context we will make the distinction between SIR models and models that include different compartments than just susceptible, infectious, and recovered.</p>
+</div>
+</div>
+<p>The <a href="#The-Classic-SIR-Epidemic-Model">next section</a> covers the specific formulation and assumptions of this model.</p>
+<section id="learning-assessment" class="level3">
+<h3 class="anchored" data-anchor-id="learning-assessment">Learning Assessment:</h3>
+<p>Make assessment that’s like given what compartments these letters represent draw a flowchart for the following models like SEIR SMEIR SIS SIRS etc</p>
 </section>
-<section id="the-classic-epidemic-model" class="level2">
-<h2 class="anchored" data-anchor-id="the-classic-epidemic-model">The Classic Epidemic Model</h2>
-<p>Be Able To</p>
+</section>
+<section id="the-classic-sir-epidemic-model" class="level2">
+<h2 class="anchored" data-anchor-id="the-classic-sir-epidemic-model">The Classic SIR Epidemic Model</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the end of this section, you should be able to:</p>
 <ul>
 <li><p>Recall the classic epidemic model’s equations.</p></li>
-<li><p>Identify the assumptions made in the formulation of a classic epidemic model, specifically in relation to how its parameters were obtained / formulated.</p></li>
+<li><p>Construct equations for novel compartmental models given the flow rates between each of the compartments.</p></li>
+<li><p>Identify the assumptions (and their justifications) made in the formulation of the classic epidemic model, including the assumptions made in relation to how its parameters were obtained / formulated.</p></li>
 <li><p>Recall what parameters go into the construction of the classic epidemic model, including the typical symbols for each.</p></li>
 <li><p>Explain how the classic epidemic model deviates from reality in relation to the assumptions it makes.</p></li>
 <li><p>Differentiate situations where an empirically deduced transmission rate is more accurate and beneficial to one calculated based on first principles.</p></li>
 <li><p>Discern what situations are best modeled by frequency or density dependent transmission rates, or a combination of both.</p></li>
 </ul>
-<section id="formulating-tranmission-rate" class="level3">
-<h3 class="anchored" data-anchor-id="formulating-tranmission-rate">Formulating Tranmission Rate</h3>
+</div>
+</div>
+<p>The classic SIR epidemic model is a type of compartmental model that makes the following key assumptions:</p>
+<ol type="1">
+<li><p>The epidemic invades the population and concludes itself quickly enough that demographic processes, namely births and deaths, are not very influential to the overall process and can be omitted from the model. This is also known as the <em>closed population</em> assumption.</p></li>
+<li><p>Individuals move between the compartments of susceptible, infected, and recovered only. Other compartments, namely the exposed compartment, are omitted for simplicity.</p></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There may be applications of the epidemic SIR model that justify the omission of the exposed compartment since the disease has a negligible exposed period and individuals almost immediately go to being infectious after invasion by the pathogen.</p>
+</div>
+</div>
+<p>These are not the only assumptions made by the epidemic SIR model, but they do clearly distinguish it from other compartmental models such as the SEIR model, which includes exposed compartment, and the endemic SIR model, which includes the flow in and out of each compartment due to demographics (births and death).</p>
+<p>Moving forward, <span class="math inline">\(S\)</span>. <span class="math inline">\(I\)</span>, and <span class="math inline">\(R\)</span> will refer to the <em>number</em> of individuals in the susceptible, infected, and recovered compartments, respectively. The variables <span class="math inline">\(\tilde{S}=\frac{S}{N}\)</span>, <span class="math inline">\(\tilde{I}=\frac{I}{N}\)</span>, and <span class="math inline">\(\tilde{R}=\frac{R}{N}\)</span>, will be used to refer to the <em>proportion</em> of individuals in the susceptible, infected, and recovered compartments, respectively, where <span class="math inline">\(N\)</span> is the total number of individuals in the population defined as <span class="math inline">\(N=S+I+R\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Since the epidemic model assumes a closed population with no births or deaths, <span class="math inline">\(N\)</span> is not a variable that can change but a constant.</p></li>
+<li><p>Notice that <span class="math inline">\(\tilde{S}+\tilde{I}+\tilde{R}=1\)</span></p></li>
+</ul>
+</div>
+</div>
+<p>The following equations provide the rates of change, with respect to time, for the number of individuals in each of the three compartments of the epidemic SIR model:</p>
+<p><span class="math display">\[
+\frac{dS}{dt}=-\lambda S
+\]</span> <span class="math display">\[
+\frac{dI}{dt}=\lambda S - \gamma I
+\]</span> <span class="math display">\[
+\frac{dR}{dt}=\gamma I
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The rate of change of the number of people in each compartment can be understood as following the basic pattern of <span class="math inline">\(R_i-R_o\)</span> where <span class="math inline">\(R_i\)</span> is the rate that people are flowing into the compartment per unit time and <span class="math inline">\(R_o\)</span> is the rate that people are flowing out of the compartment per unit time. This pattern can be used to construct any number of novel compartmental models.</p>
+</div>
+</div>
+<p>Notice that these equations mirror exactly the compartmental flowcharts introduced in the <a href="#Introducing-Compartmental-Models">previous section</a>. The epidemic SIR model can be representing using the following flowchart:</p>
+<p>The flow rates between each compartment have specific names and symbology, summarized in the table below:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 22%">
+<col style="width: 51%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Terminology / Name</strong></th>
+<th><strong>Common Symbol</strong></th>
+<th><strong>Interpretation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Force of Infection</td>
+<td><span class="math inline">\(\lambda\)</span></td>
+<td>The rate at which susceptible individuals are becoming infected per unit time</td>
+</tr>
+<tr class="even">
+<td>Recovery Rate</td>
+<td><span class="math inline">\(\gamma\)</span></td>
+<td>The rate at which infected individuals are recovering from infection per unit time.</td>
+</tr>
+</tbody>
+</table>
+<section id="formulating-the-force-of-infection" class="level3">
+<h3 class="anchored" data-anchor-id="formulating-the-force-of-infection">Formulating the Force of Infection</h3>
 </section>
 <section id="obtaining-other-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="obtaining-other-parameters">Obtaining Other Parameters</h3>
@@ -131,44 +327,104 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="solving-sir-equations" class="level2">
 <h2 class="anchored" data-anchor-id="solving-sir-equations">Solving SIR Equations</h2>
-<p>Be Able To:</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the end of this section, you should be able to:</p>
 <ul>
 <li><p>Solve basic SIR model equations using either mathematical or computational techniques.</p></li>
 <li><p>Identify the difference between common methods of solving SIR models, including Euler’s method and the deSolve package in R.</p></li>
 </ul>
+</div>
+</div>
 </section>
 <section id="basic-and-effective-reproduction-numbers" class="level2">
 <h2 class="anchored" data-anchor-id="basic-and-effective-reproduction-numbers">Basic and Effective Reproduction Numbers</h2>
-<p>Be Able To:</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the end of this section, you should be able to:</p>
 <ul>
 <li><p>Define what the basic and effective reproduction number is and recall primary differences between the two.</p></li>
 <li><p>Interpret the basic and effective reproduction number in context.</p></li>
 <li><p>Derive the formula for the basic and effective reproduction number based on their definitions.</p></li>
 </ul>
+</div>
+</div>
 </section>
 <section id="example-of-the-classic-epidemic-model" class="level2">
 <h2 class="anchored" data-anchor-id="example-of-the-classic-epidemic-model">Example of the Classic Epidemic Model</h2>
-<p>Be Able To:</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the end of this section, you should be able to:</p>
 <ul>
 <li>Identify examples of situations where the classic epidemic model is a useful tool for modeling.</li>
 </ul>
+</div>
+</div>
 </section>
 <section id="the-classic-endemic-model" class="level2">
 <h2 class="anchored" data-anchor-id="the-classic-endemic-model">The Classic Endemic Model</h2>
-<p>Be Able To:</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the end of this section, you should be able to:</p>
 <ul>
 <li><p>Recall the classic endemic model’s equations.</p></li>
 <li><p>Differentiate the classic endemic model from the epidemic model.</p></li>
 </ul>
+</div>
+</div>
 </section>
 <section id="disease-free-and-endemic-equilibrium" class="level2">
 <h2 class="anchored" data-anchor-id="disease-free-and-endemic-equilibrium">Disease Free and Endemic Equilibrium</h2>
-<p>Be Able To:</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the end of this section, you should be able to:</p>
 <ul>
 <li><p>Define what an equilibrium is the context of a system of differential equations.</p></li>
 <li><p>Find the values where the disease-free and endemic equilibrium occur.</p></li>
 <li><p>Recall when each equilibrium type occurs in relation to R0 and justify it based on the definition of R0.</p></li>
 </ul>
+</div>
+</div>
 </section>
 
 </main>
