@@ -84,10 +84,16 @@ window.Quarto = {
   <li><a href="#the-classic-sir-epidemic-model" id="toc-the-classic-sir-epidemic-model" class="nav-link" data-scroll-target="#the-classic-sir-epidemic-model">The Classic SIR Epidemic Model</a>
   <ul class="collapse">
   <li><a href="#formulating-the-force-of-infection" id="toc-formulating-the-force-of-infection" class="nav-link" data-scroll-target="#formulating-the-force-of-infection">Formulating the Force of Infection</a></li>
-  <li><a href="#obtaining-other-parameters" id="toc-obtaining-other-parameters" class="nav-link" data-scroll-target="#obtaining-other-parameters">Obtaining Other Parameters</a></li>
+  <li><a href="#formulating-the-recovery-rate" id="toc-formulating-the-recovery-rate" class="nav-link" data-scroll-target="#formulating-the-recovery-rate">Formulating the Recovery Rate</a></li>
   </ul></li>
-  <li><a href="#solving-sir-equations" id="toc-solving-sir-equations" class="nav-link" data-scroll-target="#solving-sir-equations">Solving SIR Equations</a></li>
-  <li><a href="#basic-and-effective-reproduction-numbers" id="toc-basic-and-effective-reproduction-numbers" class="nav-link" data-scroll-target="#basic-and-effective-reproduction-numbers">Basic and Effective Reproduction Numbers</a></li>
+  <li><a href="#solving-sir-equations" id="toc-solving-sir-equations" class="nav-link" data-scroll-target="#solving-sir-equations">Solving SIR Equations</a>
+  <ul class="collapse">
+  <li><a href="#eulers-method" id="toc-eulers-method" class="nav-link" data-scroll-target="#eulers-method">Euler’s Method</a></li>
+  </ul></li>
+  <li><a href="#reproduction-numbers" id="toc-reproduction-numbers" class="nav-link" data-scroll-target="#reproduction-numbers">Reproduction Numbers</a>
+  <ul class="collapse">
+  <li><a href="#the-basic-reproduction-number" id="toc-the-basic-reproduction-number" class="nav-link" data-scroll-target="#the-basic-reproduction-number">The Basic Reproduction Number</a></li>
+  </ul></li>
   <li><a href="#example-of-the-classic-epidemic-model" id="toc-example-of-the-classic-epidemic-model" class="nav-link" data-scroll-target="#example-of-the-classic-epidemic-model">Example of the Classic Epidemic Model</a></li>
   <li><a href="#the-classic-endemic-model" id="toc-the-classic-endemic-model" class="nav-link" data-scroll-target="#the-classic-endemic-model">The Classic Endemic Model</a></li>
   <li><a href="#disease-free-and-endemic-equilibrium" id="toc-disease-free-and-endemic-equilibrium" class="nav-link" data-scroll-target="#disease-free-and-endemic-equilibrium">Disease Free and Endemic Equilibrium</a></li>
@@ -130,7 +136,7 @@ Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>At the end of this section, you should be able to:</p>
+<p>By the end of this section, you should be able to:</p>
 <ul>
 <li>Define basic terms in epidemiology.</li>
 </ul>
@@ -177,7 +183,7 @@ Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>At the end of this section, you should be able to:</p>
+<p>By the end of this section, you should be able to:</p>
 <ul>
 <li>Define what a compartmental model is.</li>
 <li>Identify which differential equation models can be called compartmental models.</li>
@@ -185,7 +191,7 @@ Learning Objectives
 </div>
 </div>
 <p>Generally speaking, compartmental models are a way to represent the flow of populations between different states, known as compartments, using differential equations. Compartmental models show up in a wide variety of fields, not just epidemiology. Any field that can benefit from knowing how information flows between states can benefit from compartmental models.</p>
-<p>In the epidemiological context, compartmental models are analyzing how people flow through the four categories, which will be refferred to simply as “compartments” from now on, introduced in the previous section: susceptible, exposed, infectious, and recovered. The relationships between these compartments are often represented using flowcharts like the one seen below.</p>
+<p>In the epidemiological context, compartmental models are analyzing how people flow through the four categories, which will be referred to simply as “compartments” from now on, introduced in the previous section: susceptible, exposed, infectious, and recovered. The relationships between these compartments are often represented using flowcharts like the one seen below.</p>
 <p>(INSERT IMAGE OF SEIR FLOWCHART THAT SPECIFICALLY SHOWS LAMBDA INSTEAD OF BETA AS THE FLOW RATE BETWEEN S AND E)</p>
 <p>The arrows between these compartments represent the direction of flow (susceptible individuals becoming exposed, exposed individuals becoming infectious, etc.) and the symbols above each arrow represent the <em>flow rate</em> between these compartments with respect to time.</p>
 <p>It’s easiest to understand this conceptually through an example. Say in a very large population with the established presence of a pathogen, on average, 300 new people become exposed to a pathogen every day. Of those that are exposed to the pathogen, on average, 50 of them reach pathogen levels high enough to become infectious per day. Then, of those that are infectious and able to transmit the pathogen, on average, 40 of them recover from the pathogen (in the sense that they can no longer transmit it). We can model this specific example with the modified flowchart below:</p>
@@ -207,6 +213,7 @@ Note
 <section id="learning-assessment" class="level3">
 <h3 class="anchored" data-anchor-id="learning-assessment">Learning Assessment:</h3>
 <p>Make assessment that’s like given what compartments these letters represent draw a flowchart for the following models like SEIR SMEIR SIS SIRS etc</p>
+<p>CITATION FOR ENTIRE SECTION: Keeling and Rohani</p>
 </section>
 </section>
 <section id="the-classic-sir-epidemic-model" class="level2">
@@ -221,7 +228,7 @@ Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>At the end of this section, you should be able to:</p>
+<p>By the end of this section, you should be able to:</p>
 <ul>
 <li><p>Recall the classic epidemic model’s equations.</p></li>
 <li><p>Construct equations for novel compartmental models given the flow rates between each of the compartments.</p></li>
@@ -277,6 +284,14 @@ Note
 \]</span> <span class="math display">\[
 \frac{dR}{dt}=\gamma I
 \]</span></p>
+<p>Dividing each equation by the population size <span class="math inline">\(N\)</span>, we can rewrite the SIR equations above to provide the rates of change, with respect to time, for the proportion of individuals in each compartment:</p>
+<p><span class="math display">\[
+\frac{d\tilde{S}}{dt}=-\lambda \tilde{S}
+\]</span> <span class="math display">\[
+\frac{d\tilde{I}}{dt}=\lambda \tilde{S} - \gamma \tilde{I}
+\]</span> <span class="math display">\[
+\frac{d\tilde{R}}{dt}=\gamma \tilde{I}
+\]</span></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -295,8 +310,8 @@ Note
 <table class="caption-top table">
 <colgroup>
 <col style="width: 26%">
-<col style="width: 22%">
-<col style="width: 51%">
+<col style="width: 24%">
+<col style="width: 49%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -309,20 +324,86 @@ Note
 <tr class="odd">
 <td>Force of Infection</td>
 <td><span class="math inline">\(\lambda\)</span></td>
-<td>The rate at which susceptible individuals are becoming infected per unit time</td>
+<td>The per capita rate at which susceptible individuals are becoming infectious per unit time.</td>
 </tr>
 <tr class="even">
 <td>Recovery Rate</td>
 <td><span class="math inline">\(\gamma\)</span></td>
-<td>The rate at which infected individuals are recovering from infection per unit time.</td>
+<td>The per capita rate at which infectious individuals are recovering from infection per unit time.</td>
 </tr>
 </tbody>
 </table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The phrase “per capita” here refers to a rate that is divided among each person in the given compartment. Take the following example: if 3 people are pouring water into a large bucket and each are adding 5 cups per minute, then the per capita rate at which water is being added is 5 cups per minute. To obtain the total rate at which water is being poured into the bucket, we would multiply the number of people pouring, 3, by their per capita rate, 5, to get a total inflow of 15 cups per minute.</p>
+<p>A similar logic is being utilized in the SIR equations: the number of susceptible people at a given time, <span class="math inline">\(S\)</span>, is multiplied by the per capita rate they are becoming infectious to get the total rate at which people are entering the infectious category. Similarly, the number of infectious people at a given time, <span class="math inline">\(I\)</span>, is multiplied by the per capita rate they are recovering to get the total rate at which people are entering the recovered category.</p>
+</div>
+</div>
+<p>CITATION FOR ENTIRE SECTION: Keeling and Rohani</p>
 <section id="formulating-the-force-of-infection" class="level3">
 <h3 class="anchored" data-anchor-id="formulating-the-force-of-infection">Formulating the Force of Infection</h3>
+<p>The force of infection, or the rate at which susceptible individuals are becoming infected (as well as infectious) per unit time, can be understood and formulated based on first principles in epidemiology as follows:</p>
+<blockquote class="blockquote">
+<p>Consider the perspective of a susceptible individual in the population at any given time. Let’s say this individual makes, on average, <span class="math inline">\(c\)</span> contacts with other people per unit time. Then, suppose that of those <span class="math inline">\(c\)</span> people this individual makes contact with per unit time, the proportion of them that will be infectious is <span class="math inline">\(\tilde{I}\)</span>. Then, of those <span class="math inline">\(c\tilde{I}\)</span> contacts this individual makes with infectious people, the proportion of them that will actually succeed at spreading the infection to them is <span class="math inline">\(p\)</span>. Multiplying these together, we can obtain the per capita (per person) rate which susceptible people are becoming infectious, or the force of infection as follows: <span class="math display">\[
+\lambda=cp\tilde{I}
+\]</span></p>
+</blockquote>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Although this formulation for <span class="math inline">\(\lambda\)</span> is based on first principles, there are still a number of assumptions being made. Namely:</p>
+<ol type="1">
+<li><p>We assume every individual in the population comes into contact with other individuals at a constant rate <span class="math inline">\(c\)</span>. This means we assume everyone in the population is equally sociable and, on average, comes into contact with the same number of people per unit time.</p></li>
+<li><p>We assume <em>homogeneous mixing</em> of the population. That is, we assume everyone has an equal probability of contacting any other individual in the population. In real life, this is of course not true: infectious individuals are more likely to come into contact with other infectious individuals if they go to the hospital and are less likely to come into contact with susceptible individuals if they quarantine, just to name a few examples.</p></li>
+</ol>
+</div>
+</div>
+<p>The force of infection is calculated in many ways; we just provide one of many possible formulations and rationales here. Notice there are two constant terms in the formulation for <span class="math inline">\(\lambda\)</span> given above: <span class="math inline">\(c\)</span> and <span class="math inline">\(p\)</span>. Since these terms are constant throughout time in the model, they are grouped together into a singular term, known as the <em>transmission rate</em>. As it is a constant unaffected by the dynamics of the model itself, the transmission rate—often denoted as <span class="math inline">\(\beta\)</span>—is considered a property of the specific disease or pathogen being analyzed and is calculated prior to the construction of the model. We present common methods of calculating <span class="math inline">\(\beta\)</span>, summarized in the table below:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 48%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Method</strong></th>
+<th><strong>What is it?</strong></th>
+<th><strong>Best Used When . . .</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Blackbox Method</td>
+<td>This is a data-driven method wherein <span class="math inline">\(\beta\)</span> is calculated empirically using epidemiological data. We can think of this as “fitting” a value of <span class="math inline">\(\beta\)</span> in our model to most accurately reflect the dynamics we observe in the real world.</td>
+<td>There is an abundance of accurate real-world data available on the number of susceptible and infectious people over time.</td>
+</tr>
+<tr class="even">
+<td>First-Principles Method</td>
+<td>This method utilizes the formulation <span class="math inline">\(\beta=cp\)</span>, which was obtained using first-principles, and separately calculates appropriate values for <span class="math inline">\(c\)</span> and <span class="math inline">\(p\)</span>. The specifics of how <span class="math inline">\(c\)</span> and <span class="math inline">\(p\)</span> are calculated vary widely depending on context and model complexity, but can be found using a combination of logic and predictions for how people will interact as well as real-world data on the transmissibility of a pathogen.</td>
+<td>Real-world data is scarcer or there the data available lends itself better to calculating <span class="math inline">\(c\)</span> and <span class="math inline">\(p\)</span> separately rather than fitting an overall <span class="math inline">\(\beta\)</span>.</td>
+</tr>
+</tbody>
+</table>
+<p>CITATION: difficult to say, mixture of book and own intuition of these concepts</p>
 </section>
-<section id="obtaining-other-parameters" class="level3">
-<h3 class="anchored" data-anchor-id="obtaining-other-parameters">Obtaining Other Parameters</h3>
+<section id="formulating-the-recovery-rate" class="level3">
+<h3 class="anchored" data-anchor-id="formulating-the-recovery-rate">Formulating the Recovery Rate</h3>
 </section>
 </section>
 <section id="solving-sir-equations" class="level2">
@@ -337,16 +418,27 @@ Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>At the end of this section, you should be able to:</p>
+<p>By the end of this section, you should be able to:</p>
 <ul>
-<li><p>Solve basic SIR model equations using either mathematical or computational techniques.</p></li>
+<li><p>Solve basic SIR model equations using a combination of mathematical and computational techniques.</p></li>
 <li><p>Identify the difference between common methods of solving SIR models, including Euler’s method and the deSolve package in R.</p></li>
 </ul>
 </div>
 </div>
+<p>Two common methods of solving differential equations that are difficult to solve by hand (in an exact method, that is) is:</p>
+<ol type="1">
+<li>Euler’s Method</li>
+<li>The deSolve package in R</li>
+</ol>
+<p>We will go over each method in this section and the differences between the two.</p>
+<section id="eulers-method" class="level3">
+<h3 class="anchored" data-anchor-id="eulers-method">Euler’s Method</h3>
+<p>Although Euler’s Method is widely regarded to be a relatively inefficient method for solving otherwise “unsolvable” (at least in the elementary sense) ordinary differential equations, it is still valued for its simplicity and accessibility.</p>
+<p>Suppose we have approximate initial values for the variables of interest (which, in the case of the SIR model, is the number of susceptible, infectious, and recovered individuals at the beginning of our study period).</p>
 </section>
-<section id="basic-and-effective-reproduction-numbers" class="level2">
-<h2 class="anchored" data-anchor-id="basic-and-effective-reproduction-numbers">Basic and Effective Reproduction Numbers</h2>
+</section>
+<section id="reproduction-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="reproduction-numbers">Reproduction Numbers</h2>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -357,14 +449,17 @@ Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>At the end of this section, you should be able to:</p>
+<p>By the end of this section, you should be able to:</p>
 <ul>
 <li><p>Define what the basic and effective reproduction number is and recall primary differences between the two.</p></li>
 <li><p>Interpret the basic and effective reproduction number in context.</p></li>
-<li><p>Derive the formula for the basic and effective reproduction number based on their definitions.</p></li>
+<li><p>Derive the formula for the basic and effective reproduction numbers based on their definitions.</p></li>
 </ul>
 </div>
 </div>
+<section id="the-basic-reproduction-number" class="level3">
+<h3 class="anchored" data-anchor-id="the-basic-reproduction-number">The Basic Reproduction Number</h3>
+</section>
 </section>
 <section id="example-of-the-classic-epidemic-model" class="level2">
 <h2 class="anchored" data-anchor-id="example-of-the-classic-epidemic-model">Example of the Classic Epidemic Model</h2>
@@ -378,7 +473,7 @@ Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>At the end of this section, you should be able to:</p>
+<p>By the end of this section, you should be able to:</p>
 <ul>
 <li>Identify examples of situations where the classic epidemic model is a useful tool for modeling.</li>
 </ul>
@@ -397,7 +492,7 @@ Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>At the end of this section, you should be able to:</p>
+<p>By the end of this section, you should be able to:</p>
 <ul>
 <li><p>Recall the classic endemic model’s equations.</p></li>
 <li><p>Differentiate the classic endemic model from the epidemic model.</p></li>
@@ -417,7 +512,7 @@ Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>At the end of this section, you should be able to:</p>
+<p>By the end of this section, you should be able to:</p>
 <ul>
 <li><p>Define what an equilibrium is the context of a system of differential equations.</p></li>
 <li><p>Find the values where the disease-free and endemic equilibrium occur.</p></li>

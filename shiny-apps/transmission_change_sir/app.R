@@ -9,7 +9,6 @@
 
 library(shiny)
 library(bslib)
-setwd("C:/Users/anjal/Documents/transmission_change_sir")
 source("sir_solver.R")
 
 # Define UI for application that draws a histogram

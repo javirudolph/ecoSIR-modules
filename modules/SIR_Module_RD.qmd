@@ -11,78 +11,78 @@ editor: visual
 ## Epidemiology Terms
 
 ::: {.callout-tip title="Learning Objectives"}
-At the end of this section, you should be able to:
+By the end of this section, you should be able to:
 
 -   Define basic terms in epidemiology.
 :::
 
 For the purposes of mathematical models in epidemiology, such as the SIR model, individuals are classified based solely on their ability to transmit a pathogen, not their diseased status (whether or not they exhibit symptoms). For the purposes of epidemiological models, individuals are generally classified into four primary categories:
 
-- **Susceptible:** No pathogen is present in the individual. The individual only has a low level of non-specific immunity to incoming infection. 
+-   **Susceptible:** No pathogen is present in the individual. The individual only has a low level of non-specific immunity to incoming infection.
 
-- **Exposed:** The individual has encountered an infected individual and is infected with the pathogen. The levels of pathogen in this individual are too low to allow them to transmit the disease to another person. This individual is hence considered "exposed" to the pathogen but not yet able to infect others with it.
+-   **Exposed:** The individual has encountered an infected individual and is infected with the pathogen. The levels of pathogen in this individual are too low to allow them to transmit the disease to another person. This individual is hence considered "exposed" to the pathogen but not yet able to infect others with it.
 
-- **Infectious:** The individual has surpassed the exposed stage and the pathogen levels within them are high enough to allow for transmission. This individual is no longer just exposed to the pathogen, but can actively spread it now. 
+-   **Infectious:** The individual has surpassed the exposed stage and the pathogen levels within them are high enough to allow for transmission. This individual is no longer just exposed to the pathogen, but can actively spread it now.
 
-- **Recovered:** The individual has surpassed the infectious stage, their immune system has cleared enough of the pathogen that they can no longer transmit it. This individual has some amount of immunity to the pathogen now, but for how long this immunity lasts depends on the specific pathogen.
+-   **Recovered:** The individual has surpassed the infectious stage, their immune system has cleared enough of the pathogen that they can no longer transmit it. This individual has some amount of immunity to the pathogen now, but for how long this immunity lasts depends on the specific pathogen.
 
-:::{.callout-note}
-The individual can still exhibit symptoms of the disease while in the recovered category, so it is best to think of this category as individuals who have "recovered" from their ability to spread the infection but not necessarily all symptomatic implications of that infection. 
+::: callout-note
+The individual can still exhibit symptoms of the disease while in the recovered category, so it is best to think of this category as individuals who have "recovered" from their ability to spread the infection but not necessarily all symptomatic implications of that infection.
 :::
-
 
 These categories are not exhaustive, and individuals can be classified into further categories based on their stage of infection or immunity status, just to name a few. These four categories are highlighted since they come up most often while discussing SIR models and epidemiological models in general. It is important to note that, at the same time individuals fall into these categories, they can also be classified based on whether or not they exhibit symptoms of infection:
 
-- **Incubation Period:** The individual has been infected with the pathogen but does not show disease symptoms. This is also commonly refferred to as the *asymptomatic period*. 
+-   **Incubation Period:** The individual has been infected with the pathogen but does not show disease symptoms. This is also commonly refferred to as the *asymptomatic period*.
 
-- **Diseased period:** The individual has surpassed the incubation period and begins to show symptoms of the disease.
+-   **Diseased period:** The individual has surpassed the incubation period and begins to show symptoms of the disease.
 
-Although these classifications are more commonly used in a medical, rather than an epidemiological, contexts, we still provide them here to clarify the fact that an individual can still be infectious while in the incubation period and showing no symptoms of the disease. Similarly, an individual can still be in the diseased period and show lingering symptoms of infection while being recovered since their immune system has cleared enough of the pathogen that they are not longer infectious. 
-
+Although these classifications are more commonly used in a medical, rather than an epidemiological, contexts, we still provide them here to clarify the fact that an individual can still be infectious while in the incubation period and showing no symptoms of the disease. Similarly, an individual can still be in the diseased period and show lingering symptoms of infection while being recovered since their immune system has cleared enough of the pathogen that they are not longer infectious.
 
 (PLACE GRAPH HERE OF ALL THESE PERIODS)
 
 CITATION FOR ENTIRE SECTION: Keeling and Rohani
 
-## Introducing Compartmental Models
+## Introducing Compartmental Models {#introducing-compartmental-models}
 
 ::: {.callout-tip title="Learning Objectives"}
-At the end of this section, you should be able to:
+By the end of this section, you should be able to:
 
--   Define what a compartmental model is. 
+-   Define what a compartmental model is.
 -   Identify which differential equation models can be called compartmental models.
 :::
 
 Generally speaking, compartmental models are a way to represent the flow of populations between different states, known as compartments, using differential equations. Compartmental models show up in a wide variety of fields, not just epidemiology. Any field that can benefit from knowing how information flows between states can benefit from compartmental models.
 
-In the epidemiological context, compartmental models are analyzing how people flow through the four categories, which will be refferred to simply as "compartments" from now on, introduced in the previous section: susceptible, exposed, infectious, and recovered. The relationships between these compartments are often represented using flowcharts like the one seen below. 
+In the epidemiological context, compartmental models are analyzing how people flow through the four categories, which will be referred to simply as "compartments" from now on, introduced in the previous section: susceptible, exposed, infectious, and recovered. The relationships between these compartments are often represented using flowcharts like the one seen below.
 
 (INSERT IMAGE OF SEIR FLOWCHART THAT SPECIFICALLY SHOWS LAMBDA INSTEAD OF BETA AS THE FLOW RATE BETWEEN S AND E)
 
 The arrows between these compartments represent the direction of flow (susceptible individuals becoming exposed, exposed individuals becoming infectious, etc.) and the symbols above each arrow represent the *flow rate* between these compartments with respect to time.
 
-It's easiest to understand this conceptually through an example. Say in a very large population with the established presence of a pathogen, on average, 300 new people become exposed to a pathogen every day. Of those that are exposed to the pathogen, on average, 50 of them reach pathogen levels high enough to become infectious per day. Then, of those that are infectious and able to transmit the pathogen, on average, 40 of them recover from the pathogen (in the sense that they can no longer transmit it). We can model this specific example with the modified flowchart below: 
+It's easiest to understand this conceptually through an example. Say in a very large population with the established presence of a pathogen, on average, 300 new people become exposed to a pathogen every day. Of those that are exposed to the pathogen, on average, 50 of them reach pathogen levels high enough to become infectious per day. Then, of those that are infectious and able to transmit the pathogen, on average, 40 of them recover from the pathogen (in the sense that they can no longer transmit it). We can model this specific example with the modified flowchart below:
 
-Which compartments we choose to include depends on the specific pathogen and disease we are modeling. Models where the exposed period is so small it can be considered negligible, or is ommited for the sake of simplicity, are specifically known as *SIR models* (standing for the three different compartments included in the model: susceptible, infectious, and recovered). 
+Which compartments we choose to include depends on the specific pathogen and disease we are modeling. Models where the exposed period is so small it can be considered negligible, or is ommited for the sake of simplicity, are specifically known as *SIR models* (standing for the three different compartments included in the model: susceptible, infectious, and recovered).
 
-:::{.callout-note}
-Some sources will refer generally to any compartmental epidemiological model as an "SIR model," but in our context we will make the distinction between SIR models and models that include different compartments than just susceptible, infectious, and recovered. 
+::: callout-note
+Some sources will refer generally to any compartmental epidemiological model as an "SIR model," but in our context we will make the distinction between SIR models and models that include different compartments than just susceptible, infectious, and recovered.
 :::
 
 The [next section](#The-Classic-SIR-Epidemic-Model) covers the specific formulation and assumptions of this model.
 
-### Learning Assessment: 
+### Learning Assessment:
 
 Make assessment that's like given what compartments these letters represent draw a flowchart for the following models like SEIR SMEIR SIS SIRS etc
 
-## The Classic SIR Epidemic Model
+CITATION FOR ENTIRE SECTION: Keeling and Rohani
+
+## The Classic SIR Epidemic Model {#the-classic-sir-epidemic-model}
 
 ::: {.callout-tip title="Learning Objectives"}
-At the end of this section, you should be able to:
+By the end of this section, you should be able to:
 
 -   Recall the classic epidemic model's equations.
 
-- Construct equations for novel compartmental models given the flow rates between each of the compartments.
+-   Construct equations for novel compartmental models given the flow rates between each of the compartments.
 
 -   Identify the assumptions (and their justifications) made in the formulation of the classic epidemic model, including the assumptions made in relation to how its parameters were obtained / formulated.
 
@@ -97,85 +97,133 @@ At the end of this section, you should be able to:
 
 The classic SIR epidemic model is a type of compartmental model that makes the following key assumptions:
 
-1. The epidemic invades the population and concludes itself quickly enough that demographic processes, namely births and deaths, are not very influential to the overall process and can be omitted from the model. This is also known as the *closed population* assumption.
+1.  The epidemic invades the population and concludes itself quickly enough that demographic processes, namely births and deaths, are not very influential to the overall process and can be omitted from the model. This is also known as the *closed population* assumption.
 
-2. Individuals move between the compartments of susceptible, infected, and recovered only. Other compartments, namely the exposed compartment, are omitted for simplicity.
+2.  Individuals move between the compartments of susceptible, infected, and recovered only. Other compartments, namely the exposed compartment, are omitted for simplicity.
 
-:::{.callout-note}
-There may be applications of the epidemic SIR model that justify the omission of the exposed compartment since the disease has a negligible exposed period and individuals almost immediately go to being infectious after invasion by the pathogen. 
+::: callout-note
+There may be applications of the epidemic SIR model that justify the omission of the exposed compartment since the disease has a negligible exposed period and individuals almost immediately go to being infectious after invasion by the pathogen.
 :::
 
-These are not the only assumptions made by the epidemic SIR model, but they do clearly distinguish it from other compartmental models such as the SEIR model, which includes exposed compartment, and the endemic SIR model, which includes the flow in and out of each compartment due to demographics (births and death).  
+These are not the only assumptions made by the epidemic SIR model, but they do clearly distinguish it from other compartmental models such as the SEIR model, which includes exposed compartment, and the endemic SIR model, which includes the flow in and out of each compartment due to demographics (births and death).
 
 Moving forward, $S$. $I$, and $R$ will refer to the *number* of individuals in the susceptible, infected, and recovered compartments, respectively. The variables $\tilde{S}=\frac{S}{N}$, $\tilde{I}=\frac{I}{N}$, and $\tilde{R}=\frac{R}{N}$, will be used to refer to the *proportion* of individuals in the susceptible, infected, and recovered compartments, respectively, where $N$ is the total number of individuals in the population defined as $N=S+I+R$.
 
-:::{.callout-note}
-- Since the epidemic model assumes a closed population with no births or deaths, $N$ is not a variable that can change but a constant.
+::: callout-note
+-   Since the epidemic model assumes a closed population with no births or deaths, $N$ is not a variable that can change but a constant.
 
-- Notice that $\tilde{S}+\tilde{I}+\tilde{R}=1$
+-   Notice that $\tilde{S}+\tilde{I}+\tilde{R}=1$
 :::
 
 The following equations provide the rates of change, with respect to time, for the number of individuals in each of the three compartments of the epidemic SIR model:
 
 $$
 \frac{dS}{dt}=-\lambda S
-$$
-$$
+$$ $$
 \frac{dI}{dt}=\lambda S - \gamma I
-$$
-$$
+$$ $$
 \frac{dR}{dt}=\gamma I
 $$
 
-:::{.callout-note}
-The rate of change of the number of people in each compartment can be understood as following the basic pattern of $R_i-R_o$ where $R_i$ is the rate that people are flowing into the compartment per unit time and $R_o$ is the rate that people are flowing out of the compartment per unit time. This pattern can be used to construct any number of novel compartmental models. 
+Dividing each equation by the population size $N$, we can rewrite the SIR equations above to provide the rates of change, with respect to time, for the proportion of individuals in each compartment:
+
+$$
+\frac{d\tilde{S}}{dt}=-\lambda \tilde{S}
+$$ $$
+\frac{d\tilde{I}}{dt}=\lambda \tilde{S} - \gamma \tilde{I}
+$$ $$
+\frac{d\tilde{R}}{dt}=\gamma \tilde{I}
+$$
+
+::: callout-note
+The rate of change of the number of people in each compartment can be understood as following the basic pattern of $R_i-R_o$ where $R_i$ is the rate that people are flowing into the compartment per unit time and $R_o$ is the rate that people are flowing out of the compartment per unit time. This pattern can be used to construct any number of novel compartmental models.
 :::
 
 Notice that these equations mirror exactly the compartmental flowcharts introduced in the [previous section](#Introducing-Compartmental-Models). The epidemic SIR model can be representing using the following flowchart:
 
-
 The flow rates between each compartment have specific names and symbology, summarized in the table below:
 
-| **Terminology / Name** | **Common Symbol** 	| **Interpretation**                                                                  	|
-|-----------------------------	|-------------------------	|---------------------------------------------------------	|
-| Force of Infection     	| $\lambda$         	| The rate at which susceptible individuals are becoming infected per unit time       	|
-| Recovery Rate       	| $\gamma$          	| The rate at which infected individuals are recovering from infection per unit time. 	|
+| **Terminology / Name** | **Common Symbol** | **Interpretation** |
+|-------------------|------------------|------------------------------------|
+| Force of Infection | $\lambda$ | The per capita rate at which susceptible individuals are becoming infectious per unit time. |
+| Recovery Rate | $\gamma$ | The per capita rate at which infectious individuals are recovering from infection per unit time. |
 
+::: callout-note
+The phrase "per capita" here refers to a rate that is divided among each person in the given compartment. Take the following example: if 3 people are pouring water into a large bucket and each are adding 5 cups per minute, then the per capita rate at which water is being added is 5 cups per minute. To obtain the total rate at which water is being poured into the bucket, we would multiply the number of people pouring, 3, by their per capita rate, 5, to get a total inflow of 15 cups per minute.
+
+A similar logic is being utilized in the SIR equations: the number of susceptible people at a given time, $S$, is multiplied by the per capita rate they are becoming infectious to get the total rate at which people are entering the infectious category. Similarly, the number of infectious people at a given time, $I$, is multiplied by the per capita rate they are recovering to get the total rate at which people are entering the recovered category.
+:::
+
+CITATION FOR ENTIRE SECTION: Keeling and Rohani
 
 ### Formulating the Force of Infection
 
+The force of infection, or the rate at which susceptible individuals are becoming infected (as well as infectious) per unit time, can be understood and formulated based on first principles in epidemiology as follows:
 
-### Obtaining Other Parameters
+> Consider the perspective of a susceptible individual in the population at any given time. Let's say this individual makes, on average, $c$ contacts with other people per unit time. Then, suppose that of those $c$ people this individual makes contact with per unit time, the proportion of them that will be infectious is $\tilde{I}$. Then, of those $c\tilde{I}$ contacts this individual makes with infectious people, the proportion of them that will actually succeed at spreading the infection to them is $p$. Multiplying these together, we can obtain the per capita (per person) rate which susceptible people are becoming infectious, or the force of infection as follows: $$
+> \lambda=cp\tilde{I}
+> $$
+
+::: callout-note
+Although this formulation for $\lambda$ is based on first principles, there are still a number of assumptions being made. Namely:
+
+1.  We assume every individual in the population comes into contact with other individuals at a constant rate $c$. This means we assume everyone in the population is equally sociable and, on average, comes into contact with the same number of people per unit time.
+
+2.  We assume *homogeneous mixing* of the population. That is, we assume everyone has an equal probability of contacting any other individual in the population. In real life, this is of course not true: infectious individuals are more likely to come into contact with other infectious individuals if they go to the hospital and are less likely to come into contact with susceptible individuals if they quarantine, just to name a few examples.
+:::
+
+The force of infection is calculated in many ways; we just provide one of many possible formulations and rationales here. Notice there are two constant terms in the formulation for $\lambda$ given above: $c$ and $p$. Since these terms are constant throughout time in the model, they are grouped together into a singular term, known as the *transmission rate*. As it is a constant unaffected by the dynamics of the model itself, the transmission rate---often denoted as $\beta$---is considered a property of the specific disease or pathogen being analyzed and is calculated prior to the construction of the model. We present common methods of calculating $\beta$, summarized in the table below:
+
+| **Method** | **What is it?** | **Best Used When . . .** |
+|----------------|-----------------------------------|---------------------|
+| Blackbox Method | This is a data-driven method wherein $\beta$ is calculated empirically using epidemiological data. We can think of this as "fitting" a value of $\beta$ in our model to most accurately reflect the dynamics we observe in the real world. | There is an abundance of accurate real-world data available on the number of susceptible and infectious people over time. |
+| First-Principles Method | This method utilizes the formulation $\beta=cp$, which was obtained using first-principles, and separately calculates appropriate values for $c$ and $p$. The specifics of how $c$ and $p$ are calculated vary widely depending on context and model complexity, but can be found using a combination of logic and predictions for how people will interact as well as real-world data on the transmissibility of a pathogen. | Real-world data is scarcer or there the data available lends itself better to calculating $c$ and $p$ separately rather than fitting an overall $\beta$. |
+
+CITATION: difficult to say, mixture of book and own intuition of these concepts
+
+### Formulating the Recovery Rate
 
 ## Solving SIR Equations
 
 ::: {.callout-tip title="Learning Objectives"}
-At the end of this section, you should be able to:
+By the end of this section, you should be able to:
 
-
--   Solve basic SIR model equations using either mathematical or computational techniques.
+-   Solve basic SIR model equations using a combination of mathematical and computational techniques.
 
 -   Identify the difference between common methods of solving SIR models, including Euler's method and the deSolve package in R.
 :::
 
-## Basic and Effective Reproduction Numbers
+Two common methods of solving differential equations that are difficult to solve by hand (in an exact method, that is) is:
+
+1.  Euler's Method
+2.  The deSolve package in R
+
+We will go over each method in this section and the differences between the two.
+
+### Euler's Method
+
+Although Euler's Method is widely regarded to be a relatively inefficient method for solving otherwise "unsolvable" (at least in the elementary sense) ordinary differential equations, it is still valued for its simplicity and accessibility.
+
+Suppose we have approximate initial values for the variables of interest (which, in the case of the SIR model, is the number of susceptible, infectious, and recovered individuals at the beginning of our study period).
+
+## Reproduction Numbers
 
 ::: {.callout-tip title="Learning Objectives"}
-At the end of this section, you should be able to:
-
+By the end of this section, you should be able to:
 
 -   Define what the basic and effective reproduction number is and recall primary differences between the two.
 
 -   Interpret the basic and effective reproduction number in context.
 
--   Derive the formula for the basic and effective reproduction number based on their definitions.
+-   Derive the formula for the basic and effective reproduction numbers based on their definitions.
 :::
+
+### The Basic Reproduction Number
 
 ## Example of the Classic Epidemic Model
 
 ::: {.callout-tip title="Learning Objectives"}
-At the end of this section, you should be able to:
-
+By the end of this section, you should be able to:
 
 -   Identify examples of situations where the classic epidemic model is a useful tool for modeling.
 :::
@@ -183,18 +231,17 @@ At the end of this section, you should be able to:
 ## The Classic Endemic Model
 
 ::: {.callout-tip title="Learning Objectives"}
-At the end of this section, you should be able to:
-
+By the end of this section, you should be able to:
 
 -   Recall the classic endemic model's equations.
 
 -   Differentiate the classic endemic model from the epidemic model.
 :::
+
 ## Disease Free and Endemic Equilibrium
 
 ::: {.callout-tip title="Learning Objectives"}
-At the end of this section, you should be able to:
-
+By the end of this section, you should be able to:
 
 -   Define what an equilibrium is the context of a system of differential equations.
 
