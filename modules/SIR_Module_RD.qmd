@@ -30,7 +30,7 @@ For the purposes of mathematical models in epidemiology, such as the SIR model, 
 The individual can still exhibit symptoms of the disease while in the recovered category, so it is best to think of this category as individuals who have "recovered" from their ability to spread the infection but not necessarily all symptomatic implications of that infection.
 :::
 
-These categories are not exhaustive, and individuals can be classified into further categories based on their stage of infection or immunity status, just to name a few. These four categories are highlighted since they come up most often while discussing SIR models and epidemiological models in general. It is important to note that, at the same time individuals fall into these categories, they can also be classified based on whether or not they exhibit symptoms of infection:
+These categories are not exhaustive, and individuals can be classified into further categories based on their stage of infection or immunity status, just to name a few. These four categories are highlighted since they come up most often while discussing SIR-type models and epidemiological models in general. It is important to note that, at the same time individuals fall into these categories, they can also be classified based on whether or not they exhibit symptoms of infection:
 
 -   **Incubation Period:** The individual has been infected with the pathogen but does not show disease symptoms. This is also commonly refferred to as the *asymptomatic period*.
 
@@ -64,10 +64,12 @@ It's easiest to understand this conceptually through an example. Say in a very l
 Which compartments we choose to include depends on the specific pathogen and disease we are modeling. Models where the exposed period is so small it can be considered negligible, or is ommited for the sake of simplicity, are specifically known as *SIR models* (standing for the three different compartments included in the model: susceptible, infectious, and recovered).
 
 ::: callout-note
-Some sources will refer generally to any compartmental epidemiological model as an "SIR model," but in our context we will make the distinction between SIR models and models that include different compartments than just susceptible, infectious, and recovered.
+Some sources will refer generally to any compartmental epidemiological model as an "SIR model," but in our context we will make the distinction between SIR models and models that include different compartments than just susceptible, infectious, and recovered. 
+
+We will, however, refer to the general idea of compartmental epidemiological models as "SIR-type models." 
 :::
 
-The [next section](#The-Classic-SIR-Epidemic-Model) covers the specific formulation and assumptions of this model.
+The [next section](#the-classic-sir-epidemic-model) covers the specific formulation and assumptions of this model.
 
 ### Learning Assessment:
 
@@ -118,28 +120,28 @@ Moving forward, $S$. $I$, and $R$ will refer to the *number* of individuals in t
 The following equations provide the rates of change, with respect to time, for the number of individuals in each of the three compartments of the epidemic SIR model:
 
 $$
-\frac{dS}{dt}=-\lambda S
-$$ $$
-\frac{dI}{dt}=\lambda S - \gamma I
-$$ $$
-\frac{dR}{dt}=\gamma I
+\begin{aligned}
+\frac{dS}{dt} &= -\lambda S \\[10pt]
+\frac{dI}{dt} &= \lambda S - \gamma I \\[10pt]
+\frac{dR}{dt} &= \gamma I
+\end{aligned}
 $$
 
 Dividing each equation by the population size $N$, we can rewrite the SIR equations above to provide the rates of change, with respect to time, for the proportion of individuals in each compartment:
 
 $$
-\frac{d\tilde{S}}{dt}=-\lambda \tilde{S}
-$$ $$
-\frac{d\tilde{I}}{dt}=\lambda \tilde{S} - \gamma \tilde{I}
-$$ $$
-\frac{d\tilde{R}}{dt}=\gamma \tilde{I}
+\begin{aligned}
+\frac{d\tilde{S}}{dt} &= -\lambda \tilde{S} \\[10pt]
+\frac{d\tilde{I}}{dt} &= \lambda \tilde{S} - \gamma \tilde{I} \\[10pt]
+\frac{d\tilde{R}}{dt} &= \gamma \tilde{I}
+\end{aligned}
 $$
 
 ::: callout-note
 The rate of change of the number of people in each compartment can be understood as following the basic pattern of $R_i-R_o$ where $R_i$ is the rate that people are flowing into the compartment per unit time and $R_o$ is the rate that people are flowing out of the compartment per unit time. This pattern can be used to construct any number of novel compartmental models.
 :::
 
-Notice that these equations mirror exactly the compartmental flowcharts introduced in the [previous section](#Introducing-Compartmental-Models). The epidemic SIR model can be representing using the following flowchart:
+Notice that these equations mirror exactly the compartmental flowcharts introduced in the [previous section](#introducing-compartmental-models). The epidemic SIR model can be representing using the following flowchart:
 
 The flow rates between each compartment have specific names and symbology, summarized in the table below:
 
@@ -174,14 +176,41 @@ Although this formulation for $\lambda$ is based on first principles, there are 
 
 The force of infection is calculated in many ways; we just provide one of many possible formulations and rationales here. Notice there are two constant terms in the formulation for $\lambda$ given above: $c$ and $p$. Since these terms are constant throughout time in the model, they are grouped together into a singular term, known as the *transmission rate*. As it is a constant unaffected by the dynamics of the model itself, the transmission rate---often denoted as $\beta$---is considered a property of the specific disease or pathogen being analyzed and is calculated prior to the construction of the model. We present common methods of calculating $\beta$, summarized in the table below:
 
-| **Method** | **What is it?** | **Best Used When . . .** |
+| **method** | **What is it?** | **Best Used When . . .** |
 |----------------|-----------------------------------|---------------------|
-| Blackbox Method | This is a data-driven method wherein $\beta$ is calculated empirically using epidemiological data. We can think of this as "fitting" a value of $\beta$ in our model to most accurately reflect the dynamics we observe in the real world. | There is an abundance of accurate real-world data available on the number of susceptible and infectious people over time. |
-| First-Principles Method | This method utilizes the formulation $\beta=cp$, which was obtained using first-principles, and separately calculates appropriate values for $c$ and $p$. The specifics of how $c$ and $p$ are calculated vary widely depending on context and model complexity, but can be found using a combination of logic and predictions for how people will interact as well as real-world data on the transmissibility of a pathogen. | Real-world data is scarcer or there the data available lends itself better to calculating $c$ and $p$ separately rather than fitting an overall $\beta$. |
+| Blackbox method | This is a data-driven method wherein $\beta$ is calculated empirically using epidemiological data. We can think of this as "fitting" a value of $\beta$ in our model to most accurately reflect the dynamics we observe in the real world. | There is an abundance of accurate real-world data available on the number of susceptible and infectious people over time. |
+| First-Principles method | This method utilizes the formulation $\beta=cp$, which was obtained using first-principles, and separately calculates appropriate values for $c$ and $p$. The specifics of how $c$ and $p$ are calculated vary widely depending on context and model complexity, but can be found using a combination of logic and predictions for how people will interact as well as real-world data on the transmissibility of a pathogen. | Real-world data is scarcer or there the data available lends itself better to calculating $c$ and $p$ separately rather than fitting an overall $\beta$. |
+
+
+Putting this all together, we can rewrite the SIR model equations from the [previous section](#the-classic-sir-epidemic-model) as follows:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta \tilde{I} S \\[10pt]
+\frac{dI}{dt} &= \beta \tilde{I} S - \gamma I \\[10pt]
+\frac{dR}{dt} &= \gamma I
+\end{aligned}
+$$
+
+
+
+And for proportions:
+
+$$
+\begin{aligned}
+\frac{d\tilde{S}}{dt} &= -\beta \tilde{I} \tilde{S} \\[10pt]
+\frac{d\tilde{I}}{dt} &= \beta \tilde{I} \tilde{S} - \gamma \tilde{I} \\[10pt]
+\frac{d\tilde{R}}{dt} &= \gamma \tilde{I}
+\end{aligned}
+$$
+
+
 
 CITATION: difficult to say, mixture of book and own intuition of these concepts
 
-### Formulating the Recovery Rate
+### Formulating the Recovery Rate and Other Parameters
+
+MLE?
 
 ## Solving SIR Equations
 
@@ -190,21 +219,211 @@ By the end of this section, you should be able to:
 
 -   Solve basic SIR model equations using a combination of mathematical and computational techniques.
 
--   Identify the difference between common methods of solving SIR models, including Euler's method and the deSolve package in R.
+-   Identify the difference between common methods of solving SIR-type models, including Euler's method and the deSolve package in R.
 :::
 
 Two common methods of solving differential equations that are difficult to solve by hand (in an exact method, that is) is:
 
-1.  Euler's Method
+1.  Euler's method
 2.  The deSolve package in R
 
 We will go over each method in this section and the differences between the two.
 
-### Euler's Method
+### Euler's method
 
-Although Euler's Method is widely regarded to be a relatively inefficient method for solving otherwise "unsolvable" (at least in the elementary sense) ordinary differential equations, it is still valued for its simplicity and accessibility.
+Euler's method estimates the solution to a differential equation using a series of short, connected linear approximations at a discrete set of times. Although Euler's method is widely regarded to be a relatively inefficient method for solving otherwise "unsolvable" (at least in the elementary sense) ordinary differential equations, it is still valued for its simplicity and accessibility.
 
-Suppose we have approximate initial values for the variables of interest (which, in the case of the SIR model, is the number of susceptible, infectious, and recovered individuals at the beginning of our study period).
+Suppose we have approximate initial values for the variables of interest (which, in the case of the SIR model, is the number or proportion of susceptible, infectious, and recovered individuals at the beginning of our study period). We will denote the number of susceptible, infectious, and recovered individuals at starting time $t$ as $S(0)$, $I(0)$, and $R(0)$, respectively. 
+
+:::{.callout-note}
+To keep it simple, we will only discuss the process of Euler's method as it is applied to the number of individuals in each compartment, but keep in mind this process can be applied in exactly the same way to proportions as well. 
+:::
+
+Our goal is to find an approximate solutions to $S(t)$, $I(t)$, and $R(t)$---the number of individuals in each category at time $t$---using  $s(0)$, $i(0)$, and $r(0)$ and the rates of change given by the system of SIR equations formulated in [this section](#the-classic-sir-epidemic-model). For clarity, $S(t)$, $I(t)$, and $R(t)$ represent the exact solutions to the SIR equations, and the approximation solutions given by Euler's method are represent as $s(t)$, $i(t)$, and $r(t)$. 
+
+:::{.callout-note}
+These types of problems, one where we are given a set of intial values and corresponding differential equations, are known as initial-value problems (or IVPs). 
+:::
+
+Euler's method involves repeatedly finding tangent line approximations to $S(t)$, $I(t)$, and $R(t)$ at a discrete set of times (often called nodes):
+
+- $s_0,\dots,s_t,\dots,s_b$
+- $i_0,\dots,i_t,\dots,i_b$
+- $r_0,\dots,r_t,\dots,r_b$
+
+:::{.callout-note}
+$s_t$, $i_t$, and $r_t$ represent approximations to $S(t)$, $I(t)$, and $R(t)$ at a time $t$. Additionally, $s_b$, $i_b$, and $r_b$ just represent the approximation at the final time $b$ of the interval we wish to find an approximate solution to, or $[0,b]$ .  
+:::
+
+These approximations are found using the following recursive formulas:
+
+$$
+\begin{align}
+s_{t+1} &= s_t - \Delta t \, \beta i_t s_t \\[10pt]
+i_{t+1} &= i_t + \Delta t \, (\beta i_t s_t - \gamma i_t) \\[10pt]
+r_{t+1} &= r_t + \Delta t \, \gamma i_t
+\end{align}
+$$
+
+Where:
+
+- $s_{t+1}$, $i_{t+1}$, and $r_{t+1}$ are the approximations for $S(t)$, $I(t)$, and $R(t)$ at the next node 
+- $s_{t}$, $i_{t}$, and $r_{t}$ are the approximations for $S(t)$, $I(t)$, and $R(t)$ at the previous node
+- $\Delta t$ is the step size (how far each node is spaced apart on the $t$-axis)
+- $\beta$ and $\gamma$ are the transmission and recovery rate, respectively 
+
+:::{.callout-note}
+This formula is just an application of the generalized Euler's method for first-order differential equation $Y'(t)=f(t,Y(t))$, true solution $Y(t)$, and approximate solutions $y_0,\dots,y_t,\dots,y_b$, which are calculated at evenly spaced $t_n$ as:
+
+$y_{t+1}=y_t+ \Delta t f(t_n,Y(t_n)$
+
+Where again $\Delta t$ is how far each $t_n$ are apart.
+
+Specifically, the formulas provided above substitute the rate of change functions $\frac{dS}{dt}$, $\frac{dI}{dt}$, and $\frac{dR}{dt}$ in directly. 
+:::
+This process can be a little confusing to grasp at first, so let's do an example. 
+
+Suppose the following SIR model equations with initial values $s(0)=99$, $i(0)=1$, $r(0)=0$, transmission rate $\beta=1.5$, and recovery rate $\gamma=0.5$:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -1.5 \tilde{I} S \\[10pt]
+\frac{dI}{dt} &= 1.5 \tilde{I} S - 0.5 I \\[10pt]
+\frac{dR}{dt} &= 0.5 I
+\end{aligned}
+$$
+
+
+The following table illustrates the calculation process until $t=5$ with a step size of $\Delta t=1$:
+
+| **Time** | **Approximations** | **Calculation Process** |
+|----------|------------------|------------------------|
+| $t=0$ | $s(0)=99.0$<br>$i(0)=1.0$<br>$r(0)=0.0$ | — |
+| $t=1$ | $s(1)\approx 97.5$<br>$i(1)\approx 2.0$<br>$r(1)=0.5$ | $s(1)=99-(1)(1.5)(\frac{1}{100})(99)$<br>$i(1)=1+(1)[(1.5)(\frac{1}{100})(99)-0.5(1)]$<br>$r(1)=0+(1)(0.5)(1)$ |
+| $t=2$ | $s(2)\approx 94.6$<br>$i(2)\approx 3.9$<br>$r(2)\approx 2.0$ | $s(2)=97.5-(1)(1.5)(\frac{2.0}{100})(97.5)$<br>$i(2)=2.0+(1)[(1.5)(\frac{2.0}{100})(97.5)-0.5(2.0)]$<br>$r(2)=0.5+(1)(0.5)(2.0)$ |
+| $t=3$ | $s(3)\approx 89.1$<br>$i(3)\approx 7.5$<br>$r(3)\approx 3.4$ | $s(3)=94.6-(1)(1.5)(\frac{3.9}{100})(94.6)$<br>$i(3)=3.9+(1)[(1.5)(\frac{3.9}{100})(94.6)-0.5(3.9)]$<br>$r(3)=2.0+(1)(0.5)(3.9)$ |
+| $t=4$ | $s(4)\approx 79.1$<br>$i(4)\approx 13.7$<br>$r(4)\approx 7.2$ | $s(4)=89.1-(1)(1.5)(\frac{7.5}{100})(89.1)$<br>$i(4)=7.5+(1)[(1.5)(\frac{7.5}{100})(89.1)-0.5(7.5)]$<br>$r(4)=3.4+(1)(0.5)(7.5)$ |
+| $t=5$ | $s(5)\approx 62.8$<br>$i(5)\approx 23.1$<br>$r(5)\approx 14.0$ | $s(5)=79.1-(1)(1.5)(\frac{13.7}{100})(79.1)$<br>$i(5)=13.7+(1)[(1.5)(\frac{13.7}{100})(79.1)-0.5(13.7)]$<br>$r(5)=7.2+(1)(0.5)(13.7)$ |
+
+As you might notice, the calculations above are very tedious, which is why Euler's method is most often calculated using code rather than by hand. 
+
+::: {.callout-tip title="Note"}
+The accuracy of the solution produced by Euler's method is a direct result of what we choose the step size to be. If the step size is larger, then the curvature of the true solution will be lost since we are repeatedly taking linear approximations, resulting in an approximate solution that deviates a lot from the true solution curve.
+On the other hand, as the step size gets smaller, the approximate solution provided by Euler's method converges to the true solution curve. 
+
+See the section [Evaluating and Comparing Both Methods](#evaluating-and-comparing-both-methods) for a simulation demonstrating what happens when you change the step size. 
+:::
+
+CITATION: https://homepage.math.uiowa.edu/~atkinson/papers/NAODE_Book.pdf
+
+### deSolve Package in R
+
+The deSolve Package in R contains a variety of functions that "solve initial value problems of a system of first-order ordinary differential equations ('ODE'), of partial differential equations ('PDE'), of differential algebraic equations ('DAE'), and of delay differential equations." 
+
+:::{.callout-note}
+The SIR-type models we are going to cover deal with systems of first-order ordinary differential equations.
+
+Breaking up each word in this description, we have:
+
+- "First-order": This just means we are only dealing with equations involving the first derivative and not subsequent derivatives (the second, third, fourth, etc. derivative)
+
+- "Ordinary": The unknown function which we are trying to solve for depends only one independent variable. 
+:::
+
+Since our applications will only deal with first-order ODEs, we will only cover the deSolve function `ode`, which is used to solve (as you can probably guess) initial value problems (IVPs) for first-order ordinary differential equations. 
+
+The function `ode` takes in the following relevant parameters, summarized in the table below: 
+
+| **Parameter Name** 	| **What Does It Take In?**                                                                                                                                                                                      	|
+|--------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| `func`             	| A user-defined function that defines and returns a list of the model equations (the differential equations to be solved).                                                                                      	|
+| `y`                	| A vector specifying initial values.                                                                                                                                                                            	|
+| `parms`            	| A vector specifying the model parameters.                                                                                                                                                                      	|
+| `times`            	| A vector specifying the time points at which the solution of the model equations should be returned. This determines the resolution of the overall output but not the numerical accuracy of each output point. 	|
+
+The function `ode` returns a matrix whose first column is the time points specified in the input `times` and subsequent columns are the solutions to the model's state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infected, and recovered at a given time.
+
+Before we can call `ode`, we must code the function to be passed into the parameter `func`. For a classic SIR model on the proportion of individuals in each compartment (see [The Classic SIR Epidemic Model](#the-classic-sir-epidemic-model) we do this using the following template function:
+
+```{r}
+ModelFunc <- function(time,state,parameters){
+  # Extracting the state variables
+  # Since we are doing this in the context of SIR models, we have the state variables S, I, and R
+  S <- state["S"]
+  I <- state["I"]
+  R <- state["R"]
+  
+  # Extracting the model parameters
+  # Again, we are doing this for an SIR model, so we have two parameters - the transmission and recovery rate
+  beta <- parameters["beta"]
+  gamma <- parameters["gamma"]
+  
+  # Now we are going to use those previously extracted state variables and parameters to construct our model equations (differential equations)
+  
+  dS <- -(beta*I*S)
+  dI <- (beta*I*S) - (gamma*I)
+  dR <- (gamma*I)
+  
+  # Now we will return those model equations as a list
+  return(list(c(dS,dI,dR)))
+}
+```
+
+Now all we need to do is specify the other parameters `y`, `parms`, and `times` and call `ode` with them like so:
+
+```{r}
+library(deSolve)
+
+# Here we are specifying the initial values to be passed into the parameter y
+# Make sure these initial values line up exactly with the state variables extracted in the model function from before
+initial_vals <- c(S=0.99,I=0.01,R=0)
+
+# Here we are specifying the parameters of the model and their values
+# Make sure these parameters line up exactly with the parameters extracted in the model function from before
+
+model_parameters <- c(beta=1.5,gamma=0.5)
+
+# Here we are specifying the times for which outputs are calculated
+# The closer together these times are, the higher the output resolution
+
+output_times <- seq(0,50,by=1)
+
+# Now we can call the function ode like so:
+
+output <- ode(func=ModelFunc,y=initial_vals,parms=model_parameters,times=output_times)
+
+# Printing the first 5 rows of the output matrix
+print(head(output,5))
+```
+
+Now that we have this matrix of the solved SIR model equations are at specified times, we can plot it like so:
+
+```{r}
+matplot(x = output[,"time"], y = output[,2:4], type = "l", lty = 1, xlab = "time", ylab = "proportion", main = "Solved Example SIR Model", col = c("blue","red","green"))
+
+# Adding a legend
+legend("topright",legend = c("Susceptible", "Infectious", "Recovered"), col = c("blue","red","green"), lty = 1)
+
+```
+
+
+CITATION FOR QUOTE: https://cran.r-project.org/web/packages/deSolve/index.html
+
+CITATION FOR CONTENT: file:///C:/Users/anjal/Downloads/v33i09.pdf
+
+### Evaluating and Comparing Both Methods
+
+The following table summarizes some potential benefits and drawbacks to using Euler's method or deSolve:
+
+| **Solving Method** 	| **Potential Benefits**                                                                                                                              	| **Potential Drawbacks**                                                                                                                                                                                                       	|
+|--------------------	|-----------------------------------------------------------------------------------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| Euler's Method     	| - Can be done by hand or implemented in code<br>- Simple to understand<br>- Full control over accuracy of model <br>- No external packages required 	| - Low accuracy unless an extremely small step size is used<br>- Computationally inefficient for small step sizes or complex models<br>- Can be tedious to calculate by hand                                                   	|
+| deSolve Package    	| - Uses advanced solving methods with high accuracy<br>- Handles large models with many system equations well<br>- Efficient for complex models      	| - Less transparent approach; not much understanding of what is going on "under the hood"<br>- Requires learning new functions and syntax<br>- Depends on external packages<br>- Less control over solving method and accuracy 	|
+
+The following simulation shows the difference between the solution curves produced by Euler's method and the deSolve package for different values of the model parameters and step size: 
+
+INSERT SHINY APP HERE
+
 
 ## Reproduction Numbers
 
