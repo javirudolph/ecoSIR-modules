@@ -9,8 +9,7 @@
 
 library(shiny)
 library(bslib)
-setwd("C:/Users/anjal/Documents/euler_vs_deSolve")
-source("euler_sir.R")
+source("euler_desolve_solver.R")
 
 # Define UI for application that draws a histogram
 ui <- page_sidebar(

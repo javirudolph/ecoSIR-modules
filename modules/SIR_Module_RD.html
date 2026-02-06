@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="SIR_Module_RD_files/libs/clipboard/clipboard.min.js"></script>
@@ -129,10 +149,12 @@ window.Quarto = {
   </ul></li>
   <li><a href="#reproduction-numbers" id="toc-reproduction-numbers" class="nav-link" data-scroll-target="#reproduction-numbers">Reproduction Numbers</a>
   <ul class="collapse">
-  <li><a href="#the-basic-reproduction-number" id="toc-the-basic-reproduction-number" class="nav-link" data-scroll-target="#the-basic-reproduction-number">The Basic Reproduction Number</a></li>
+  <li><a href="#the-threshold-phenomenon" id="toc-the-threshold-phenomenon" class="nav-link" data-scroll-target="#the-threshold-phenomenon">The Threshold Phenomenon</a></li>
+  <li><a href="#choosing-how-many-people-to-vaccinate" id="toc-choosing-how-many-people-to-vaccinate" class="nav-link" data-scroll-target="#choosing-how-many-people-to-vaccinate">Choosing How Many People to Vaccinate</a></li>
   </ul></li>
   <li><a href="#example-of-the-classic-epidemic-model" id="toc-example-of-the-classic-epidemic-model" class="nav-link" data-scroll-target="#example-of-the-classic-epidemic-model">Example of the Classic Epidemic Model</a></li>
   <li><a href="#the-classic-endemic-model" id="toc-the-classic-endemic-model" class="nav-link" data-scroll-target="#the-classic-endemic-model">The Classic Endemic Model</a></li>
+  <li><a href="#formulating" id="toc-formulating" class="nav-link" data-scroll-target="#formulating">Formulating</a></li>
   <li><a href="#disease-free-and-endemic-equilibrium" id="toc-disease-free-and-endemic-equilibrium" class="nav-link" data-scroll-target="#disease-free-and-endemic-equilibrium">Disease Free and Endemic Equilibrium</a></li>
   </ul>
 </nav>
@@ -196,7 +218,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The individual can still exhibit symptoms of the disease while in the recovered category, so it is best to think of this category as individuals who have “recovered” from their ability to spread the infection but not necessarily all symptomatic implications of that infection.</p>
+<p>The individual can still exhibit symptoms of the disease while in the recovered compartment, so it is best to think of this compartment as individuals who have “recovered” from their ability to spread the infection but not necessarily all symptomatic implications of that infection.</p>
 </div>
 </div>
 <p>These categories are not exhaustive, and individuals can be classified into further categories based on their stage of infection or immunity status, just to name a few. These four categories are highlighted since they come up most often while discussing SIR-type models and epidemiological models in general. It is important to note that, at the same time individuals fall into these categories, they can also be classified based on whether or not they exhibit symptoms of infection:</p>
@@ -207,6 +229,7 @@ Note
 <p>Although these classifications are more commonly used in a medical, rather than an epidemiological, contexts, we still provide them here to clarify the fact that an individual can still be infectious while in the incubation period and showing no symptoms of the disease. Similarly, an individual can still be in the diseased period and show lingering symptoms of infection while being recovered since their immune system has cleared enough of the pathogen that they are not longer infectious.</p>
 <p>(PLACE GRAPH HERE OF ALL THESE PERIODS)</p>
 <p>CITATION FOR ENTIRE SECTION: Keeling and Rohani</p>
+<p>Test ref<span class="citation" data-cites="Bjornstad2020-cp">(<a href="#ref-Bjornstad2020-cp" role="doc-biblioref">Bjørnstad et al. 2020</a>)</span></p>
 </section>
 <section id="introducing-compartmental-models" class="level2">
 <h2 class="anchored" data-anchor-id="introducing-compartmental-models">Introducing Compartmental Models</h2>
@@ -281,7 +304,7 @@ Learning Objectives
 <p>The classic SIR epidemic model is a type of compartmental model that makes the following key assumptions:</p>
 <ol type="1">
 <li><p>The epidemic invades the population and concludes itself quickly enough that demographic processes, namely births and deaths, are not very influential to the overall process and can be omitted from the model. This is also known as the <em>closed population</em> assumption.</p></li>
-<li><p>Individuals move between the compartments of susceptible, infected, and recovered only. Other compartments, namely the exposed compartment, are omitted for simplicity.</p></li>
+<li><p>Individuals move between the compartments of susceptible, infectious, and recovered only. Other compartments, namely the exposed compartment, are omitted for simplicity.</p></li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -293,11 +316,12 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>There may be applications of the epidemic SIR model that justify the omission of the exposed compartment since the disease has a negligible exposed period and individuals almost immediately go to being infectious after invasion by the pathogen.</p>
+<p>Since this module covers only the epidemic and endemic SIR models, neither of which include the exposed compartment, the terms “infected” and “infectious” will be used interchangeably moving forward. This is because with only the susceptible, infectious, and recovered compartments, once an individual gets infected with the pathogen we assume they are infectious as well.</p>
+<p>It is important to note that although “infected” and “infectious” are used interchangeably within the context of this learning module, they are not synonymous all the time. As model complexity increases and the exposed compartment is included, a distinction must be made between the two, as an individual can be considered “infected” but not “infectious” (i.e.&nbsp;they belong to the exposed compartment).</p>
 </div>
 </div>
 <p>These are not the only assumptions made by the epidemic SIR model, but they do clearly distinguish it from other compartmental models such as the SEIR model, which includes exposed compartment, and the endemic SIR model, which includes the flow in and out of each compartment due to demographics (births and death).</p>
-<p>Moving forward, <span class="math inline">\(S\)</span>. <span class="math inline">\(I\)</span>, and <span class="math inline">\(R\)</span> will refer to the <em>number</em> of individuals in the susceptible, infected, and recovered compartments, respectively. The variables <span class="math inline">\(\tilde{S}=\frac{S}{N}\)</span>, <span class="math inline">\(\tilde{I}=\frac{I}{N}\)</span>, and <span class="math inline">\(\tilde{R}=\frac{R}{N}\)</span>, will be used to refer to the <em>proportion</em> of individuals in the susceptible, infected, and recovered compartments, respectively, where <span class="math inline">\(N\)</span> is the total number of individuals in the population defined as <span class="math inline">\(N=S+I+R\)</span>.</p>
+<p>Moving forward, <span class="math inline">\(S\)</span>. <span class="math inline">\(I\)</span>, and <span class="math inline">\(R\)</span> will refer to the <em>number</em> of individuals in the susceptible, infectious, and recovered compartments, respectively. The variables <span class="math inline">\(\tilde{S}=\frac{S}{N}\)</span>, <span class="math inline">\(\tilde{I}=\frac{I}{N}\)</span>, and <span class="math inline">\(\tilde{R}=\frac{R}{N}\)</span>, will be used to refer to the <em>proportion</em> of individuals in the susceptible, infectious, and recovered compartments, respectively, where <span class="math inline">\(N\)</span> is the total number of individuals in the population defined as <span class="math inline">\(N=S+I+R\)</span>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -382,13 +406,13 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <p>The phrase “per capita” here refers to a rate that is divided among each person in the given compartment. Take the following example: if 3 people are pouring water into a large bucket and each are adding 5 cups per minute, then the per capita rate at which water is being added is 5 cups per minute. To obtain the total rate at which water is being poured into the bucket, we would multiply the number of people pouring, 3, by their per capita rate, 5, to get a total inflow of 15 cups per minute.</p>
-<p>A similar logic is being utilized in the SIR equations: the number of susceptible people at a given time, <span class="math inline">\(S\)</span>, is multiplied by the per capita rate they are becoming infectious to get the total rate at which people are entering the infectious category. Similarly, the number of infectious people at a given time, <span class="math inline">\(I\)</span>, is multiplied by the per capita rate they are recovering to get the total rate at which people are entering the recovered category.</p>
+<p>A similar logic is being utilized in the SIR equations: the number of susceptible people at a given time, <span class="math inline">\(S\)</span>, is multiplied by the per capita rate they are becoming infectious to get the total rate at which people are entering the infectious compartment Similarly, the number of infectious people at a given time, <span class="math inline">\(I\)</span>, is multiplied by the per capita rate they are recovering to get the total rate at which people are entering the recovered compartment</p>
 </div>
 </div>
 <p>CITATION FOR ENTIRE SECTION: Keeling and Rohani</p>
 <section id="formulating-the-force-of-infection" class="level3">
 <h3 class="anchored" data-anchor-id="formulating-the-force-of-infection">Formulating the Force of Infection</h3>
-<p>The force of infection, or the rate at which susceptible individuals are becoming infected (as well as infectious) per unit time, can be understood and formulated based on first principles in epidemiology as follows:</p>
+<p>The force of infection, or the rate at which susceptible individuals are becoming infected per unit time, can be understood and formulated based on first principles in epidemiology as follows:</p>
 <blockquote class="blockquote">
 <p>Consider the perspective of a susceptible individual in the population at any given time. Let’s say this individual makes, on average, <span class="math inline">\(c\)</span> contacts with other people per unit time. Then, suppose that of those <span class="math inline">\(c\)</span> people this individual makes contact with per unit time, the proportion of them that will be infectious is <span class="math inline">\(\tilde{I}\)</span>. Then, of those <span class="math inline">\(c\tilde{I}\)</span> contacts this individual makes with infectious people, the proportion of them that will actually succeed at spreading the infection to them is <span class="math inline">\(p\)</span>. Multiplying these together, we can obtain the per capita (per person) rate which susceptible people are becoming infectious, or the force of infection as follows: <span class="math display">\[
 \lambda=cp\tilde{I}
@@ -420,7 +444,7 @@ Note
 </colgroup>
 <thead>
 <tr class="header">
-<th><strong>method</strong></th>
+<th><strong>Method</strong></th>
 <th><strong>What is it?</strong></th>
 <th><strong>Best Used When . . .</strong></th>
 </tr>
@@ -503,7 +527,7 @@ Note
 <p>To keep it simple, we will only discuss the process of Euler’s method as it is applied to the number of individuals in each compartment, but keep in mind this process can be applied in exactly the same way to proportions as well.</p>
 </div>
 </div>
-<p>Our goal is to find an approximate solutions to <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span>—the number of individuals in each category at time <span class="math inline">\(t\)</span>—using <span class="math inline">\(s(0)\)</span>, <span class="math inline">\(i(0)\)</span>, and <span class="math inline">\(r(0)\)</span> and the rates of change given by the system of SIR equations formulated in <a href="#the-classic-sir-epidemic-model">this section</a>. For clarity, <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> represent the exact solutions to the SIR equations, and the approximation solutions given by Euler’s method are represent as <span class="math inline">\(s(t)\)</span>, <span class="math inline">\(i(t)\)</span>, and <span class="math inline">\(r(t)\)</span>.</p>
+<p>Our goal is to find an approximate solutions to <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span>—the number of individuals in each compartment at time <span class="math inline">\(t\)</span>—using <span class="math inline">\(s(0)\)</span>, <span class="math inline">\(i(0)\)</span>, and <span class="math inline">\(r(0)\)</span> and the rates of change given by the system of SIR equations formulated in <a href="#the-classic-sir-epidemic-model">this section</a>. For clarity, <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> represent the exact solutions to the SIR equations, and the approximation solutions given by Euler’s method are represent as <span class="math inline">\(s(t)\)</span>, <span class="math inline">\(i(t)\)</span>, and <span class="math inline">\(r(t)\)</span>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -693,7 +717,7 @@ Note
 </tr>
 </tbody>
 </table>
-<p>The function <code>ode</code> returns a matrix whose first column is the time points specified in the input <code>times</code> and subsequent columns are the solutions to the model’s state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infected, and recovered at a given time.</p>
+<p>The function <code>ode</code> returns a matrix whose first column is the time points specified in the input <code>times</code> and subsequent columns are the solutions to the model’s state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infectious, and recovered at a given time.</p>
 <p>Before we can call <code>ode</code>, we must code the function to be passed into the parameter <code>func</code>. For a classic SIR model on the proportion of individuals in each compartment (see <a href="#the-classic-sir-epidemic-model">The Classic SIR Epidemic Model</a> we do this using the following template function:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ModelFunc <span class="ot">&lt;-</span> <span class="cf">function</span>(time,state,parameters){</span>
@@ -798,7 +822,6 @@ Note
 </tbody>
 </table>
 <p>The following simulation shows the difference between the solution curves produced by Euler’s method and the deSolve package for different values of the model parameters and step size:</p>
-<p>INSERT SHINY APP HERE</p>
 </section>
 </section>
 <section id="reproduction-numbers" class="level2">
@@ -817,12 +840,199 @@ Learning Objectives
 <ul>
 <li><p>Define what the basic and effective reproduction number is and recall primary differences between the two.</p></li>
 <li><p>Interpret the basic and effective reproduction number in context.</p></li>
-<li><p>Derive the formula for the basic and effective reproduction numbers based on their definitions.</p></li>
+<li><p>Recall the formulas for the basic and effective reproduction numbers.</p></li>
+<li><p>Explain what the “threshold phenomenon” is.</p></li>
 </ul>
 </div>
 </div>
-<section id="the-basic-reproduction-number" class="level3">
-<h3 class="anchored" data-anchor-id="the-basic-reproduction-number">The Basic Reproduction Number</h3>
+<p>The reproductive number is defined as “the average number of secondary infectious cases caused by one infectious individual (before they recover or die or are otherwise not able to further transmit).” (CITATION: ANDREAS HANDEL BOOK)</p>
+<p>The table below summarizes the two types of reproduction numbers we will focus on:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Name</strong></th>
+<th><strong>Symbol</strong></th>
+<th><strong>Interpretation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Basic Reproduction Number</td>
+<td><span class="math inline">\(R_0\)</span></td>
+<td>The average number of secondary infections produced by a single infectious individual in a <em>completely susceptible</em> population. This can also be thought of as the reproduction number calculated at the beginning of an outbreak (when basically everyone is suceptible).</td>
+</tr>
+<tr class="even">
+<td>Effective Reproduction Number</td>
+<td><span class="math inline">\(R_{e}\)</span></td>
+<td>The average number of secondary infections produced by a single infectious individual in a population with a susceptible proportion equal to <span class="math inline">\(\frac{S}{N}\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Some common misconceptions about <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span> are:</p>
+<ul>
+<li>“Must <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span> be whole numbers because nobody can transmit the disease to, say, half a person?”
+<ul>
+<li>No, <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span> do not have to be whole numbers because they refer to <em>averages</em>, not the exact number of secondary infections produced by one person. An infectious person might infect nobody or tons of people but the reproduction numbers don’t capture every detail just the overall picture of how many secondary infectious are produced.</li>
+</ul>
+<br></li>
+<li>“Is the reproduction number a rate?”
+<ul>
+<li>No, the reproduction number is not a rate. Take the example of HIV and SARS, which both have <span class="math inline">\(R_e\approx4\)</span>. However, SARS has an extremely rapid spread while HIV is much slower spreading. One individual infected with SARS might cause 4 secondary infections within the span of a week while an individual with HIV most likely infects 4 other people within the span of a few years. <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span> don’t tell us anything about the timeframe of infections, so they are not rates.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<p>The formula for the basic reproduction number is:</p>
+<p><span class="math display">\[
+R_0=\frac{\beta}{\gamma}
+\]</span></p>
+<p>And similarly, the formula for the effective reproduction number is:</p>
+<p><span class="math display">\[
+R_e=\frac{\beta}{\gamma}(\frac{S}{N})=R_0\tilde{S}
+\]</span> These formulas should make sense, as they are multiplying the transmission rate <span class="math inline">\(\beta\)</span> by the average duration of infection <span class="math inline">\(\frac{1}{\gamma}\)</span> to obtain the average number of secondary infections by one infectious individual throughout their entire duration of infectivity.</p>
+<p>The point where these two formulas differ is in their assumption about the proportion of susceptible individuals in the population. <span class="math inline">\(R_0\)</span> assumes a completely susceptible population, so it is multiplying the expression <span class="math inline">\(\frac{\beta}{\gamma}\)</span> by an invisible <span class="math inline">\(1\)</span>. Meanwhile, <span class="math inline">\(R_e\)</span> assumes a susceptible proportion equal to <span class="math inline">\(\frac{S}{N}\)</span> hence the final expression <span class="math inline">\(\frac{\beta}{\gamma}(\frac{S}{N})\)</span>.</p>
+<p>Make sure you understand the definitions and intuition behind the formulas for <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span>. The <a href="#the-threshold-phenomenon">next section</a> on the threshold phenomenon applies the reproduction number in learning how to control the spread of infection.</p>
+<p>CITATION FOR SECTION: ANDREAS HANDEL BOOK</p>
+<section id="the-threshold-phenomenon" class="level3">
+<h3 class="anchored" data-anchor-id="the-threshold-phenomenon">The Threshold Phenomenon</h3>
+<p>First described by Kermack and McKendrick, the threshold phenomenon refers to the critical point whereby an infection will either invade the population or fail to. To find this critical point, observe the change in the proportion of infectious individuals given by:</p>
+<p><span class="math display">\[
+\frac{d\tilde{I}}{dt} = \beta \tilde{I} \tilde{S} - \gamma \tilde{I}
+\]</span> Factoring out the <span class="math inline">\(\tilde{I}\)</span>, we have:</p>
+<p><span class="math display">\[
+\frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma)
+\]</span> If we wish to find the point at which the infection either invades or fails to, we can solve for when <span class="math inline">\(\frac{d\tilde{I}}{dt}&lt;0\)</span> (the proportion of infectious individuals is decreasing, or the disease is “dying off”) and <span class="math inline">\(\frac{d\tilde{I}}{dt}&gt;0\)</span> (the proportion of infectious individuals is increasing, or the disease is “growing”).</p>
+<p>First, let’s analyze when <span class="math inline">\(\frac{d\tilde{I}}{dt}&lt;0\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{d\tilde{I}}{dt} &amp;&lt; 0
+&amp;\quad&amp; \text{(Condition that the infected population is decreasing)} \\[10pt]
+
+\tilde{I}(\beta \tilde{S} - \gamma) &amp;&lt; 0
+&amp;\quad&amp; \text{(Substitute } \frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma)\text{)} \\[10pt]
+
+\beta \tilde{S} - \gamma &amp;&lt; 0
+&amp;\quad&amp; \text{(Divide both sides by } \tilde{I} &gt; 0\text{)} \\[10pt]
+
+\tilde{S} &amp;&lt; \frac{\gamma}{\beta}
+&amp;\quad&amp; \text{(Add } \gamma \text{ to both sides, then divide by } \beta &gt; 0\text{)}
+\end{align*}\]</span></p>
+<p>Reproducing this procedure, we obtain the following similar result:</p>
+<p><span class="math display">\[
+\frac{d\tilde{I}}{dt} &gt; 0
+\;\Longleftrightarrow\;
+\tilde{S} &gt; \frac{\gamma}{\beta}
+\]</span></p>
+<p>From this, we can deduce that for an infection to even invade the population and start spreading, the initial proportion of susceptibles must be greater than <span class="math inline">\(\frac{\gamma}{\beta}\)</span>. This result is what is specifically known as the <em>threshold phenomenon</em>, with <span class="math inline">\(\frac{\gamma}{\beta}\)</span> known as the <em>threshold value</em>. Notice that <span class="math inline">\(\frac{\gamma}{\beta}\)</span> is exactly equal to the inverse of the basic reproduction number <span class="math inline">\(\frac{1}{R_0}\)</span>, which means we can also rewrite these conditions like so:</p>
+<p><span class="math display">\[\begin{align*}
+\text{Disease will not invade the population and / or spread:}
+\qquad
+\tilde{S} &amp;&lt; \frac{1}{R_0}
+\\[10pt]
+\text{Disease will invade the population and / or spread:}
+\qquad
+\tilde{S} &amp;&gt; \frac{1}{R_0}
+
+\end{align*}\]</span></p>
+<p>The simulation below let’s you see the threshold phenomenon in action:</p>
+<p>INSERT THRESHOLD SIM HERE</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Try changing the initial proportion of susceptible individuals <span class="math inline">\(S(0)\)</span> to be above and below the rounded threshold value (<span class="math inline">\(\frac{\gamma}{\beta}\)</span> ) shown. Notice that the proportion of infected individuals never increases if <span class="math inline">\(S(0)&lt;\frac{\gamma}{\beta}\)</span> but does increase if <span class="math inline">\(S(0)&gt;\frac{\gamma}{\beta}\)</span>.</p>
+</div>
+</div>
+<p>Connecting this even further to reproduction numbers, we can rewrite the inequalities found above in terms of <span class="math inline">\(R_e\)</span> as follows:</p>
+<p><span class="math display">\[
+\begin{align*}
+\qquad
+\tilde{S} &amp;&lt; \frac{\beta}{\gamma}
+\qquad \Longleftrightarrow \qquad
+R_e &lt; 1
+\\[10pt]
+\qquad
+\tilde{S} &amp;&gt; \frac{\beta}{\gamma}
+\qquad \Longleftrightarrow \qquad
+R_e &gt; 1
+\end{align*}
+\]</span> The result above is a really important one: it tells us that <span class="math inline">\(R_e\)</span> is another threshold for determining whether or not a disease will spread. Specifically, if <span class="math inline">\(R_e&lt;1\)</span>, the disease is dying off but if <span class="math inline">\(R_e&gt;1\)</span> the disease is spreading.</p>
+<p>This should come as no surprise though, as it can be inferred from the definition of <span class="math inline">\(R_e\)</span> itself: if every single infectious person in the population (assuming the true value for the susceptible population, unlike <span class="math inline">\(R_0\)</span> which assumes a completely naive population), on average “replaces” themselves with more than <span class="math inline">\(1\)</span> infection, the disease will spread. Moreover, the point at which <span class="math inline">\(R_e\)</span> reaches exactly <span class="math inline">\(1\)</span> marks the maximum for the infected population since it is the point at which the disease goes from spreading (number of individuals infected rising) to dying off (number of individuals infected falling).</p>
+<p>The simulation below demonstrates how the infected population increases, decreases, and reaches its maximum at different values of <span class="math inline">\(R_e\)</span>:</p>
+<p>INSERT R EFFECTIVE SIM HERE</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Notice how <span class="math inline">\(R_e\)</span> starts off at its highest (when the population is almost entirely susceptible and it is equal to <span class="math inline">\(R_0\)</span>), then decreases over time to be equal to <span class="math inline">\(1\)</span>. At the point <span class="math inline">\(R_e=1\)</span>, the proportion of infected individuals reaches a maximum. Then, as <span class="math inline">\(R_e\)</span> further decreases below <span class="math inline">\(1\)</span> the proportion of infected individuals starts decreasing as the epidemic “dies off.”</p>
+</div>
+</div>
+<p>Try expanding the window size in the simulation above and observe what happens to <span class="math inline">\(R_e\)</span> as <span class="math inline">\(t \rightarrow \infty\)</span>. Notice that <span class="math inline">\(R_e\)</span> never reaches <span class="math inline">\(0\)</span>! This demonstrates another important result: for an epidemic to end, it is not necessary to completely exhaust the susceptible population and attain <span class="math inline">\(R_e=0\)</span>. The epidemic will start to end its course as soon as the proportion of susceptibles dips low enough to where <span class="math inline">\(R_e&lt;1\)</span>. When this happens, the infectious individuals will, on average, no longer be “replacing” themselves with another infectious person despite there still being a non-zero population of susceptible people. If this goes on for a long enough time, the chain of transmission will break because there will be no more infectious people to spread the infection not because there were no more susceptible people to infect. This means that at the end of every epidemic, there will always be some people who were never infected and are still susceptible.</p>
+<p>INSERT FLOW DIAGRAM THAT SHOWS EFF R AT VARIOUS FINITE STAGES AND ARROWS BETWEEN PEOPLE SPREADING THE INFECTION AND SAY THAT IF THERE IS LIKE 50 INFECTIOUS PEOPLE AND AN RE = 0.1 THEN 5 PEOPLE WILL GET INFECTED NEXT STAGE; ONCE THIS AVERAGE DIPS BELOW 1 PERSON FOR THE WHOLE INFECTIOUS POPULATION, DISEASE DIES OFF</p>
+<p>Of course, one of our primary goals is to expedite the natural decrease of <span class="math inline">\(R_e\)</span> to be below <span class="math inline">\(1\)</span> as quickly as possible, thus reducing and eventually fully stopping the spread of infection. One of the most effective public health measures to accomplish this is vaccination (CITATION: https://pmc.ncbi.nlm.nih.gov/articles/PMC12115698/). The <a href="#choosing-how-many-people-to-vaccinate">next section</a> answers the crucial following question: “How many vaccinated people is enough?”.</p>
+<p>CITATION FOR SECTION: KEELING AND ROHANI BOOK</p>
+</section>
+<section id="choosing-how-many-people-to-vaccinate" class="level3">
+<h3 class="anchored" data-anchor-id="choosing-how-many-people-to-vaccinate">Choosing How Many People to Vaccinate</h3>
+<p>Recall from the <a href="#the-threshold-phenomenon">previous section</a> that the disease will begin to die off when <span class="math inline">\(R_e\)</span> drops below <span class="math inline">\(1\)</span>. The proportion of susceptible individuals <span class="math inline">\(\tilde{S}\)</span> can be considered to be equal to <span class="math inline">\(1-i\)</span>, where <span class="math inline">\(i\)</span> is the proportion of people in the population who are infectious or immune to the disease. We can rearrange the expression <span class="math inline">\(R_e&lt;1\)</span> and solve for <span class="math inline">\(i\)</span>:</p>
+<p><br></p>
+<p><span class="math display">\[\begin{align*}
+R_e &amp;&lt; 1 &amp;&amp; \text{Condition for disease to die off} \\[10pt]
+R_0 \tilde{S} &amp;&lt; 1 &amp;&amp; \text{Definition of $R_e$} \\[10pt]
+R_0 (1-i) &amp;&lt; 1 &amp;&amp; \text{($\tilde{S}=1-i$)} \\[10pt]
+i &amp;&gt; 1-\frac{1}{R_0} &amp;&amp; \text{Rearranging and solving for $i$}
+\end{align*}\]</span></p>
+<p><br></p>
+<p>At the beginning of the outbreak, when nearly all individuals are susceptible and there are very few infectious, the proportion of individuals immune to the disease or infectious with it <span class="math inline">\(i\)</span> can be considered approximately equal to the proportion of individuals <em>successfully</em> vaccinated against the disease. This is because, generally speaking, vaccination confers immunity, though most of the time only temporary, to a disease (https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work). Since we are analyzing a relatively small time-frame with epidemics, the temporary nature of vaccine-conferred immunity can be safely disregarded.</p>
+<p>Notice the emphasis on the word “successfully.” This is because most vaccines are not <span class="math inline">\(100%\)</span> effective; there will always be a percentage of people, though however small, that are vaccinated but can still contract the disease. Assuming a vaccine efficacy rate of <span class="math inline">\(e\)</span>, or the proportion of people who are vaccinated <span class="math inline">\(p\)</span> that are truly granted immunity, the proportion of individuals successfully vaccinated is <span class="math inline">\(i=ep\)</span>. We can rearrange the expression found previously to find the proportion of the population <span class="math inline">\(p\)</span> that should be vaccinated at the start of the outbreak:</p>
+<p><br></p>
+<p><span class="math display">\[\begin{align*}
+i &amp;&gt; 1-\frac{1}{R_0} &amp;&amp; \text{Minimum proportion of immune individuals i} \\[10pt]
+ep &amp;&gt; 1-\frac{1}{R_0} &amp;&amp; \text{Considering i=ep} \\[10pt]
+p &amp;&gt; \frac{1}{e}(1-\frac{1}{R_0}) &amp;&amp; \text{Rearranging for p}
+\end{align*}\]</span></p>
+<p><br></p>
+<p>This means that, for a vaccine with an efficacy rate <span class="math inline">\(e\)</span>, at the proportion of people that should be vaccinated at the start of an outbreak to prevent further spread should be at least <span class="math inline">\(\frac{1}{e}(1-\frac{1}{R_0}\)</span>. Not everyone in the population must be vaccinated to stop the spread of a disease, an idea known as <em>herd immunity</em>.</p>
+<p>However, sometimes herd immunity cannot be obtained. Take the case when <span class="math inline">\(R_0=3\)</span> and the best avaliable vaccine has an efficacy rate of <span class="math inline">\(e=0.6\)</span> (meaning that of the people who are vaccinated, only about <span class="math inline">\(60%\)</span> of them will actually be immune and unable to contract the disease). Using the formula above, we find that the proportion of people who are vaccinated at the beginning of the outrbreak must be at least <span class="math inline">\(\frac{1}{0.6}(1-\frac{1}{3})\approx1.1\)</span>. However, this is impossible: we cannot possible vaccinate more than <span class="math inline">\(100%\)</span> of the population! This means that, due to a combination of the high transmissibility of the disease and the relatively low vaccine efficacy rate, even if <span class="math inline">\(100%\)</span> of the population were to be vaccinated, there would still be enough susceptible people (i.e.&nbsp;people whose vaccines were not effective) for an outbreak to occur (ANDREAS BOOK CITATION).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Please note that the above calculations and statements are assuming ideal vaccination practices at the beginning of an outbreak when nearly all individuals are susceptible and almost none are recovered or infectious. If vaccination is implemented mid-outbreak, when the number of recovered individuals with natural immunity and infectious people are not negligible, the calculations must be modified. In general, fewer individuals will have to be vaccinated than at the beginning of an outbreak since the proportion of susceptible individuals <span class="math inline">\(\tilde{S}\)</span> will be equal to the complement of the sum of: the proportion of people who are infectious, those who have natural immunity due to recovery, and those who are successfully vaccinated.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="example-of-the-classic-epidemic-model" class="level2">
@@ -863,6 +1073,53 @@ Learning Objectives
 </ul>
 </div>
 </div>
+<p>Recalling the information in <a href="#the-classic-sir-epidemic-model">the section</a> on introducing the classic SIR epidemic model, the classic epidemic model assumes no demographics (births and deaths) in the population. This is because epidemics occur in such a relatively short timeframe, so the inclusion of births and deaths adds unnecessary complexity since so few will occur over this period.</p>
+<p>However, epidemic models are not suitable for all disease; there are some diseases that do not conclude their spread sufficiently fast to neglect the births and deaths that occur during that time. This is when the SIR model with demographics, also known commonly as the classic endemic model, comes in. The classic endemic model includes birth and death rates, but makes the following key assumptions about them:</p>
+<ul>
+<li><p>Every individual in the population has a natural “lifespan” of <span class="math inline">\(\frac{1}{\mu}\)</span> years, where <span class="math inline">\(\mu\)</span> is the rate at which individuals die due to natural causes</p>
+<ul>
+<li><span class="math inline">\(\mu\)</span> is independent of the disease and does not represent the pathogenicity of the disease, or its ability to cause death</li>
+</ul></li>
+<li><p>No deaths outside of natural ones dictated by the rate <span class="math inline">\(\mu\)</span> occur; in other words, there are no separate disease related deaths and <span class="math inline">\(\mu\)</span> is the crude death rate, or the death rate across people in all demographic groups and disease statuses (susceptible, infected, or recovered)</p></li>
+<li><p><span class="math inline">\(\mu\)</span> also represents the population’s crude birth rate as well</p>
+<ul>
+<li>This ensure that the total population size does not change as time goes on; as such, <span class="math inline">\(N\)</span> is a constant in the endemic SIR just as it is in the epidemic model</li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The other assumptions made for the classic epidemic SIR apply to the endemic SIR model as well. We are just simply adding these new assumptions about the characteristics of the birth and death rates in the population. These assumptions are common but it should be noted that not all SIR models with demographics will make the same assumptions as above.</p>
+</div>
+</div>
+<p>The flowchart for the classic endemic model can be seen below:</p>
+<p>INSERT FLOWCHART OF ENDEMIC MODEL</p>
+<p>From this flowchart, we can deduce the following equations for the number of people in each compartment according to the endemic SIR model:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{dS}{dt} &amp;= \mu-\beta \tilde{I} S - \mu S \\[10pt]
+\frac{dI}{dt} &amp;= \beta \tilde{I} S - \gamma I - \mu I\\[10pt]
+\frac{dR}{dt} &amp;= \gamma I - \mu R
+\end{aligned}
+\]</span> And just like before, we can divide every equation above by the constant population size <span class="math inline">\(N\)</span> to obtain the following equations for the proportion of individuals in each compartment:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{d\tilde{S}}{dt} &amp;= \mu-\beta \tilde{I} \tilde{S} - \mu \tilde{S} \\[10pt]
+\frac{d\tilde{I}}{dt} &amp;= \beta \tilde{I} \tilde{S} - \gamma \tilde{I} - \mu \tilde{I}\\[10pt]
+\frac{d\tilde{R}}{dt} &amp;= \gamma \tilde{I} - \mu \tilde{R}
+\end{aligned}
+\]</span></p>
+<p>Notice that the force of infection for the endemic model is the same as the epidemic model (<span class="math inline">\(\lambda=\beta \tilde{I}\)</span>. Many of the concepts covered previously which apply to the epidemic SIR model apply for the endemic model as well. However, there are important distinctions between the two in how their reproductive numbers are calculated, for example.</p>
+</section>
+<section id="formulating" class="level2">
+<h2 class="anchored" data-anchor-id="formulating">Formulating</h2>
 </section>
 <section id="disease-free-and-endemic-equilibrium" class="level2">
 <h2 class="anchored" data-anchor-id="disease-free-and-endemic-equilibrium">Disease Free and Endemic Equilibrium</h2>
@@ -884,9 +1141,14 @@ Learning Objectives
 </ul>
 </div>
 </div>
+
 </section>
 
-</main>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Bjornstad2020-cp" class="csl-entry" role="listitem">
+Bjørnstad, Ottar N, Katriona Shea, Martin Krzywinski, and Naomi Altman. 2020. <span>“Modeling Infectious Epidemics.”</span> <em>Nat. Methods</em> 17 (5): 455–56.
+</div>
+</div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

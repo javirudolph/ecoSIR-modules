@@ -9,7 +9,7 @@
 
 library(shiny)
 library(bslib)
-source("sir_solver.R")
+source("trans_change_solver.R")
 
 # Define UI for application that draws a histogram
 ui <- page_sidebar(
@@ -26,7 +26,7 @@ ui <- page_sidebar(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   output$plot_sir <- renderPlot(
-    solve_sir(S0=1-1e-6, I0 = 1e-6,R0=0,c=input$contact,p=input$prob_inf,g=input$gamma,len=50,dt=1)
+    solve_sir(S0=1-1e-6, I0 = 1e-6,R0=0,c=input$contact,p=input$prob_inf,g=input$gamma,len=50,dt=0.1)
   ) 
 }
 
