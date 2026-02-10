@@ -154,7 +154,9 @@ window.Quarto = {
   </ul></li>
   <li><a href="#example-of-the-classic-epidemic-model" id="toc-example-of-the-classic-epidemic-model" class="nav-link" data-scroll-target="#example-of-the-classic-epidemic-model">Example of the Classic Epidemic Model</a></li>
   <li><a href="#the-classic-endemic-model" id="toc-the-classic-endemic-model" class="nav-link" data-scroll-target="#the-classic-endemic-model">The Classic Endemic Model</a></li>
-  <li><a href="#formulating" id="toc-formulating" class="nav-link" data-scroll-target="#formulating">Formulating</a></li>
+  <li><a href="#formulating-the-death-rate" id="toc-formulating-the-death-rate" class="nav-link" data-scroll-target="#formulating-the-death-rate">Formulating the Death Rate</a></li>
+  <li><a href="#solving-the-endemic-sir-model---example" id="toc-solving-the-endemic-sir-model---example" class="nav-link" data-scroll-target="#solving-the-endemic-sir-model---example">Solving the Endemic SIR Model - Example</a></li>
+  <li><a href="#reproduction-numbers-1" id="toc-reproduction-numbers-1" class="nav-link" data-scroll-target="#reproduction-numbers-1">Reproduction Numbers</a></li>
   <li><a href="#disease-free-and-endemic-equilibrium" id="toc-disease-free-and-endemic-equilibrium" class="nav-link" data-scroll-target="#disease-free-and-endemic-equilibrium">Disease Free and Endemic Equilibrium</a></li>
   </ul>
 </nav>
@@ -229,7 +231,8 @@ Note
 <p>Although these classifications are more commonly used in a medical, rather than an epidemiological, contexts, we still provide them here to clarify the fact that an individual can still be infectious while in the incubation period and showing no symptoms of the disease. Similarly, an individual can still be in the diseased period and show lingering symptoms of infection while being recovered since their immune system has cleared enough of the pathogen that they are not longer infectious.</p>
 <p>(PLACE GRAPH HERE OF ALL THESE PERIODS)</p>
 <p>CITATION FOR ENTIRE SECTION: Keeling and Rohani</p>
-<p>Test ref<span class="citation" data-cites="Bjornstad2020-cp">(<a href="#ref-Bjornstad2020-cp" role="doc-biblioref">Bjørnstad et al. 2020</a>)</span></p>
+<p><strong>References</strong></p>
+<p><span class="citation" data-cites="keeling_modeling_2008">(<a href="#ref-keeling_modeling_2008" role="doc-biblioref">Keeling and Rohani 2008</a>)</span></p>
 </section>
 <section id="introducing-compartmental-models" class="level2">
 <h2 class="anchored" data-anchor-id="introducing-compartmental-models">Introducing Compartmental Models</h2>
@@ -372,8 +375,8 @@ Note
 <table class="caption-top table">
 <colgroup>
 <col style="width: 26%">
-<col style="width: 24%">
-<col style="width: 49%">
+<col style="width: 25%">
+<col style="width: 48%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -438,9 +441,9 @@ Note
 <p>The force of infection is calculated in many ways; we just provide one of many possible formulations and rationales here. Notice there are two constant terms in the formulation for <span class="math inline">\(\lambda\)</span> given above: <span class="math inline">\(c\)</span> and <span class="math inline">\(p\)</span>. Since these terms are constant throughout time in the model, they are grouped together into a singular term, known as the <em>transmission rate</em>. As it is a constant unaffected by the dynamics of the model itself, the transmission rate—often denoted as <span class="math inline">\(\beta\)</span>—is considered a property of the specific disease or pathogen being analyzed and is calculated prior to the construction of the model. We present common methods of calculating <span class="math inline">\(\beta\)</span>, summarized in the table below:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 22%">
-<col style="width: 48%">
-<col style="width: 29%">
+<col style="width: 24%">
+<col style="width: 46%">
+<col style="width: 28%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -562,11 +565,11 @@ Note
 </div>
 <p>These approximations are found using the following recursive formulas:</p>
 <p><span class="math display">\[
-\begin{align}
+\begin{aligned}
 s_{t+1} &amp;= s_t - \Delta t \, \beta i_t s_t \\[10pt]
 i_{t+1} &amp;= i_t + \Delta t \, (\beta i_t s_t - \gamma i_t) \\[10pt]
 r_{t+1} &amp;= r_t + \Delta t \, \gamma i_t
-\end{align}
+\end{aligned}
 \]</span></p>
 <p>Where:</p>
 <ul>
@@ -603,9 +606,9 @@ Note
 <p>The following table illustrates the calculation process until <span class="math inline">\(t=5\)</span> with a step size of <span class="math inline">\(\Delta t=1\)</span>:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 19%">
-<col style="width: 34%">
-<col style="width: 46%">
+<col style="width: 23%">
+<col style="width: 33%">
+<col style="width: 43%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -617,33 +620,33 @@ Note
 <tbody>
 <tr class="odd">
 <td><span class="math inline">\(t=0\)</span></td>
-<td><span class="math inline">\(s(0)=99.0\)</span><br><span class="math inline">\(i(0)=1.0\)</span><br><span class="math inline">\(r(0)=0.0\)</span></td>
+<td><span class="math inline">\(s\left(0\right)=99.0\)</span><br><span class="math inline">\(i\left(0\right)=1.0\)</span><br><span class="math inline">\(r\left(0\right)=0.0\)</span></td>
 <td>—</td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(t=1\)</span></td>
-<td><span class="math inline">\(s(1)\approx 97.5\)</span><br><span class="math inline">\(i(1)\approx 2.0\)</span><br><span class="math inline">\(r(1)=0.5\)</span></td>
-<td><span class="math inline">\(s(1)=99-(1)(1.5)(\frac{1}{100})(99)\)</span><br><span class="math inline">\(i(1)=1+(1)[(1.5)(\frac{1}{100})(99)-0.5(1)]\)</span><br><span class="math inline">\(r(1)=0+(1)(0.5)(1)\)</span></td>
+<td><span class="math inline">\(s\left(1\right)\approx 97.5\)</span><br><span class="math inline">\(i\left(1\right)\approx 2.0\)</span><br><span class="math inline">\(r\left(1\right)=0.5\)</span></td>
+<td><span class="math inline">\(s\left(1\right)=99-\left(1\right)\left(1.5\right)\left(\frac{1}{100}\right)\left(99\right)\)</span><br><span class="math inline">\(i\left(1\right)=1+\left(1\right)\left[\left(1.5\right)\left(\frac{1}{100}\right)\left(99\right)-0.5\left(1\right)\right]\)</span><br><span class="math inline">\(r\left(1\right)=0+\left(1\right)\left(0.5\right)\left(1\right)\)</span></td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(t=2\)</span></td>
-<td><span class="math inline">\(s(2)\approx 94.6\)</span><br><span class="math inline">\(i(2)\approx 3.9\)</span><br><span class="math inline">\(r(2)\approx 2.0\)</span></td>
-<td><span class="math inline">\(s(2)=97.5-(1)(1.5)(\frac{2.0}{100})(97.5)\)</span><br><span class="math inline">\(i(2)=2.0+(1)[(1.5)(\frac{2.0}{100})(97.5)-0.5(2.0)]\)</span><br><span class="math inline">\(r(2)=0.5+(1)(0.5)(2.0)\)</span></td>
+<td><span class="math inline">\(s\left(2\right)\approx 94.6\)</span><br><span class="math inline">\(i\left(2\right)\approx 3.9\)</span><br><span class="math inline">\(r\left(2\right)\approx 2.0\)</span></td>
+<td><span class="math inline">\(s\left(2\right)=97.5-\left(1\right)\left(1.5\right)\left(\frac{2.0}{100}\right)\left(97.5\right)\)</span><br><span class="math inline">\(i\left(2\right)=2.0+\left(1\right)\left[\left(1.5\right)\left(\frac{2.0}{100}\right)\left(97.5\right)-0.5\left(2.0\right)\right]\)</span><br><span class="math inline">\(r\left(2\right)=0.5+\left(1\right)\left(0.5\right)\left(2.0\right)\)</span></td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(t=3\)</span></td>
-<td><span class="math inline">\(s(3)\approx 89.1\)</span><br><span class="math inline">\(i(3)\approx 7.5\)</span><br><span class="math inline">\(r(3)\approx 3.4\)</span></td>
-<td><span class="math inline">\(s(3)=94.6-(1)(1.5)(\frac{3.9}{100})(94.6)\)</span><br><span class="math inline">\(i(3)=3.9+(1)[(1.5)(\frac{3.9}{100})(94.6)-0.5(3.9)]\)</span><br><span class="math inline">\(r(3)=2.0+(1)(0.5)(3.9)\)</span></td>
+<td><span class="math inline">\(s\left(3\right)\approx 89.1\)</span><br><span class="math inline">\(i\left(3\right)\approx 7.5\)</span><br><span class="math inline">\(r\left(3\right)\approx 3.4\)</span></td>
+<td><span class="math inline">\(s\left(3\right)=94.6-\left(1\right)\left(1.5\right)\left(\frac{3.9}{100}\right)\left(94.6\right)\)</span><br><span class="math inline">\(i\left(3\right)=3.9+\left(1\right)\left[\left(1.5\right)\left(\frac{3.9}{100}\right)\left(94.6\right)-0.5\left(3.9\right)\right]\)</span><br><span class="math inline">\(r\left(3\right)=2.0+\left(1\right)\left(0.5\right)\left(3.9\right)\)</span></td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(t=4\)</span></td>
-<td><span class="math inline">\(s(4)\approx 79.1\)</span><br><span class="math inline">\(i(4)\approx 13.7\)</span><br><span class="math inline">\(r(4)\approx 7.2\)</span></td>
-<td><span class="math inline">\(s(4)=89.1-(1)(1.5)(\frac{7.5}{100})(89.1)\)</span><br><span class="math inline">\(i(4)=7.5+(1)[(1.5)(\frac{7.5}{100})(89.1)-0.5(7.5)]\)</span><br><span class="math inline">\(r(4)=3.4+(1)(0.5)(7.5)\)</span></td>
+<td><span class="math inline">\(s\left(4\right)\approx 79.1\)</span><br><span class="math inline">\(i\left(4\right)\approx 13.7\)</span><br><span class="math inline">\(r\left(4\right)\approx 7.2\)</span></td>
+<td><span class="math inline">\(s\left(4\right)=89.1-\left(1\right)\left(1.5\right)\left(\frac{7.5}{100}\right)\left(89.1\right)\)</span><br><span class="math inline">\(i\left(4\right)=7.5+\left(1\right)\left[\left(1.5\right)\left(\frac{7.5}{100}\right)\left(89.1\right)-0.5\left(7.5\right)\right]\)</span><br><span class="math inline">\(r\left(4\right)=3.4+\left(1\right)\left(0.5\right)\left(7.5\right)\)</span></td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(t=5\)</span></td>
-<td><span class="math inline">\(s(5)\approx 62.8\)</span><br><span class="math inline">\(i(5)\approx 23.1\)</span><br><span class="math inline">\(r(5)\approx 14.0\)</span></td>
-<td><span class="math inline">\(s(5)=79.1-(1)(1.5)(\frac{13.7}{100})(79.1)\)</span><br><span class="math inline">\(i(5)=13.7+(1)[(1.5)(\frac{13.7}{100})(79.1)-0.5(13.7)]\)</span><br><span class="math inline">\(r(5)=7.2+(1)(0.5)(13.7)\)</span></td>
+<td><span class="math inline">\(s\left(5\right)\approx 62.8\)</span><br><span class="math inline">\(i\left(5\right)\approx 23.1\)</span><br><span class="math inline">\(r\left(5\right)\approx 14.0\)</span></td>
+<td><span class="math inline">\(s\left(5\right)=79.1-\left(1\right)\left(1.5\right)\left(\frac{13.7}{100}\right)\left(79.1\right)\)</span><br><span class="math inline">\(i\left(5\right)=13.7+\left(1\right)\left[\left(1.5\right)\left(\frac{13.7}{100}\right)\left(79.1\right)-0.5\left(13.7\right)\right]\)</span><br><span class="math inline">\(r\left(5\right)=7.2+\left(1\right)\left(0.5\right)\left(13.7\right)\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -689,8 +692,8 @@ Note
 <p>The function <code>ode</code> takes in the following relevant parameters, summarized in the table below:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 8%">
-<col style="width: 91%">
+<col style="width: 18%">
+<col style="width: 81%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -728,19 +731,18 @@ Note
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> state[<span class="st">"R"</span>]</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the model parameters</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Again, we are doing this for an SIR model, so we have two parameters - the transmission and recovery rate</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We are doing this for an SIR model, so we have two parameters - the transmission and recovery rate</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> parameters[<span class="st">"beta"</span>]</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  gamma <span class="ot">&lt;-</span> parameters[<span class="st">"gamma"</span>]</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now we are going to use those previously extracted state variables and parameters to construct our model equations (differential equations)</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  dS <span class="ot">&lt;-</span> <span class="sc">-</span>(beta<span class="sc">*</span>I<span class="sc">*</span>S)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  dI <span class="ot">&lt;-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> (gamma<span class="sc">*</span>I)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  dR <span class="ot">&lt;-</span> (gamma<span class="sc">*</span>I)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now we will return those model equations as a list</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dS,dI,dR)))</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  dS <span class="ot">&lt;-</span> <span class="sc">-</span>(beta<span class="sc">*</span>I<span class="sc">*</span>S)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  dI <span class="ot">&lt;-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> (gamma<span class="sc">*</span>I)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  dR <span class="ot">&lt;-</span> (gamma<span class="sc">*</span>I)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now we will return those model equations as a list</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dS,dI,dR)))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now all we need to do is specify the other parameters <code>y</code>, <code>parms</code>, and <code>times</code> and call <code>ode</code> with them like so:</p>
 <div class="cell">
@@ -752,20 +754,17 @@ Note
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are specifying the parameters of the model and their values</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these parameters line up exactly with the parameters extracted in the model function from before</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>model_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta=</span><span class="fl">1.5</span>,<span class="at">gamma=</span><span class="fl">0.5</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are specifying the times for which outputs are calculated</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># The closer together these times are, the higher the output resolution</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>model_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta=</span><span class="fl">1.5</span>,<span class="at">gamma=</span><span class="fl">0.5</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are specifying the times for which outputs are calculated</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># The closer together these times are, the higher the output resolution</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>output_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="at">by=</span><span class="dv">1</span>)</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>output_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="at">by=</span><span class="dv">1</span>)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we can call the function ode like so:</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">func=</span>ModelFunc,<span class="at">y=</span>initial_vals,<span class="at">parms=</span>model_parameters,<span class="at">times=</span>output_times)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the first 5 rows of the output matrix</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(output,<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we can call the function ode like so:</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">func=</span>ModelFunc,<span class="at">y=</span>initial_vals,<span class="at">parms=</span>model_parameters,<span class="at">times=</span>output_times)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the first 5 rows of the output matrix</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(output,<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     time         S          I           R
 [1,]    0 0.9900000 0.01000000 0.000000000
@@ -777,7 +776,7 @@ Note
 </div>
 <p>Now that we have this matrix of the solved SIR model equations are at specified times, we can plot it like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(<span class="at">x =</span> output[,<span class="st">"time"</span>], <span class="at">y =</span> output[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">xlab =</span> <span class="st">"time"</span>, <span class="at">ylab =</span> <span class="st">"proportion"</span>, <span class="at">main =</span> <span class="st">"Solved Example SIR Model"</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>))</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(<span class="at">x =</span> output[,<span class="st">"time"</span>], <span class="at">y =</span> output[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">xlab =</span> <span class="st">"time"</span>, <span class="at">ylab =</span> <span class="st">"proportion"</span>, <span class="at">main =</span> <span class="st">"Solved Example: Epidemic SIR Model"</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a legend</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>,<span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Susceptible"</span>, <span class="st">"Infectious"</span>, <span class="st">"Recovered"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -797,9 +796,9 @@ Note
 <p>The following table summarizes some potential benefits and drawbacks to using Euler’s method or deSolve:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 5%">
-<col style="width: 38%">
-<col style="width: 56%">
+<col style="width: 19%">
+<col style="width: 31%">
+<col style="width: 49%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -849,9 +848,9 @@ Learning Objectives
 <p>The table below summarizes the two types of reproduction numbers we will focus on:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
-<col style="width: 9%">
-<col style="width: 75%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 64%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -885,12 +884,12 @@ Note
 <div class="callout-body-container callout-body">
 <p>Some common misconceptions about <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span> are:</p>
 <ul>
-<li>“Must <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span> be whole numbers because nobody can transmit the disease to, say, half a person?”
+<li><p>“Must <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span> be whole numbers because nobody can transmit the disease to, say, half a person?”</p>
 <ul>
 <li>No, <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span> do not have to be whole numbers because they refer to <em>averages</em>, not the exact number of secondary infections produced by one person. An infectious person might infect nobody or tons of people but the reproduction numbers don’t capture every detail just the overall picture of how many secondary infectious are produced.</li>
 </ul>
-<br></li>
-<li>“Is the reproduction number a rate?”
+<p><br></p></li>
+<li><p>“Is the reproduction number a rate?”</p>
 <ul>
 <li>No, the reproduction number is not a rate. Take the example of HIV and SARS, which both have <span class="math inline">\(R_e\approx4\)</span>. However, SARS has an extremely rapid spread while HIV is much slower spreading. One individual infected with SARS might cause 4 secondary infections within the span of a week while an individual with HIV most likely infects 4 other people within the span of a few years. <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span> don’t tell us anything about the timeframe of infections, so they are not rates.</li>
 </ul></li>
@@ -903,7 +902,7 @@ R_0=\frac{\beta}{\gamma}
 \]</span></p>
 <p>And similarly, the formula for the effective reproduction number is:</p>
 <p><span class="math display">\[
-R_e=\frac{\beta}{\gamma}(\frac{S}{N})=R_0\tilde{S}
+R_e=\frac{\beta}{\gamma} \left( \frac{S}{N} \right) =R_0\tilde{S}
 \]</span> These formulas should make sense, as they are multiplying the transmission rate <span class="math inline">\(\beta\)</span> by the average duration of infection <span class="math inline">\(\frac{1}{\gamma}\)</span> to obtain the average number of secondary infections by one infectious individual throughout their entire duration of infectivity.</p>
 <p>The point where these two formulas differ is in their assumption about the proportion of susceptible individuals in the population. <span class="math inline">\(R_0\)</span> assumes a completely susceptible population, so it is multiplying the expression <span class="math inline">\(\frac{\beta}{\gamma}\)</span> by an invisible <span class="math inline">\(1\)</span>. Meanwhile, <span class="math inline">\(R_e\)</span> assumes a susceptible proportion equal to <span class="math inline">\(\frac{S}{N}\)</span> hence the final expression <span class="math inline">\(\frac{\beta}{\gamma}(\frac{S}{N})\)</span>.</p>
 <p>Make sure you understand the definitions and intuition behind the formulas for <span class="math inline">\(R_0\)</span> and <span class="math inline">\(R_e\)</span>. The <a href="#the-threshold-phenomenon">next section</a> on the threshold phenomenon applies the reproduction number in learning how to control the spread of infection.</p>
@@ -918,7 +917,8 @@ R_e=\frac{\beta}{\gamma}(\frac{S}{N})=R_0\tilde{S}
 \frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma)
 \]</span> If we wish to find the point at which the infection either invades or fails to, we can solve for when <span class="math inline">\(\frac{d\tilde{I}}{dt}&lt;0\)</span> (the proportion of infectious individuals is decreasing, or the disease is “dying off”) and <span class="math inline">\(\frac{d\tilde{I}}{dt}&gt;0\)</span> (the proportion of infectious individuals is increasing, or the disease is “growing”).</p>
 <p>First, let’s analyze when <span class="math inline">\(\frac{d\tilde{I}}{dt}&lt;0\)</span>:</p>
-<p><span class="math display">\[\begin{align*}
+$$
+<span class="math display">\[\begin{aligned}
 \frac{d\tilde{I}}{dt} &amp;&lt; 0
 &amp;\quad&amp; \text{(Condition that the infected population is decreasing)} \\[10pt]
 
@@ -930,7 +930,8 @@ R_e=\frac{\beta}{\gamma}(\frac{S}{N})=R_0\tilde{S}
 
 \tilde{S} &amp;&lt; \frac{\gamma}{\beta}
 &amp;\quad&amp; \text{(Add } \gamma \text{ to both sides, then divide by } \beta &gt; 0\text{)}
-\end{align*}\]</span></p>
+\end{aligned}\]</span>
+<p>$$</p>
 <p>Reproducing this procedure, we obtain the following similar result:</p>
 <p><span class="math display">\[
 \frac{d\tilde{I}}{dt} &gt; 0
@@ -938,7 +939,8 @@ R_e=\frac{\beta}{\gamma}(\frac{S}{N})=R_0\tilde{S}
 \tilde{S} &gt; \frac{\gamma}{\beta}
 \]</span></p>
 <p>From this, we can deduce that for an infection to even invade the population and start spreading, the initial proportion of susceptibles must be greater than <span class="math inline">\(\frac{\gamma}{\beta}\)</span>. This result is what is specifically known as the <em>threshold phenomenon</em>, with <span class="math inline">\(\frac{\gamma}{\beta}\)</span> known as the <em>threshold value</em>. Notice that <span class="math inline">\(\frac{\gamma}{\beta}\)</span> is exactly equal to the inverse of the basic reproduction number <span class="math inline">\(\frac{1}{R_0}\)</span>, which means we can also rewrite these conditions like so:</p>
-<p><span class="math display">\[\begin{align*}
+<p><span class="math display">\[
+\begin{aligned}
 \text{Disease will not invade the population and / or spread:}
 \qquad
 \tilde{S} &amp;&lt; \frac{1}{R_0}
@@ -946,8 +948,8 @@ R_e=\frac{\beta}{\gamma}(\frac{S}{N})=R_0\tilde{S}
 \text{Disease will invade the population and / or spread:}
 \qquad
 \tilde{S} &amp;&gt; \frac{1}{R_0}
-
-\end{align*}\]</span></p>
+\end{aligned}
+\]</span></p>
 <p>The simulation below let’s you see the threshold phenomenon in action:</p>
 <p>INSERT THRESHOLD SIM HERE</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -965,7 +967,7 @@ Note
 </div>
 <p>Connecting this even further to reproduction numbers, we can rewrite the inequalities found above in terms of <span class="math inline">\(R_e\)</span> as follows:</p>
 <p><span class="math display">\[
-\begin{align*}
+\begin{aligned}
 \qquad
 \tilde{S} &amp;&lt; \frac{\beta}{\gamma}
 \qquad \Longleftrightarrow \qquad
@@ -975,8 +977,9 @@ R_e &lt; 1
 \tilde{S} &amp;&gt; \frac{\beta}{\gamma}
 \qquad \Longleftrightarrow \qquad
 R_e &gt; 1
-\end{align*}
-\]</span> The result above is a really important one: it tells us that <span class="math inline">\(R_e\)</span> is another threshold for determining whether or not a disease will spread. Specifically, if <span class="math inline">\(R_e&lt;1\)</span>, the disease is dying off but if <span class="math inline">\(R_e&gt;1\)</span> the disease is spreading.</p>
+\end{aligned}
+\]</span></p>
+<p>The result above is a really important one: it tells us that <span class="math inline">\(R_e\)</span> is another threshold for determining whether or not a disease will spread. Specifically, if <span class="math inline">\(R_e&lt;1\)</span>, the disease is dying off but if <span class="math inline">\(R_e&gt;1\)</span> the disease is spreading.</p>
 <p>This should come as no surprise though, as it can be inferred from the definition of <span class="math inline">\(R_e\)</span> itself: if every single infectious person in the population (assuming the true value for the susceptible population, unlike <span class="math inline">\(R_0\)</span> which assumes a completely naive population), on average “replaces” themselves with more than <span class="math inline">\(1\)</span> infection, the disease will spread. Moreover, the point at which <span class="math inline">\(R_e\)</span> reaches exactly <span class="math inline">\(1\)</span> marks the maximum for the infected population since it is the point at which the disease goes from spreading (number of individuals infected rising) to dying off (number of individuals infected falling).</p>
 <p>The simulation below demonstrates how the infected population increases, decreases, and reaches its maximum at different values of <span class="math inline">\(R_e\)</span>:</p>
 <p>INSERT R EFFECTIVE SIM HERE</p>
@@ -1002,21 +1005,25 @@ Note
 <h3 class="anchored" data-anchor-id="choosing-how-many-people-to-vaccinate">Choosing How Many People to Vaccinate</h3>
 <p>Recall from the <a href="#the-threshold-phenomenon">previous section</a> that the disease will begin to die off when <span class="math inline">\(R_e\)</span> drops below <span class="math inline">\(1\)</span>. The proportion of susceptible individuals <span class="math inline">\(\tilde{S}\)</span> can be considered to be equal to <span class="math inline">\(1-i\)</span>, where <span class="math inline">\(i\)</span> is the proportion of people in the population who are infectious or immune to the disease. We can rearrange the expression <span class="math inline">\(R_e&lt;1\)</span> and solve for <span class="math inline">\(i\)</span>:</p>
 <p><br></p>
-<p><span class="math display">\[\begin{align*}
+<p><span class="math display">\[
+\begin{aligned}
 R_e &amp;&lt; 1 &amp;&amp; \text{Condition for disease to die off} \\[10pt]
 R_0 \tilde{S} &amp;&lt; 1 &amp;&amp; \text{Definition of $R_e$} \\[10pt]
-R_0 (1-i) &amp;&lt; 1 &amp;&amp; \text{($\tilde{S}=1-i$)} \\[10pt]
+R_0 (1-i) &amp;&lt; 1 &amp;&amp; \text{$\tilde{S}=1-i$} \\[10pt]
 i &amp;&gt; 1-\frac{1}{R_0} &amp;&amp; \text{Rearranging and solving for $i$}
-\end{align*}\]</span></p>
+\end{aligned}
+\]</span></p>
 <p><br></p>
 <p>At the beginning of the outbreak, when nearly all individuals are susceptible and there are very few infectious, the proportion of individuals immune to the disease or infectious with it <span class="math inline">\(i\)</span> can be considered approximately equal to the proportion of individuals <em>successfully</em> vaccinated against the disease. This is because, generally speaking, vaccination confers immunity, though most of the time only temporary, to a disease (https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work). Since we are analyzing a relatively small time-frame with epidemics, the temporary nature of vaccine-conferred immunity can be safely disregarded.</p>
 <p>Notice the emphasis on the word “successfully.” This is because most vaccines are not <span class="math inline">\(100%\)</span> effective; there will always be a percentage of people, though however small, that are vaccinated but can still contract the disease. Assuming a vaccine efficacy rate of <span class="math inline">\(e\)</span>, or the proportion of people who are vaccinated <span class="math inline">\(p\)</span> that are truly granted immunity, the proportion of individuals successfully vaccinated is <span class="math inline">\(i=ep\)</span>. We can rearrange the expression found previously to find the proportion of the population <span class="math inline">\(p\)</span> that should be vaccinated at the start of the outbreak:</p>
 <p><br></p>
-<p><span class="math display">\[\begin{align*}
+<p><span class="math display">\[
+\begin{aligned}
 i &amp;&gt; 1-\frac{1}{R_0} &amp;&amp; \text{Minimum proportion of immune individuals i} \\[10pt]
 ep &amp;&gt; 1-\frac{1}{R_0} &amp;&amp; \text{Considering i=ep} \\[10pt]
-p &amp;&gt; \frac{1}{e}(1-\frac{1}{R_0}) &amp;&amp; \text{Rearranging for p}
-\end{align*}\]</span></p>
+p &amp;&gt; \frac{1}{e}\left(1-\frac{1}{R_0} \right) &amp;&amp; \text{Rearranging for p}
+\end{aligned}
+\]</span></p>
 <p><br></p>
 <p>This means that, for a vaccine with an efficacy rate <span class="math inline">\(e\)</span>, at the proportion of people that should be vaccinated at the start of an outbreak to prevent further spread should be at least <span class="math inline">\(\frac{1}{e}(1-\frac{1}{R_0}\)</span>. Not everyone in the population must be vaccinated to stop the spread of a disease, an idea known as <em>herd immunity</em>.</p>
 <p>However, sometimes herd immunity cannot be obtained. Take the case when <span class="math inline">\(R_0=3\)</span> and the best avaliable vaccine has an efficacy rate of <span class="math inline">\(e=0.6\)</span> (meaning that of the people who are vaccinated, only about <span class="math inline">\(60%\)</span> of them will actually be immune and unable to contract the disease). Using the formula above, we find that the proportion of people who are vaccinated at the beginning of the outrbreak must be at least <span class="math inline">\(\frac{1}{0.6}(1-\frac{1}{3})\approx1.1\)</span>. However, this is impossible: we cannot possible vaccinate more than <span class="math inline">\(100%\)</span> of the population! This means that, due to a combination of the high transmissibility of the disease and the relatively low vaccine efficacy rate, even if <span class="math inline">\(100%\)</span> of the population were to be vaccinated, there would still be enough susceptible people (i.e.&nbsp;people whose vaccines were not effective) for an outbreak to occur (ANDREAS BOOK CITATION).</p>
@@ -1030,7 +1037,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Please note that the above calculations and statements are assuming ideal vaccination practices at the beginning of an outbreak when nearly all individuals are susceptible and almost none are recovered or infectious. If vaccination is implemented mid-outbreak, when the number of recovered individuals with natural immunity and infectious people are not negligible, the calculations must be modified. In general, fewer individuals will have to be vaccinated than at the beginning of an outbreak since the proportion of susceptible individuals <span class="math inline">\(\tilde{S}\)</span> will be equal to the complement of the sum of: the proportion of people who are infectious, those who have natural immunity due to recovery, and those who are successfully vaccinated.</p>
+<p>Note that the above calculations and statements are assuming ideal vaccination practices at the beginning of an outbreak when nearly all individuals are susceptible and almost none are recovered or infectious. If vaccination is implemented mid-outbreak, when the number of recovered individuals with natural immunity and infectious people are not negligible, the calculations must be modified. In general, fewer individuals will have to be vaccinated than at the beginning of an outbreak since the proportion of susceptible individuals <span class="math inline">\(\tilde{S}\)</span> will be equal to the complement of the sum of: the proportion of people who are infectious, those who have natural immunity due to recovery, and those who are successfully vaccinated.</p>
 </div>
 </div>
 </section>
@@ -1085,7 +1092,12 @@ Learning Objectives
 <ul>
 <li>This ensure that the total population size does not change as time goes on; as such, <span class="math inline">\(N\)</span> is a constant in the endemic SIR just as it is in the epidemic model</li>
 </ul></li>
+<li><p>Every individual is born into the susceptible population</p>
+<ul>
+<li>Although for many disease (like measles for example) newborns are born with passive immunity due to the passing down of maternal antibodies, the average age at which passive immunity is lost is much lower than the typical age of first infection in developed countries. This tells us that it is reasonable to consider all newborns as being immediately susceptible since the time to their first infection is most likely independent of their initial fading immunity at birth. This is not true of diseases that have a very small mean age of infection, however, since an infection can happen as soon as passive immunity ends.</li>
+</ul></li>
 </ul>
+<p>CITATION FOR SECTION: KEELING AND ROHANI</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1108,7 +1120,8 @@ Note
 \frac{dI}{dt} &amp;= \beta \tilde{I} S - \gamma I - \mu I\\[10pt]
 \frac{dR}{dt} &amp;= \gamma I - \mu R
 \end{aligned}
-\]</span> And just like before, we can divide every equation above by the constant population size <span class="math inline">\(N\)</span> to obtain the following equations for the proportion of individuals in each compartment:</p>
+\]</span></p>
+<p>And just like before, we can divide every equation above by the constant population size <span class="math inline">\(N\)</span> to obtain the following equations for the proportion of individuals in each compartment:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \frac{d\tilde{S}}{dt} &amp;= \mu-\beta \tilde{I} \tilde{S} - \mu \tilde{S} \\[10pt]
@@ -1116,10 +1129,98 @@ Note
 \frac{d\tilde{R}}{dt} &amp;= \gamma \tilde{I} - \mu \tilde{R}
 \end{aligned}
 \]</span></p>
-<p>Notice that the force of infection for the endemic model is the same as the epidemic model (<span class="math inline">\(\lambda=\beta \tilde{I}\)</span>. Many of the concepts covered previously which apply to the epidemic SIR model apply for the endemic model as well. However, there are important distinctions between the two in how their reproductive numbers are calculated, for example.</p>
+<p>Notice that the force of infection for the endemic model is the same as the epidemic model (<span class="math inline">\(\lambda=\beta \tilde{I}\)</span>.</p>
+<p>The following sections are mostly reviews of concepts covered previously in the epidemic model. For this reason, they are mostly short sections but do cover important distinctions between the epidemic and endemic model, including how their reproduction numbers are calculated and how to solve them using deSolve just to name a few.</p>
 </section>
-<section id="formulating" class="level2">
-<h2 class="anchored" data-anchor-id="formulating">Formulating</h2>
+<section id="formulating-the-death-rate" class="level2">
+<h2 class="anchored" data-anchor-id="formulating-the-death-rate">Formulating the Death Rate</h2>
+<p>FIND SOURCE ON FORMULATING DEATH RATE; I ASSUME IT IS SIMILAR TO FORMULATING RECOVERY RATE (JUST USING MLE)?</p>
+</section>
+<section id="solving-the-endemic-sir-model---example" class="level2">
+<h2 class="anchored" data-anchor-id="solving-the-endemic-sir-model---example">Solving the Endemic SIR Model - Example</h2>
+<p>The endemic SIR model can be solved using many of the same methods as the epidemic SIR model. In <a href="#solving-sir-equations">the previous section</a> on solving the epidemic SIR model, we covered two main methods of doing so: Euler’s method and the deSolve package in R.</p>
+<p>Both of these methods can be used to solve the endemic model as well, but we will only show an example of solving the endemic model using deSolve since Euler’s method is quite lengthy and is the exact same process as for the epidemic model just with different SIR equations.</p>
+<p>Below is a complete example of using the deSolve package to solve an endemic SIR model and plotting the results:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(deSolve)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ModelFunc <span class="ot">&lt;-</span> <span class="cf">function</span>(time,state,parameters){</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the state variables</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Same compartments as before: susceptible, infectious, and recovered</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">&lt;-</span> state[<span class="st">"S"</span>]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  I <span class="ot">&lt;-</span> state[<span class="st">"I"</span>]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> state[<span class="st">"R"</span>]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the model parameters</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We now have three parameters - the transmission rate, recovery rate, and mortality rate</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> parameters[<span class="st">"beta"</span>]</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  gamma <span class="ot">&lt;-</span> parameters[<span class="st">"gamma"</span>]</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> parameters[<span class="st">"mu"</span>]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Using the previously extracted state variables and parameters to construct our model equations (differential equations)</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  dS <span class="ot">&lt;-</span> mu <span class="sc">-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> mu<span class="sc">*</span>S</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  dI <span class="ot">&lt;-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> (gamma<span class="sc">*</span>I) <span class="sc">-</span> mu<span class="sc">*</span>I</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  dR <span class="ot">&lt;-</span> (gamma<span class="sc">*</span>I) <span class="sc">-</span> mu<span class="sc">*</span>R</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Returning model equations as a list</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dS,dI,dR)))</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying the initial values to be passed into the parameter y</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these initial values line up exactly with the state variables extracted in the model function from before</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>initial_vals <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S=</span><span class="fl">0.99</span>,<span class="at">I=</span><span class="fl">0.01</span>,<span class="at">R=</span><span class="dv">0</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying the parameters of the model and their values</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these parameters line up exactly with the parameters extracted in the model function from before</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>model_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta=</span><span class="fl">1.5</span>,<span class="at">gamma=</span><span class="fl">0.3</span>,<span class="at">mu=</span><span class="fl">0.2</span>)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Times for which outputs are calculated</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co"># The closer together these times are, the higher the output resolution</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>output_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="at">by=</span><span class="dv">1</span>)</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we can call the function ode</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">func=</span>ModelFunc,<span class="at">y=</span>initial_vals,<span class="at">parms=</span>model_parameters,<span class="at">times=</span>output_times)</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the output</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(<span class="at">x =</span> output[,<span class="st">"time"</span>], <span class="at">y =</span> output[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">xlab =</span> <span class="st">"time"</span>, <span class="at">ylab =</span> <span class="st">"proportion"</span>, <span class="at">main =</span> <span class="st">"Solved Example: Endemic SIR Model"</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>))</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a legend</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>,<span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Susceptible"</span>, <span class="st">"Infectious"</span>, <span class="st">"Recovered"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SIR_Module_RD_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Notice that the curves above seem to “even out” after a while? This is a really important distinction between the epidemic and endemic SIR model, and is explained in detail in <a href="#disease-free-and-endemic-equilibrium">the future section on model equilibriums</a>.</p>
+</div>
+</div>
+</section>
+<section id="reproduction-numbers-1" class="level2">
+<h2 class="anchored" data-anchor-id="reproduction-numbers-1">Reproduction Numbers</h2>
+<p>The basic and effective reproduction numbers for the endemic SIR model have the same interpretation as they do for the epidemic SIR model. Refer back to <a href="#reproduction-numbers">this section</a> on reproduction numbers in the epidemic SIR model if you need a refresher of these definitions.</p>
+<p>Although they have the same interpretations before, the formulas for the basic and reproductive number are different for the endemic SIR model.</p>
+<p>First, let’s formulate the basic reproductive number <span class="math inline">\(R_0\)</span> for the endemic SIR model. We still utilize <span class="math inline">\(\beta\)</span> as the per-capita transmission rate but instead of considering the average time an individual is infectious to be <span class="math inline">\(\frac{1}{\gamma}\)</span> (like it is for the epidemic SIR model), we consider it to be <span class="math inline">\(\frac{1}{\gamma+\mu}\)</span>. On a conceptual level, this is justified because there are now two ways to leave the infectious class: recovery or death. Before in the epidemic model, there was only one way to become noninfectious—through recovery.</p>
+<p>Multiplying the tranmission rate <span class="math inline">\(\beta\)</span> by the average time an individual will stay infectious <span class="math inline">\(\frac{1}{\gamma+\mu}\)</span>, we obtain the the basic reproduction number <span class="math inline">\(R_0\)</span> for the epidemic SIR model:</p>
+<p><span class="math display">\[
+R_0=\frac{\beta}{\gamma+\mu}
+\]</span> ::: {.callout-note} This basic reproduction number for the endemic model is generally similar to, but always smaller than, the basic reproduction number for the epidemic model since the natural morality rate reduces the average time an individual is infectious (we now consider the possibility that individuals can die to natural causes while infectious, thus reducing their “infective potential”). :::</p>
+<p>The effective reproduction number <span class="math inline">\(R_e\)</span> for the endemic model is quite similar to the epidemic model. It is still found by multiplying the basic reproduction number <span class="math inline">\(R_0\)</span> by the proportion of susceptible individuals in the population <span class="math inline">\(\tilde{S}\)</span> like so:</p>
+<p><span class="math display">\[
+R_e=R_0 \tilde{S}=\left(\frac{\beta}{\gamma+\mu} \right) \tilde{S}
+\]</span></p>
 </section>
 <section id="disease-free-and-endemic-equilibrium" class="level2">
 <h2 class="anchored" data-anchor-id="disease-free-and-endemic-equilibrium">Disease Free and Endemic Equilibrium</h2>
@@ -1141,12 +1242,45 @@ Learning Objectives
 </ul>
 </div>
 </div>
+<p>The inclusion of births in the endemic model means there is a constant “replenishing” of the susceptible population. This allows for the disease to persist in the population in the long-term, unlike the epidemic model which always ends in the disease “dying off.”</p>
+<p>To analyze the long-term behavior of the endemic model, we start by analyzing what the model equations look like at <em>equilibrium</em>, or the point when <span class="math inline">\(\frac{dS}{dt}=\frac{dI}{dt}=\frac{dR}{dt}=0\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is important to note that equilibrium doesn’t mean a lack of individuals flowing between each compartment but rather a <em>balanced</em> flow of individuals between each compartment. This means that the same number or proportion of individuals are entering and leaving each compartment at a given time, so the net change in the number or proportion of individuals in each compartment is <span class="math inline">\(0\)</span>.</p>
+<p>We can understand this just by looking at the model equations themselves. Take the susceptible population as an example, dictated by the rate:</p>
+<p><span class="math display">\[
+\frac{dS}{dt} = \mu-\beta \tilde{I} S - \mu S
+\]</span></p>
+<p>We can see that for <span class="math inline">\(\frac{dS}{dt}\)</span> to be equal to <span class="math inline">\(0\)</span>, it is not necessary that <span class="math inline">\(0\)</span> people are entering the susceptible population (i.e.&nbsp;being born) and <span class="math inline">\(0\)</span> people are leaving the susceptible population (i.e.&nbsp;getting infected). It is simply necessary that the flow rate <em>into</em> the susceptible population (given by the birth rate term ) is the same as the flow rate <em>out</em> of the susceptible population (given by the infection term <span class="math inline">\(\beta \tilde{I} S\)</span> and the death rate term <span class="math inline">\(\mu S\)</span>).</p>
+</div>
+</div>
+<p>The equilibrium point of a system of differential equations is found by setting each rate of change equal to <span class="math inline">\(0\)</span> and finding the solution(s) of the resulting system:</p>
+$$
+<span class="math display">\[\begin{aligned}
+\frac{d\tilde{I}}{dt} &amp;&lt; 0
+&amp;\quad&amp; \text{Condition that the infected population is decreasing} \\[10pt]
+
+\tilde{I}(\beta \tilde{S} - \gamma) &amp;&lt; 0
+&amp;\quad&amp; \text{Substitute } \frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma) \\[10pt]
+
+\beta \tilde{S} - \gamma &amp;&lt; 0
+&amp;\quad&amp; \text{Divide both sides by } \tilde{I} &gt; 0
+\end{aligned}\]</span>
+<p>$$</p>
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-Bjornstad2020-cp" class="csl-entry" role="listitem">
-Bjørnstad, Ottar N, Katriona Shea, Martin Krzywinski, and Naomi Altman. 2020. <span>“Modeling Infectious Epidemics.”</span> <em>Nat. Methods</em> 17 (5): 455–56.
+<div id="ref-keeling_modeling_2008" class="csl-entry" role="listitem">
+Keeling, Matt J., and Pejman Rohani. 2008. <em>Modeling <span>Infectious</span> <span>Diseases</span> in <span>Humans</span> and <span>Animals</span></em>. Princeton University Press. <a href="https://doi.org/10.2307/j.ctvcm4gk0">https://doi.org/10.2307/j.ctvcm4gk0</a>.
 </div>
 </div></section></div></main>
 <!-- /main column -->
