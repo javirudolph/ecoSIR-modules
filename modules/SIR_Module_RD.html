@@ -912,26 +912,21 @@ R_e=\frac{\beta}{\gamma} \left( \frac{S}{N} \right) =R_0\tilde{S}
 <p>First described by Kermack and McKendrick, the threshold phenomenon refers to the critical point whereby an infection will either invade the population or fail to. To find this critical point, observe the change in the proportion of infectious individuals given by:</p>
 <p><span class="math display">\[
 \frac{d\tilde{I}}{dt} = \beta \tilde{I} \tilde{S} - \gamma \tilde{I}
-\]</span> Factoring out the <span class="math inline">\(\tilde{I}\)</span>, we have:</p>
+\]</span></p>
+<p>Factoring out the <span class="math inline">\(\tilde{I}\)</span>, we have:</p>
 <p><span class="math display">\[
 \frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma)
-\]</span> If we wish to find the point at which the infection either invades or fails to, we can solve for when <span class="math inline">\(\frac{d\tilde{I}}{dt}&lt;0\)</span> (the proportion of infectious individuals is decreasing, or the disease is “dying off”) and <span class="math inline">\(\frac{d\tilde{I}}{dt}&gt;0\)</span> (the proportion of infectious individuals is increasing, or the disease is “growing”).</p>
+\]</span></p>
+<p>If we wish to find the point at which the infection either invades or fails to, we can solve for when <span class="math inline">\(\frac{d\tilde{I}}{dt}&lt;0\)</span> (the proportion of infectious individuals is decreasing, or the disease is “dying off”) and <span class="math inline">\(\frac{d\tilde{I}}{dt}&gt;0\)</span> (the proportion of infectious individuals is increasing, or the disease is “growing”).</p>
 <p>First, let’s analyze when <span class="math inline">\(\frac{d\tilde{I}}{dt}&lt;0\)</span>:</p>
-$$
-<span class="math display">\[\begin{aligned}
-\frac{d\tilde{I}}{dt} &amp;&lt; 0
-&amp;\quad&amp; \text{(Condition that the infected population is decreasing)} \\[10pt]
-
-\tilde{I}(\beta \tilde{S} - \gamma) &amp;&lt; 0
-&amp;\quad&amp; \text{(Substitute } \frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma)\text{)} \\[10pt]
-
-\beta \tilde{S} - \gamma &amp;&lt; 0
-&amp;\quad&amp; \text{(Divide both sides by } \tilde{I} &gt; 0\text{)} \\[10pt]
-
-\tilde{S} &amp;&lt; \frac{\gamma}{\beta}
-&amp;\quad&amp; \text{(Add } \gamma \text{ to both sides, then divide by } \beta &gt; 0\text{)}
-\end{aligned}\]</span>
-<p>$$</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{d\tilde{I}}{dt} &amp;&lt; 0  &amp;&amp; \text{Condition that the infected population is decreasing} \\[10pt]
+\tilde{I}(\beta \tilde{S} - \gamma) &amp;&lt; 0  &amp;&amp; \text{Substitute } \frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma) \\[10pt]
+\beta \tilde{S} - \gamma &amp;&lt; 0  &amp;&amp; \text{Divide both sides by } \tilde{I} &gt; 0 \\[10pt]
+\tilde{S} &amp;&lt; \frac{\gamma}{\beta}  &amp;&amp; \text{Add } \gamma \text{ to both sides, then divide by } \beta &gt; 0
+\end{aligned}
+\]</span></p>
 <p>Reproducing this procedure, we obtain the following similar result:</p>
 <p><span class="math display">\[
 \frac{d\tilde{I}}{dt} &gt; 0
@@ -1262,19 +1257,46 @@ Note
 <p>We can see that for <span class="math inline">\(\frac{dS}{dt}\)</span> to be equal to <span class="math inline">\(0\)</span>, it is not necessary that <span class="math inline">\(0\)</span> people are entering the susceptible population (i.e.&nbsp;being born) and <span class="math inline">\(0\)</span> people are leaving the susceptible population (i.e.&nbsp;getting infected). It is simply necessary that the flow rate <em>into</em> the susceptible population (given by the birth rate term ) is the same as the flow rate <em>out</em> of the susceptible population (given by the infection term <span class="math inline">\(\beta \tilde{I} S\)</span> and the death rate term <span class="math inline">\(\mu S\)</span>).</p>
 </div>
 </div>
-<p>The equilibrium point of a system of differential equations is found by setting each rate of change equal to <span class="math inline">\(0\)</span> and finding the solution(s) of the resulting system:</p>
-$$
-<span class="math display">\[\begin{aligned}
-\frac{d\tilde{I}}{dt} &amp;&lt; 0
-&amp;\quad&amp; \text{Condition that the infected population is decreasing} \\[10pt]
-
-\tilde{I}(\beta \tilde{S} - \gamma) &amp;&lt; 0
-&amp;\quad&amp; \text{Substitute } \frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma) \\[10pt]
-
-\beta \tilde{S} - \gamma &amp;&lt; 0
-&amp;\quad&amp; \text{Divide both sides by } \tilde{I} &gt; 0
-\end{aligned}\]</span>
-<p>$$</p>
+<p>The equilibrium of a system of differential equations is found by setting each rate of change equal to <span class="math inline">\(0\)</span> and finding the solution(s) of the resulting system:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{d\tilde{S}}{dt} = 0, \quad \frac{d\tilde{I}}{dt} = 0, \quad \frac{d\tilde{R}}{dt} = 0
+&amp; \quad &amp;&amp; \text{Equilibrium set up} \\[10pt]
+\frac{d\tilde{I}}{dt} = \beta \tilde{I} \tilde{S} - \gamma \tilde{I} - \mu \tilde{I} = 0
+&amp; \quad &amp;&amp; \text{Focus on the infected equation} \\[10pt]
+\tilde{I}(\beta \tilde{S} - \gamma - \mu ) = 0
+&amp; \quad &amp;&amp; \text{Factor out } \tilde{I} \text{ to solve for equilibrium} \\[10pt]
+\tilde{I} = 0 \quad \text{or} \quad \tilde{S} = \frac{\gamma + \mu}{\beta}
+&amp; \quad &amp;&amp; \text{Two potential solutions}
+\end{aligned}
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that above equilibrium system is solved using the endemic model equations for the proportion, not number, of individuals in each compartment. A similar procedure can be replicated to solve for the number of individuals in each compartment at the equilibrium.</p>
+<p>The values at which the equilibrium occur are often denoted using an asterisk (<span class="math inline">\(*\)</span>) above the variable. For consistency and clarity, the values at which the equilibrium occurs for the proportion endemic model will be denoted with <span class="math inline">\(\tilde{S}^*\)</span>, <span class="math inline">\(\tilde{I}^*\)</span>, and <span class="math inline">\(\tilde{R}^*\)</span>. Likewise, the values at which the equilibrium occurs for the number endemic model will be denoted with <span class="math inline">\(S^*\)</span>, <span class="math inline">\(I^*\)</span>, and <span class="math inline">\(R^*\)</span>.</p>
+</div>
+</div>
+<p>Notice that we actually have two possible solutions for the equilibrium, one where <span class="math inline">\(\tilde{I}=0\)</span> and another when <span class="math inline">\(\tilde{S} = \frac{\gamma + \mu}{\beta}\)</span>. We can solve for the values of the other variables at these points, starting with when <span class="math inline">\(\tilde{I}=0\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\tilde{I}=0 \implies  \mu- mu \tilde{S} = 0 \implies \tilde{S}=0
+&amp; \quad &amp;&amp; \text{Substituting \tilde{I}=0 into \frac{dS}{dt}=0} \\[10pt]
+\frac{d\tilde{I}}{dt} = \beta \tilde{I} \tilde{S} - \gamma \tilde{I} - \mu \tilde{I} = 0
+&amp; \quad &amp;&amp; \text{Focus on the infected equation} \\[10pt]
+\tilde{I}(\beta \tilde{S} - \gamma - \mu ) = 0
+&amp; \quad &amp;&amp; \text{Factor out } \tilde{I} \text{ to solve for equilibrium} \\[10pt]
+\tilde{I} = 0 \quad \text{or} \quad \tilde{S} = \frac{\gamma + \mu}{\beta}
+&amp; \quad &amp;&amp; \text{Two potential solutions }
+\end{aligned}
+\]</span></p>
 
 </section>
 
