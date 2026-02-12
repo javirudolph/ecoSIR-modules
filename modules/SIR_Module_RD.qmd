@@ -3,9 +3,17 @@ title: "SIR Module Rough Draft"
 format:
   html:
     toc: true
+    toc-location: right
 editor: visual
 bibliography: ../reference.bib
 ---
+
+
+
+```{r}
+system("Rscript ./run_app_script.R &")
+Sys.sleep(5)
+```
 
 ## Introduction and Course Learning Objectives
 
@@ -41,11 +49,9 @@ Although these classifications are more commonly used in a medical, rather than 
 
 (PLACE GRAPH HERE OF ALL THESE PERIODS)
 
-CITATION FOR ENTIRE SECTION: Keeling and Rohani
+**Section References**
 
-**References**
-
-[@keeling_modeling_2008]
+@keeling_modeling_2008
 
 ## Introducing Compartmental Models {#introducing-compartmental-models}
 
@@ -80,7 +86,9 @@ The [next section](#the-classic-sir-epidemic-model) covers the specific formulat
 
 Make assessment that's like given what compartments these letters represent draw a flowchart for the following models like SEIR SMEIR SIS SIRS etc
 
-CITATION FOR ENTIRE SECTION: Keeling and Rohani
+**Section References**
+
+@keeling_modeling_2008
 
 ## The Classic SIR Epidemic Model {#the-classic-sir-epidemic-model}
 
@@ -163,7 +171,9 @@ The phrase "per capita" here refers to a rate that is divided among each person 
 A similar logic is being utilized in the SIR equations: the number of susceptible people at a given time, $S$, is multiplied by the per capita rate they are becoming infectious to get the total rate at which people are entering the infectious compartment Similarly, the number of infectious people at a given time, $I$, is multiplied by the per capita rate they are recovering to get the total rate at which people are entering the recovered compartment
 :::
 
-CITATION FOR ENTIRE SECTION: Keeling and Rohani
+**Section References**
+
+@keeling_modeling_2008
 
 ### Formulating the Force of Infection
 
@@ -181,12 +191,7 @@ Although this formulation for $\lambda$ is based on first principles, there are 
 2.  We assume *homogeneous mixing* of the population. That is, we assume everyone has an equal probability of contacting any other individual in the population. In real life, this is of course not true: infectious individuals are more likely to come into contact with other infectious individuals if they go to the hospital and are less likely to come into contact with susceptible individuals if they quarantine, just to name a few examples.
 :::
 
-The force of infection is calculated in many ways; we just provide one of many possible formulations and rationales here. Notice there are two constant terms in the formulation for $\lambda$ given above: $c$ and $p$. Since these terms are constant throughout time in the model, they are grouped together into a singular term, known as the *transmission rate*. As it is a constant unaffected by the dynamics of the model itself, the transmission rate---often denoted as $\beta$---is considered a property of the specific disease or pathogen being analyzed and is calculated prior to the construction of the model. We present common methods of calculating $\beta$, summarized in the table below:
-
-| **Method** | **What is it?** | **Best Used When . . .** |
-|------------------|----------------------------------|---------------------|
-| Blackbox method | This is a data-driven method wherein $\beta$ is calculated empirically using epidemiological data. We can think of this as "fitting" a value of $\beta$ in our model to most accurately reflect the dynamics we observe in the real world. | There is an abundance of accurate real-world data available on the number of susceptible and infectious people over time. |
-| First-Principles method | This method utilizes the formulation $\beta=cp$, which was obtained using first-principles, and separately calculates appropriate values for $c$ and $p$. The specifics of how $c$ and $p$ are calculated vary widely depending on context and model complexity, but can be found using a combination of logic and predictions for how people will interact as well as real-world data on the transmissibility of a pathogen. | Real-world data is scarcer or there the data available lends itself better to calculating $c$ and $p$ separately rather than fitting an overall $\beta$. |
+The force of infection is calculated in many ways; we just provide one of many possible formulations and rationales here. Notice there are two constant terms in the formulation for $\lambda$ given above: $c$ and $p$. Since these terms are independent of the number of individuals in each compartment throughout time, they are grouped together into a singular term, known as the *transmission rate*. As it is generally unaffected by the dynamics of the model itself, the transmission rate---often denoted as $\beta$---is considered a property of the specific disease or pathogen being analyzed and is formulated prior to the construction of the model.
 
 Putting this all together, we can rewrite the SIR model equations from the [previous section](#the-classic-sir-epidemic-model) as follows:
 
@@ -208,11 +213,30 @@ $$
 \end{aligned}
 $$
 
+Now comes the question of how we even find $\beta$? The table below presents two common methods for calculating $\beta$:
+
+| **Method** | **What is it?** | **Best Used When . . .** |
+|------------------|----------------------------------|---------------------|
+| Blackbox method | This is a data-driven method wherein $\beta$ is calculated empirically using epidemiological data. We can think of this as "fitting" a value of $\beta$ in our model to most accurately reflect the dynamics we observe in the real world. | There is an abundance of accurate real-world data available on the number of susceptible and infectious people over time. |
+| First-Principles method | This method utilizes the formulation $\beta=cp$, which was obtained using first-principles, and separately calculates appropriate values for $c$ and $p$. | Real-world data is scarcer or there the data available lends itself better to calculating $c$ and $p$ separately rather than fitting an overall $\beta$. |
+
+
+For the purposes and scope of this introductory module, we will only provide examples and insights into the blackbox method for calculating the transmission rate $\beta$. This is because specifics of how $c$ and $p$ are calculated using the first-principles method depends heavily on model context and complexity, meaning there is no "one size fits all" way of finding $\beta$ using this method. 
+
+Models will often formulate $c$ and $p$ as functions of their own depending on a number of external variables. An example of this can be found in this paper [@deer_covid], where the transmission rate $\beta$ is formulated as the product of the proximity rate $\omega_{ij}$, or "frequency per day that host $i$ and recipient $j$ are within 1.5 meters (m) of each other" and $\sigma^{Aero}$, or the "probability of infection from aerosols." The paper further decomposes $\omega_{ij}$ and $\sigma^{Aero}$ into functions of their own depending on a variety of external variables. 
+
+The specific formulations for the contact rate (or proximity rate) and infection probability utilized by this paper are unique to its context (the pathogen it is analyzing, the host population(s), etc.) and will vary widely from paper to paper. PROVIDE CITATIONS FOR MORE EXAMPLES OF DIFFERENT BETA CALCULATIONS HERE. 
+
+
+However, there are standardized procedures to obtain $\beta$ using the blackbox approach, of which one common method known as *maximum likelihood estimation* is covered in the next section.
+
 CITATION: difficult to say, mixture of Keeling / Rohani book and own intuition of these concepts
 
-### Formulating the Recovery Rate and Other Parameters
+### Formulating the Transmission Rate, Recovery Rate, and Other Parameters
 
+https://scholarworks.lib.csusb.edu/cgi/viewcontent.cgi?article=2232&context=etd
 
+The paper linked above is a great intro-SIR paper in general and motivates the formulation of the recovery rate as 1 over the average duration of infection. 
 
 ## Solving SIR Equations
 
@@ -316,11 +340,13 @@ The accuracy of the solution produced by Euler's method is a direct result of wh
 See the section [Evaluating and Comparing Both Methods](#evaluating-and-comparing-both-methods) for a simulation demonstrating what happens when you change the step size.
 :::
 
-CITATION: https://homepage.math.uiowa.edu/\~atkinson/papers/NAODE_Book.pdf
+**Section References**
+
+@ode_book
 
 ### deSolve Package in R
 
-The deSolve Package in R contains a variety of functions that "solve initial value problems of a system of first-order ordinary differential equations ('ODE'), of partial differential equations ('PDE'), of differential algebraic equations ('DAE'), and of delay differential equations."
+The deSolve Package in R contains a variety of functions that "solve initial value problems of a system of first-order ordinary differential equations ('ODE'), of partial differential equations ('PDE'), of differential algebraic equations ('DAE'), and of delay differential equations" [@cran_desolve]
 
 ::: {.callout-note}
 The SIR-type models we are going to cover deal with systems of first-order ordinary differential equations.
@@ -403,9 +429,9 @@ matplot(x = output[,"time"], y = output[,2:4], type = "l", lty = 1, xlab = "time
 legend("topright",legend = c("Susceptible", "Infectious", "Recovered"), col = c("blue","red","green"), lty = 1)
 ```
 
-CITATION FOR QUOTE: https://cran.r-project.org/web/packages/deSolve/index.html
+**Section References**
 
-CITATION FOR CONTENT: file:///C:/Users/anjal/Downloads/v33i09.pdf
+@desolve_intro
 
 ### Evaluating and Comparing Both Methods {#evaluating-and-comparing-both-methods}
 
@@ -417,6 +443,12 @@ The following table summarizes some potential benefits and drawbacks to using Eu
 | deSolve Package | \- Uses advanced solving methods with high accuracy<br>- Handles large models with many system equations well<br>- Efficient for complex models | \- Less transparent approach; not much understanding of what is going on "under the hood"<br>- Requires learning new functions and syntax<br>- Depends on external packages<br>- Less control over solving method and accuracy |
 
 The following simulation shows the difference between the solution curves produced by Euler's method and the deSolve package for different values of the model parameters and step size:
+
+<iframe src="http://127.0.0.1:4570"
+        width="100%"
+        height="700"
+        style="border:none;"></iframe>
+     
 
 ## Reproduction Numbers
 
@@ -432,7 +464,7 @@ By the end of this section, you should be able to:
 -   Explain what the "threshold phenomenon" is.
 :::
 
-The reproductive number is defined as "the average number of secondary infectious cases caused by one infectious individual (before they recover or die or are otherwise not able to further transmit)." (CITATION: ANDREAS HANDEL BOOK)
+The reproductive number is defined as "the average number of secondary infectious cases caused by one infectious individual (before they recover or die or are otherwise not able to further transmit)" [@Handel2021_IDEMA_ch5].
 
 The table below summarizes the two types of reproduction numbers we will focus on:
 
@@ -471,7 +503,9 @@ The point where these two formulas differ is in their assumption about the propo
 
 Make sure you understand the definitions and intuition behind the formulas for $R_0$ and $R_e$. The [next section](#the-threshold-phenomenon) on the threshold phenomenon applies the reproduction number in learning how to control the spread of infection.
 
-CITATION FOR SECTION: ANDREAS HANDEL BOOK
+**Section References**
+
+@Handel2021_IDEMA_ch5
 
 ### The Threshold Phenomenon {#the-threshold-phenomenon}
 
@@ -525,7 +559,11 @@ $$
 
 The simulation below let's you see the threshold phenomenon in action:
 
-INSERT THRESHOLD SIM HERE
+<iframe src="http://127.0.0.1:4567"
+        width="100%"
+        height="700"
+        style="border:none;"></iframe>
+    
 
 ::: {.callout-note}
 Try changing the initial proportion of susceptible individuals $S(0)$ to be above and below the rounded threshold value ($\frac{\gamma}{\beta}$ ) shown. Notice that the proportion of infected individuals never increases if $S(0)<\frac{\gamma}{\beta}$ but does increase if $S(0)>\frac{\gamma}{\beta}$.
@@ -553,7 +591,11 @@ This should come as no surprise though, as it can be inferred from the definitio
 
 The simulation below demonstrates how the infected population increases, decreases, and reaches its maximum at different values of $R_e$:
 
-INSERT R EFFECTIVE SIM HERE
+<iframe src="http://127.0.0.1:4568"
+        width="100%"
+        height="700"
+        style="border:none;"></iframe>
+     
 
 ::: {.callout-note}
 Notice how $R_e$ starts off at its highest (when the population is almost entirely susceptible and it is equal to $R_0$), then decreases over time to be equal to $1$. At the point $R_e=1$, the proportion of infected individuals reaches a maximum. Then, as $R_e$ further decreases below $1$ the proportion of infected individuals starts decreasing as the epidemic "dies off."
@@ -563,9 +605,11 @@ Try expanding the window size in the simulation above and observe what happens t
 
 INSERT FLOW DIAGRAM THAT SHOWS EFF R AT VARIOUS FINITE STAGES AND ARROWS BETWEEN PEOPLE SPREADING THE INFECTION AND SAY THAT IF THERE IS LIKE 50 INFECTIOUS PEOPLE AND AN RE = 0.1 THEN 5 PEOPLE WILL GET INFECTED NEXT STAGE; ONCE THIS AVERAGE DIPS BELOW 1 PERSON FOR THE WHOLE INFECTIOUS POPULATION, DISEASE DIES OFF
 
-Of course, one of our primary goals is to expedite the natural decrease of $R_e$ to be below $1$ as quickly as possible, thus reducing and eventually fully stopping the spread of infection. One of the most effective public health measures to accomplish this is vaccination (CITATION: https://pmc.ncbi.nlm.nih.gov/articles/PMC12115698/). The [next section](#choosing-how-many-people-to-vaccinate) answers the crucial following question: "How many vaccinated people is enough?".
+Of course, one of our primary goals is to expedite the natural decrease of $R_e$ to be below $1$ as quickly as possible, thus reducing and eventually fully stopping the spread of infection. One of the most effective public health measures to accomplish this is vaccination [@vaccines13050479]. The [next section](#choosing-how-many-people-to-vaccinate) answers the crucial following question: "How many vaccinated people is enough?".
 
-CITATION FOR SECTION: KEELING AND ROHANI BOOK
+**Section References**
+
+@keeling_modeling_2008
 
 ### Choosing How Many People to Vaccinate {#choosing-how-many-people-to-vaccinate}
 
@@ -602,11 +646,15 @@ $$
 
 This means that, for a vaccine with an efficacy rate $e$, at the proportion of people that should be vaccinated at the start of an outbreak to prevent further spread should be at least $\frac{1}{e}(1-\frac{1}{R_0}$. Not everyone in the population must be vaccinated to stop the spread of a disease, an idea known as *herd immunity*.
 
-However, sometimes herd immunity cannot be obtained. Take the case when $R_0=3$ and the best avaliable vaccine has an efficacy rate of $e=0.6$ (meaning that of the people who are vaccinated, only about $60%$ of them will actually be immune and unable to contract the disease). Using the formula above, we find that the proportion of people who are vaccinated at the beginning of the outrbreak must be at least $\frac{1}{0.6}(1-\frac{1}{3})\approx1.1$. However, this is impossible: we cannot possible vaccinate more than $100%$ of the population! This means that, due to a combination of the high transmissibility of the disease and the relatively low vaccine efficacy rate, even if $100%$ of the population were to be vaccinated, there would still be enough susceptible people (i.e. people whose vaccines were not effective) for an outbreak to occur (ANDREAS BOOK CITATION).
+However, sometimes herd immunity cannot be obtained. Take the case when $R_0=3$ and the best available vaccine has an efficacy rate of $e=0.6$ (meaning that of the people who are vaccinated, only about $60%$ of them will actually be immune and unable to contract the disease). Using the formula above, we find that the proportion of people who are vaccinated at the beginning of the outrbreak must be at least $\frac{1}{0.6}(1-\frac{1}{3})\approx1.1$. However, this is impossible: we cannot possible vaccinate more than $100%$ of the population! This means that, due to a combination of the high transmissibility of the disease and the relatively low vaccine efficacy rate, even if $100%$ of the population were to be vaccinated, there would still be enough susceptible people (i.e. people whose vaccines were not effective) for an outbreak to occur.
 
 ::: {.callout-note}
 Note that the above calculations and statements are assuming ideal vaccination practices at the beginning of an outbreak when nearly all individuals are susceptible and almost none are recovered or infectious. If vaccination is implemented mid-outbreak, when the number of recovered individuals with natural immunity and infectious people are not negligible, the calculations must be modified. In general, fewer individuals will have to be vaccinated than at the beginning of an outbreak since the proportion of susceptible individuals $\tilde{S}$ will be equal to the complement of the sum of: the proportion of people who are infectious, those who have natural immunity due to recovery, and those who are successfully vaccinated.
 :::
+
+**Section References**
+
+@Handel2021_IDEMA_ch5
 
 ## Example of the Classic Epidemic Model
 
@@ -615,6 +663,17 @@ By the end of this section, you should be able to:
 
 -   Identify examples of situations where the classic epidemic model is a useful tool for modeling.
 :::
+
+A disease commonly modeled using SIR-type models is measles due to its high infectivity and life-long immunity once recovered [@review_measles]. 
+
+average infectious period duration in Bjornstad paper reported a "followed by a 6–7 d infective period"
+
+https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/0012-9615%282002%29072%5B0169%3ADOMEES%5D2.0.CO%3B2#i0012-9615-72-2-169-anderson5
+
+Find beta using MLE
+
+Justification for not including E in model (Bjornstad paper): "Humans, thus, enter the susceptible host population after a short delay. Following this, the high transmission rates ensured that 95% of all people in (prevaccination) urban areas were infected by the age of 15, and essentially everybody by the age of 20 (Anderson 1982). In the prevaccination era, the mean age of infection was ∼4–5 yr (Anderson and May 1991)." 
+
 
 ## The Classic Endemic Model
 
@@ -644,7 +703,9 @@ However, epidemic models are not suitable for all disease; there are some diseas
 
     -   Although for many disease (like measles for example) newborns are born with passive immunity due to the passing down of maternal antibodies, the average age at which passive immunity is lost is much lower than the typical age of first infection in developed countries. This tells us that it is reasonable to consider all newborns as being immediately susceptible since the time to their first infection is most likely independent of their initial fading immunity at birth. This is not true of diseases that have a very small mean age of infection, however, since an infection can happen as soon as passive immunity ends.
 
-CITATION FOR SECTION: KEELING AND ROHANI
+**Section References**
+
+@keeling_modeling_2008
 
 ::: {.callout-note}
 The other assumptions made for the classic epidemic SIR apply to the endemic SIR model as well. We are just simply adding these new assumptions about the characteristics of the birth and death rates in the population. These assumptions are common but it should be noted that not all SIR models with demographics will make the same assumptions as above.
@@ -680,7 +741,7 @@ The following sections are mostly reviews of concepts covered previously in the 
 
 ## Formulating the Death Rate
 
-FIND SOURCE ON FORMULATING DEATH RATE; I ASSUME IT IS SIMILAR TO FORMULATING RECOVERY RATE (JUST USING MLE)?
+FIND SOURCE ON FORMULATING DEATH RATE; I ASSUME WE CAN SIMPLY FIND SOURCES THAT SAY THE DEATH RATE IS 1/AVG LIFE EXPECTANCY IN POPULATION
 
 ## Solving the Endemic SIR Model - Example
 
@@ -754,6 +815,7 @@ Multiplying the tranmission rate $\beta$ by the average time an individual will 
 $$
 R_0=\frac{\beta}{\gamma+\mu}
 $$
+
 ::: {.callout-note}
 This basic reproduction number for the endemic model is generally similar to, but always smaller than, the basic reproduction number for the epidemic model since the natural morality rate reduces the average time an individual is infectious (we now consider the possibility that individuals can die to natural causes while infectious, thus reducing their "infective potential"). 
 :::
@@ -802,7 +864,7 @@ $$
 & \quad && \text{Focus on the infected equation} \\[10pt]
 \tilde{I}(\beta \tilde{S} - \gamma - \mu ) = 0 
 & \quad && \text{Factor out } \tilde{I} \text{ to solve for equilibrium} \\[10pt]
-\tilde{I} = 0 \quad \text{or} \quad \tilde{S} = \frac{\gamma + \mu}{\beta}
+\tilde{I}^* = 0 \quad \text{or} \quad \tilde{S}^* = \frac{\gamma + \mu}{\beta}=\frac{1}{R_0}
 & \quad && \text{Two potential solutions}
 \end{aligned}
 $$
@@ -815,20 +877,77 @@ Note that above equilibrium system is solved using the endemic model equations f
 The values at which the equilibrium occur are often denoted using an asterisk ($*$) above the variable. For consistency and clarity, the values at which the equilibrium occurs for the proportion endemic model will be denoted with $\tilde{S}^*$, $\tilde{I}^*$, and $\tilde{R}^*$. Likewise, the values at which the equilibrium occurs for the number endemic model will be denoted with $S^*$, $I^*$, and $R^*$. 
 :::
 
-Notice that we actually have two possible solutions for the equilibrium, one where $\tilde{I}=0$ and another when $\tilde{S} = \frac{\gamma + \mu}{\beta}$. We can solve for the values of the other variables at these points, starting with when $\tilde{I}=0$:
+Notice that we actually have two possible solutions for the equilibrium, one where $\tilde{I}^*=0$ and another when $\tilde{S}^* = \frac{1}{R_0}$. We can solve for the values of the other variables at these points, starting with when $\tilde{I}^*=0$:
 
 $$
 \begin{aligned}
-\tilde{I}=0 \implies  \mu- mu \tilde{S} = 0 \implies \tilde{S}=0
-& \quad && \text{Substituting \tilde{I}=0 into \frac{dS}{dt}=0} \\[10pt]
-\frac{d\tilde{I}}{dt} = \beta \tilde{I} \tilde{S} - \gamma \tilde{I} - \mu \tilde{I} = 0 
-& \quad && \text{Focus on the infected equation} \\[10pt]
-\tilde{I}(\beta \tilde{S} - \gamma - \mu ) = 0 
-& \quad && \text{Factor out } \tilde{I} \text{ to solve for equilibrium} \\[10pt]
-\tilde{I} = 0 \quad \text{or} \quad \tilde{S} = \frac{\gamma + \mu}{\beta}
-& \quad && \text{Two potential solutions }
+\frac{d\tilde{S}}{dt}=\mu - \mu \tilde{S}=0 \implies \tilde{S}^*=1
+& \quad && \text{Substituting } \tilde{I}=0 \text{ into } \frac{d\tilde{S}}{dt}=0 \\[10pt]
+\frac{d\tilde{R}}{dt}= - \mu \tilde{R} =0 \implies \tilde{R}^*=0
+& \quad && \text{Substituting } \tilde{I}=0 \text{ into } \frac{d\tilde{R}}{dt}=0 \\[10pt]
 \end{aligned}
 $$
+
+This gives us one set of values where an equilibrium can occur:
+
+$$
+(\tilde{S}^*,\tilde{I}^*,\tilde{R}^*)=(1,0,0)
+$$
+The other set of values corresponding to an equilibrium point can be obtained by solving for the values of $\tilde{I}^*$ and $\tilde{R}^*$ when $\tilde{S}^*=\frac{1}{R_0}$:
+
+$$
+\begin{aligned}
+\frac{d\tilde{S}}{dt}=\mu - \beta \tilde{I} \left(\frac{1}{R_0} \right) -\mu \tilde{S}=0 \implies \tilde{I}^*=\frac{\mu}{\beta}(R_0-1)
+& \quad && \text{Substituting } \tilde{S}=\frac{1}{R_0} \text{ into } \frac{d\tilde{S}}{dt}=0 \\[10pt]
+\tilde{S}+\tilde{I}+\tilde{R}=1 \implies \tilde{R}^*=1-\frac{1}{R_0}-\frac{\mu}{\beta}(R_0-1)
+& \quad && \text{Using total population equation}\\[10pt]
+\end{aligned}
+$$
+
+Now we have both sets of values where an equilibrium occurs:
+
+$$
+\begin{aligned}
+(\tilde{S}^*,\tilde{I}^*,\tilde{R}^*) &= (1,0,0) \\[10pt]
+(\tilde{S}^*,\tilde{I}^*,\tilde{R}^*) &= \left(\frac{1}{R_0}, \frac{\mu}{\beta}(R_0-1), 1 - \frac{1}{R_0} - \frac{\mu}{\beta}(R_0-1)\right)
+\end{aligned}
+$$
+
+Each of these two sets of values correspond to their own equilibrium points which have their own special names, summarized in the table below:
+
+
+| **Name** | **$(\tilde{S}^*,\tilde{I}^*,\tilde{R}^*)$** | **What Is Happening At This Point?** |
+|-------------|-------------|-----------------------------------------------|
+| Disease-Free Equilibrium | $(1,0,0)$ | A stable point wherein the the disease has completely left the population and all recovered individuals have died due to natural causes. It can be interpreted as a population "untouched" by the disease. |
+| Endemic Equilibrium | $\left(\frac{1}{R_0}, \frac{\mu}{\beta}(R_0-1), 1 - \frac{1}{R_0} - \frac{\mu}{\beta}(R_0-1)\right)$ | A stable point wherein the disease has established itself in the population and become *endemic*. A disease is endemic when "it is consistently present but limited to a particular region," which in the case of the endemic SIR model is our particular region of study [@endemic_article]. |
+
+The next question that arises is when do these equilibrium points occur? The answer lies in the value of $R_0$: the endemic equilibrium is *asymptotically stable* when $R_0>1$, otherwise if $R_0\leq1$ then the disease-free equilibrium is stable. 
+
+:::{.callout-note}
+The stability of model systems can be a difficult concept to grasp, but in general we can think of the above statement as saying that when $R_0\leq 1$ or the initial proportion of infected individuals equals 0, all valid solution paths (solutions which exist for all positive time and are unique) approach the disease-free equilibrium given by $(\tilde{S}^*,\tilde{I}^*,\tilde{R}^*)=(1,0,0)$. Similarly, when $R_0>1$, all valid solution paths with an intitial proportion of infected individuals greater than $0$ will approach the endemic equilibrium [@hethcote_math_infection].
+
+This makes sense intuitively, as if $R_0\leq1$ the pathogen can't invade the population since every new infectious individual would only, on average, pass on the disease to one or fewer hosts. Eventually the chain of transmission would break and the disease-free equilibrium  would be approached asymptotically (over time). 
+
+Likewise, if $R_0>1$ the pathogen can invade the population with even just the smallest introduction of infectious individuals since they will successively infect more people (who will then infect more even more people, etc.). The chain of transmission will not break either like it does in the epidemic SIR model since the population of susceptibles is constantly being "replenished" via new births, so the disease-free equilibrium is approached asymptotically. 
+:::
+
+The simulation below lets you see which equilibrium will be approached for different values of $R_0$ and initial proportion of infected individuals:
+
+<iframe src="http://127.0.0.1:4569"
+        width="100%"
+        height="700"
+        style="border:none;"></iframe>
+     
+
+:::{.callout-note}
+Try setting the transmission rate to $1$, the recovery rate to $0.7$, and the birth / death rate to $0.4$. Notice that under these model parameters, the basic reproduction number $R_0$ is barely under $1$ ($R_0\approx0.909$). Now try changing the initial proportion of infected individuals and observe what happens to the SIR curves over time. Even for an initial infected proportion of $1$ (at the start everyone is infected), the curves still approach the disease-free equilibrium as expected! 
+
+Now try setting the parameters to result in $R_0>1$ and observe the proportion of susceptible, infected, and recovered individuals as time progresses (you can see the exact proportions by hovering over each curve). Do these line up exactly with values at the endemic equilibrium point calculated before? 
+:::
+
+
+
+
 
 
 
