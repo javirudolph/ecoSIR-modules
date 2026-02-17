@@ -6,7 +6,7 @@ source("equilibrium_solver.R")
 
 # Define UI for application that draws a histogram
 ui <- page_sidebar(
-  title = "Effective Reproduction Number Simulation",
+  title = "Equilibrium Simulation",
   sidebar = sidebar(
     helpText("Simulation to help understand disease-free and endemic equilibriums and their relationship to the basic reproduction number and initial proportion of infected individuals. Hover over each of the curves to see the effective reproduction number at that point. Double click on any of the curves in the legend to isolate it. "),
     textOutput("reprod"),
