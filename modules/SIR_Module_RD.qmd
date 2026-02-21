@@ -260,9 +260,184 @@ The table below provides some empirically-deduced average infectious periods for
 
 ### Formulating the Transmission Rate Using MLE {#sec-formulating-transmission-rate}
 
-*Maximum likelihood estimation*, often shorthanded as MLE, is a statistical technique that estimates the value of an unknown parameter by maximizing the *likelihood function*.
+*Maximum likelihood estimation*, often shorthanded as MLE, is a statistical technique that estimates the value of an unknown parameter to be that which maximizes the probability of observing real-world data from the scenario of interest. Recalling from [Section @sec-formulating-the-recovery-rate], the recovery rate is often found based on prior literature and held as a constant equal to the reciprocal of the average duration of infection. As such, for the epidemic SIR model, we generally only use MLE to estimate the value of the transmission rate $\beta$ [@parameter_estimation]. 
 
-The likelihood function, in the context of MLE for SIR models, is a function that provides the probability of observing some real-world disease data given a particular SIR model (i.e. particular values for the model parameters) (CITATION MLE PAPER). In other words, maximum likelihood estimation is a process that estimates the parameters of the SIR model to be the ones which maximizes the probability of observing real-world data from the scenario of interest. Recalling from [Section @sec-formulating-the-recovery-rate], the recovery rate is often found based on prior literature and held as a constant equal to the reciprocal of the average duration of infection. As such, for the epidemic SIR model, we only use MLE to estimate the value of the transmission rate $\beta$. 
+MLE works by maximizing the *likelihood function*. The likelihood function provides the *likelihood*, or the probability of a given piece of data $D_n$ having occurred under a particular hypothesis (or model) $H$, and is typically noted as $\mathcal{L}(H,D_i)$. In other words, the likelihood function treats the model (i.e. particular values of $\beta$) as an independent variable, or input, and outputs the probability of observing a particular piece of disease data collected. The likelihood function only provides the probability of observing a particular piece of data under different values of $\beta$, but we are generally interested in finding and maximizing the probability of observing entire sets of data not just individual observations. Assuming the entire data set is *independent* (i.e. one observation in the data set does not affect what the other observations in the data set are), we can accomplish this by multiplying the individual likelihood functions $\mathcal{L}(H,D_n)$ for every individual piece of data $D_1,D_2 \cdots , D_n$ in the overall data set $D$ to get the overall likelihood of the entire set of data $\mathcal{L}(H,D)$:
+
+$$
+\mathcal{L}(H,D)=\mathcal{L}(H,D_1) \times \mathcal{L}(H,D_2) \times \cdots \times \mathcal{L}(H,D_n)
+$$
+
+What this likelihood function looks like highly depends on the disease data we have available to us. Disease data often comes in two forms:
+
+- Prevalence Count Data: Data that reports the total number of infected individuals at a time $t$. 
+
+- Incidence Data: Data that reports the number new infected individuals over a period of time from $t$ to $t+\Delta t$
+
+In this learning module, we will only cover the process for finding $\beta$ using MLE when we have prevalence count data, however. The MLE algorithm for prevalence count data follows these general steps:
+
+1. Make an assumption about the distribution of the likelihood function. Oftentimes, this means assuming that every piece of observed data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
+
+:::{.callout-note}
+In this context, the Poisson distribution describes the probability of having observed a particular count of infected individuals at a time $t$ when the the average number of infectious individuals $\lambda$ is known. 
+It's important to note that we are not saying the prediction from the SIR model is random but rather that each data point was drawn randomly from a distribution centered around the predicted value given by the SIR model, and that distribution is Poisson. We can imagine that for every time $t$ there is a separate Poisson distribution centered around the predicted prevalence count obtained from the SIR model from which the observed prevalence counts were drawn. 
+:::
+
+2. Set a range of plausible values for the parameter of interest ($\beta$) and iterate through all of them in tiny increments.
+
+3. For each plausible value of $\beta$, iterate through every data point in the set and calculate its likelihood $\mathcal{L}(H,D_n)$. Multiply the likelihoods of all the data points together and store that value as $\mathcal{L}(H,D)$.
+
+4. Repeat step 3 for every value of $\beta$ in the plausible range.
+
+5. Now that we have a collection of likelihoods for different SIR models, given by different values of $\beta$, we should find the maximum among them and estimate the value of $\beta$ to be what provides that maximum likelihood (i.e. the maximum likelihood estimator). We can also graph the likelihoods to get a better idea of what pattern they follow and a visual representation of where the maximum occurs.
+
+
+There are a few small optimizations we often make to the maximum likelihood algorithm, firstly: 
+
+- We use *log-likelihoods* instead of raw likelihoods. 
+
+  - Why do we do this?: The individual likelihoods $\mathcal{L}(H,D_i)$ represent the probability of observing a piece of data under a particular model, they are small numbers between $0$ and $1$ (since probability is always lies in the interval $[0,1]$). The MLE algorithm requires multiplying many of these small likelihoods together, and after a certain point (if our data set is big enough and we are multiplying enough individual likelihoods together), the computer might not be precise enough to represent such small number and simply round out our overall likelihood $\mathcal{L}(H,D)$ to be $0$! We obviously want to avoid this, so we often opt to using *log-likelihoods* instead since logarithms convert very small numbers between $0$ and $1$ into numbers larger in magnitude but negative (thus avoiding potential rounding errors). Log-likelihoods are simply obtained by taking the logarithm of the likelihood function $\mathcal{L}(H,D)$. When we do this, we must modify the way we calculate $\mathcal{L}(H,D)$, since we would no longer be multiplying the individual likelihoods $\mathcal{L}(H,D_i)$ but rather adding them. Remembering back to our properties of logarithms, we have:
+
+$$
+\log(a \times b) = \log(a) + \log(b)
+$$
+And from this we get:
+
+$$
+\log[\mathcal{L}(H,D)]=\log[\mathcal{L}(H,D_1) \times \cdots \times \mathcal{L}(H,D_n)]=\log[\mathcal{L}(H,D_1)] + \cdots +  \log[\mathcal{L}(H,D_n)]
+$$
+
+Taking the logarithm of the likelihood function will not change the results of MLE, making our maximum likelihood estimator for $\beta$ the same whether we use log-likelihoods or raw likelihoods. 
+
+:::{.callout-note}
+Why doesn't taking the logarithm of the likelihood function change the results of MLE?: The reason using log-likelihoods doesn't affect MLE is because the logarithm function is always increasing, so it doesn't actually change where the relative maxima of a function occur. If we have a function $f(x)$ with, say, relative maxima at $x=2,3,4$, then $\log[f(x)]$ would still have relative maxima at $x=2,3,4$. The process for MLE is dependent directly on finding where the relative maxima of the likelihood function occurs, so taking the logarithm doesn't affect its output.
+:::
+
+Including this optimization, our final modified MLE algorithm goes like so:
+
+1. Make an assumption about the distribution of the likelihood function. Oftentimes, this means assuming that every piece of observed data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
+
+2. Set a range of plausible values for the parameter of interest ($\beta$) and iterate through all of them in tiny increments.
+
+3. For each plausible value of $\beta$, iterate through every data point in the set and calculate its log-likelihood $\log[\mathcal{L}(H,D_i)]$. Add the log-likelihoods of all the data points together and store that value as $\log[\mathcal{L}(H,D)]$.
+
+4. Repeat step 3 for every value of $\beta$ in the plausible range.
+
+5. Now that we have a collection of likelihoods for different SIR models, given by different values of $\beta$, we should find the maximum among them and estimate the value of $\beta$ to be what provides that maximum likelihood (i.e. the maximum likelihood estimator). We can also graph the likelihoods to get a better idea of what pattern they follow and a visual representation of where the maximum occurs.
+
+This whole process can be really hard to conceptualize at first without concrete examples. We go over a few code examples of MLE coded from stratch and MLE using the `bblme` package in R in [Sections @sec-coding-scratch] and [@sec-bblme]. 
+
+#### Coding An MLE Algorithm From Scratch {#sec-coding-scratch}
+
+Suppose we have the following SIR epidemic model and we wish to use MLE to estimate the value of $\beta$:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta \frac{I}{N} S \\[10pt]
+\frac{dI}{dt} &= \beta \frac{I}{N} S - \gamma I \\[10pt]
+\frac{dR}{dt} &= \gamma I
+\end{aligned}
+$$
+For this model, $t$ is in units of days, the total size of the population we are modelling is $N=1000$ people, and the initial number of susceptible, infected, and recovered individuals is $S=999$, $I=1$, and $R=0$, respectively. 
+
+:::{.callout-note}
+These SIR equations are providing the number, not proportion, of individuals in each compartment. This is important because the prevalence count data we will be using to find $\beta$ is also a number, not a proportion. Additionally, our assumption mentioned in [Section @sec-formulating-transmission-rate] that the data follows a Poisson distribution is only valid if both our data and model are counts of people, not proportions, since the Poisson distribution is a discrete distribution only able to take on non-negative integer values.
+:::
+
+Let's also assume that we know the recovery rate to be $\gamma=0.7$ people per day based on past literature. Substituting this into our SIR equations we have:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta \frac{I}{N} S \\[10pt]
+\frac{dI}{dt} &= \beta \frac{I}{N} S - 0.7 I \\[10pt]
+\frac{dR}{dt} &= 0.7 I
+\end{aligned}
+$$
+Now that we have our basic model equations, we need prevalence count data to conduct MLE to find $\beta$. We will be using the following data set for this example:
+
+```{r}
+data <- read.csv("../data/mle_example.csv")
+data
+```
+
+:::{.callout-note}
+This data set was actually generated based on random Poisson samples from a $\beta=1.2$ SIR model with the same recovery rate ($\gamma=0.7$), total population size $N=1000$, initial state variables ($S=999$,$I=1$,$R=0$), and units of time $t$ (days) as our example model. Keep this in mind because we can actually see how accurate our estimate for $\beta$ found using MLE is by seeing how close it is to the $\beta$ used to generate the data. 
+:::
+
+Our first step is to code a function using the package `deSolve` to solve our given SIR model for any value of $\beta$ and output what it predicts the number of infected individuals to be at various times. This is very similar our code from [Section @sec-desolve]:
+
+```{r}
+library(deSolve)
+
+ModelFunc <- function(time,state,parameters){
+  S <- state["S"]
+  I <- state["I"]
+  R <- state["R"]
+  
+  beta <- parameters["beta"]
+  gamma <- parameters["gamma"]
+  N <- parameters["N"]
+  
+  dS <- -(beta*I*S/N)
+  dI <- (beta*I*S/N) - (gamma*I)
+  dR <- (gamma*I)
+  
+  return(list(c(dS,dI,dR)))
+}
+
+# Function to take in values of the model parameters and a vector of times and output the predicted prevalence count at those times
+pred <- function(parameters,t){
+  initial_vals <- c(S=999,I=1,R=0)
+  output <- ode(func=ModelFunc,y=initial_vals,parms=parameters,times=t,rtol = 1e-4,atol = 1e-4)
+  
+  # Extracting only the infected values (predicted prevalences)
+  I_pred <- output[, "I"]
+  
+  return(I_pred)
+}
+```
+
+Now that we have our function to output the predicted prevalence counts given by our SIR model, we need to code a function to iterate through plausible values of $\beta$ and calculate the overall log-likelihood at each using our data:
+
+```{r}
+# Function to take in a named vector of parameters (beta and gamma) and the set data and output the overall log-likelihood
+log_likelihood <- function(parameters,data){
+  times <- data$day
+  predicted <- pred(parameters,times)
+  
+  # The function dpois gives Poisson probabilities
+  # Note we are setting the mean of the Poisson distribution to be the predicted prevalence counts given by the SIR model
+  sum(dpois(x=data$prevalence_count,lambda=predicted,log=TRUE))
+}
+
+# Driver function to iterate through plausible values of beta, calculate the log-likelihood at each, and find the maximum likelihood estimator
+mle <- function(plausible_beta,data){
+  range_beta <- seq(0.01,plausible_beta,by=0.01)
+  
+  # Data frame of log-likelihoods for each beta
+  all_ll <- data.frame()
+  
+  for (beta in range_beta){
+    params <- c(beta=beta,gamma=0.7,N=1000)
+    new_ll <- data.frame(beta=beta,ll=log_likelihood(params,data))
+    all_ll <- rbind(all_ll,new_ll)
+  }
+  
+  # Plotting all the log-likelihoods against the betas
+  plot(all_ll$beta,all_ll$ll,type="l",xlab="beta",ylab="log-likelihood",main="Log-likelihood vs Beta")
+  
+  # Plotting a separate line where the maximum likelihood estimate for beta is and returning the estimate
+  beta_mle <- all_ll$beta[which.max(all_ll$ll)]
+  abline(v=beta_mle,lty=2)
+  return(beta_mle)
+}
+
+mle(2,data)
+```
+
+The code above outputs that our maximum likelihood estimator for $\beta$ is 1.2 and this aligns directly with the $\beta$ we used to generate the data! Read on to the next section to see how we can code all of this in a much easier and faster way using the `bbmle` package. 
+
+#### MLE Using the bbmle Package in R {#sec-bblme}
 
 
 
@@ -365,7 +540,7 @@ As you might notice, the calculations above are very tedious, which is why Euler
 ::: {.callout-tip title="Note"}
 The accuracy of the solution produced by Euler's method is a direct result of what we choose the step size to be. If the step size is larger, then the curvature of the true solution will be lost since we are repeatedly taking linear approximations, resulting in an approximate solution that deviates a lot from the true solution curve. On the other hand, as the step size gets smaller, the approximate solution provided by Euler's method converges to the true solution curve.
 
-See the section [Evaluating and Comparing Both Methods](#evaluating-and-comparing-both-methods) for a simulation demonstrating what happens when you change the step size.
+See [Section @sec-evaluating-and-comparing-both-methods] for a simulation demonstrating what happens when you change the step size.
 :::
 
 **Section References**
@@ -399,7 +574,7 @@ The function `ode` takes in the following relevant parameters, summarized in the
 
 The function `ode` returns a matrix whose first column is the time points specified in the input `times` and subsequent columns are the solutions to the model's state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infectious, and recovered at a given time.
 
-Before we can call `ode`, we must code the function to be passed into the parameter `func`. For a classic SIR model on the proportion of individuals in each compartment (see [The Classic SIR Epidemic Model](#the-classic-sir-epidemic-model) we do this using the following template function:
+Before we can call `ode`, we must code the function to be passed into the parameter `func`. For a classic SIR model on the proportion of individuals in each compartment (see [Section @sec-the-classic-sir-epidemic-model]) we do this using the following template function:
 
 ```{r}
 ModelFunc <- function(time,state,parameters){
@@ -461,7 +636,7 @@ legend("topright",legend = c("Susceptible", "Infectious", "Recovered"), col = c(
 
 @desolve_intro
 
-### Evaluating and Comparing Both Methods {#evaluating-and-comparing-both-methods}
+### Evaluating and Comparing Both Methods {#sec-evaluating-and-comparing-both-methods}
 
 The following table summarizes some potential benefits and drawbacks to using Euler's method or deSolve:
 
@@ -748,7 +923,9 @@ Find beta using MLE
 
 **Analyzing and Interpreting Our Model**
 
-to find prop to vaccinate use efficacy rates here: https://ir.nmu.org.ua/server/api/core/bitstreams/e4229560-2fd1-4a9f-bdeb-2c96b88fa29a/content
+to find prop to vaccinate use efficacy rates here:
+
+https://ir.nmu.org.ua/server/api/core/bitstreams/e4229560-2fd1-4a9f-bdeb-2c96b88fa29a/content
 
 
 Include practice questions that ask to repeat process for data from other cities. 
