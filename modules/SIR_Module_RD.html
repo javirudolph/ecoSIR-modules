@@ -132,14 +132,18 @@ window.Quarto = {
   <ul>
   <li><a href="#introduction-and-course-learning-objectives" id="toc-introduction-and-course-learning-objectives" class="nav-link active" data-scroll-target="#introduction-and-course-learning-objectives"><span class="header-section-number">1</span> Introduction and Course Learning Objectives</a></li>
   <li><a href="#introduction-and-the-classic-epidemic-model" id="toc-introduction-and-the-classic-epidemic-model" class="nav-link" data-scroll-target="#introduction-and-the-classic-epidemic-model"><span class="header-section-number">2</span> Introduction and The Classic Epidemic Model</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#sec-epidemiology-terms" id="toc-sec-epidemiology-terms" class="nav-link" data-scroll-target="#sec-epidemiology-terms"><span class="header-section-number">2.1</span> Epidemiology Terms</a></li>
   <li><a href="#sec-introducing-compartmental-models" id="toc-sec-introducing-compartmental-models" class="nav-link" data-scroll-target="#sec-introducing-compartmental-models"><span class="header-section-number">2.2</span> Introducing Compartmental Models</a></li>
   <li><a href="#sec-the-classic-sir-epidemic-model" id="toc-sec-the-classic-sir-epidemic-model" class="nav-link" data-scroll-target="#sec-the-classic-sir-epidemic-model"><span class="header-section-number">2.3</span> The Classic SIR Epidemic Model</a>
   <ul class="collapse">
   <li><a href="#sec-formulating-foi" id="toc-sec-formulating-foi" class="nav-link" data-scroll-target="#sec-formulating-foi"><span class="header-section-number">2.3.1</span> Formulating the Force of Infection</a></li>
   <li><a href="#sec-formulating-the-recovery-rate" id="toc-sec-formulating-the-recovery-rate" class="nav-link" data-scroll-target="#sec-formulating-the-recovery-rate"><span class="header-section-number">2.3.2</span> Formulating the Recovery Rate</a></li>
-  <li><a href="#sec-formulating-transmission-rate" id="toc-sec-formulating-transmission-rate" class="nav-link" data-scroll-target="#sec-formulating-transmission-rate"><span class="header-section-number">2.3.3</span> Formulating the Transmission Rate Using MLE</a></li>
+  <li><a href="#sec-formulating-transmission-rate" id="toc-sec-formulating-transmission-rate" class="nav-link" data-scroll-target="#sec-formulating-transmission-rate"><span class="header-section-number">2.3.3</span> Formulating the Transmission Rate Using MLE</a>
+  <ul class="collapse">
+  <li><a href="#sec-coding-scratch" id="toc-sec-coding-scratch" class="nav-link" data-scroll-target="#sec-coding-scratch"><span class="header-section-number">2.3.3.1</span> Coding An MLE Algorithm From Scratch</a></li>
+  <li><a href="#sec-bblme" id="toc-sec-bblme" class="nav-link" data-scroll-target="#sec-bblme"><span class="header-section-number">2.3.3.2</span> MLE Using the bbmle Package in R</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#sec-solving-sir-equations" id="toc-sec-solving-sir-equations" class="nav-link" data-scroll-target="#sec-solving-sir-equations"><span class="header-section-number">2.4</span> Solving SIR Equations</a>
   <ul class="collapse">
@@ -155,7 +159,7 @@ window.Quarto = {
   <li><a href="#example-of-the-classic-epidemic-model" id="toc-example-of-the-classic-epidemic-model" class="nav-link" data-scroll-target="#example-of-the-classic-epidemic-model"><span class="header-section-number">2.6</span> Example of the Classic Epidemic Model</a></li>
   </ul></li>
   <li><a href="#the-classic-endemic-model" id="toc-the-classic-endemic-model" class="nav-link" data-scroll-target="#the-classic-endemic-model"><span class="header-section-number">3</span> The Classic Endemic Model</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#the-classic-sir-endemic-model" id="toc-the-classic-sir-endemic-model" class="nav-link" data-scroll-target="#the-classic-sir-endemic-model"><span class="header-section-number">3.1</span> The Classic SIR Endemic Model</a></li>
   <li><a href="#formulating-the-death-rate" id="toc-formulating-the-death-rate" class="nav-link" data-scroll-target="#formulating-the-death-rate"><span class="header-section-number">3.2</span> Formulating the Death Rate</a></li>
   <li><a href="#solving-the-endemic-sir-model---example" id="toc-solving-the-endemic-sir-model---example" class="nav-link" data-scroll-target="#solving-the-endemic-sir-model---example"><span class="header-section-number">3.3</span> Solving the Endemic SIR Model - Example</a></li>
@@ -801,9 +805,89 @@ Note
 </div>
 </div>
 <p>The code above outputs that our maximum likelihood estimator for <span class="math inline">\(\beta\)</span> is 1.2 and this aligns directly with the <span class="math inline">\(\beta\)</span> we used to generate the data! Read on to the next section to see how we can code all of this in a much easier and faster way using the <code>bbmle</code> package.</p>
+<p><strong>SECTION REFERENCE</strong></p>
+<p>https://daphnia.ecology.uga.edu/drakelab/wp-content/uploads/2014/07/likelihood.pdf</p>
 </section>
 <section id="sec-bblme" class="level4" data-number="2.3.3.2">
 <h4 data-number="2.3.3.2" class="anchored" data-anchor-id="sec-bblme"><span class="header-section-number">2.3.3.2</span> MLE Using the bbmle Package in R</h4>
+<p>Although knowing how to code an MLE algorithm by hand is useful to first grasp the concept, in practicality it is inefficient which is why we often opt to use packages such as <code>bbmle</code> in R, which has the function <code>mle2</code> that makes it much easier.</p>
+<p><code>mle2</code> has many arguments, which can be read up on in the (R documentation for the <code>mle2</code> function)<span class="citation" data-cites="docs_bbmle_mle2">(<a href="#ref-docs_bbmle_mle2" role="doc-biblioref">n.d.a</a>)</span>, however there are only two required parameters:</p>
+<ul>
+<li><p><code>minuslogl</code>: A function or formula to calculate the <em>negative</em> log-likelihood given a value for our parameter of interest (<span class="math inline">\(\beta\)</span>)</p></li>
+<li><p><code>start</code>: An initial guess for the value of the parameter of interest (<span class="math inline">\(\beta\)</span>)</p></li>
+</ul>
+<p>We will also make use of two other parameters to ensure our code runs smoothly:</p>
+<ul>
+<li><p><code>method</code>: A string indicating what MLE algorithm method should be used. A summary of each method and how they change the MLE algorithm can be read up in the <span class="citation" data-cites="docs_stats_optim">(R Documentation for the <code>optim</code> function <a href="#ref-docs_stats_optim" role="doc-biblioref">n.d.b</a>)</span>. We will only make use of the method <code>"L-BFGS-B"</code>, or the <em>box constraint</em> method. This method allows for us to set a lower / upper bound on our parameter of interest <span class="math inline">\(\beta\)</span>. This is useful since we know <span class="math inline">\(\beta&gt;=0\)</span>, so we can set our lower bound to be a very small number such as <span class="math inline">\(0.01\)</span> to ensure that no <code>NaN</code>s are produced when we call <code>mle2</code>. Likewise, we can set an optional upper bound on <span class="math inline">\(\beta\)</span> so we can avoid unnecessary computations if we reasonably know it to be below a certain value.</p></li>
+<li><p><code>lower</code> / <code>upper</code>: These parameters are specified when using the <code>"L-BFGS-B"</code> method. These take a named vector including the lower and upper bounds of the parameter(s) of interest. Note that <code>lower</code> is a required parameter when using the <code>"L-BFGS-B"</code> method but <code>upper</code> is an optional parameter.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(bbmle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: bbmle</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: stats4</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'stats4'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked _by_ '.GlobalEnv':
+
+    mle</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the function to calculate the negative log-likelihood for a given beta</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>poisson_ll <span class="ot">&lt;-</span> <span class="cf">function</span>(b){</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  times <span class="ot">&lt;-</span> data<span class="sc">$</span>day</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta=</span>b,<span class="at">gamma=</span><span class="fl">0.7</span>,<span class="at">N=</span><span class="dv">1000</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  predicted <span class="ot">&lt;-</span> <span class="fu">pred</span>(parameters,times)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span><span class="fu">sum</span>(<span class="fu">dpois</span>(<span class="at">x=</span>data<span class="sc">$</span>prevalence_count,<span class="at">lambda=</span>predicted,<span class="at">log=</span><span class="cn">TRUE</span>))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Our initial guess for what beta is</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Try making the initial guess one that is "believable" since if it is too far off then mle2 might return some errors</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">b=</span><span class="dv">2</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the L-BFGS-B algorithm / method for MLE </span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting the lower bound to be a very small number because we know beta to be non-negative</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">mle2</span>(<span class="at">minuslogl=</span>poisson_ll,<span class="at">start=</span>start,<span class="at">method=</span><span class="st">"L-BFGS-B"</span>,<span class="at">lower=</span><span class="fu">c</span>(<span class="at">b=</span><span class="fl">0.01</span>))</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the result</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+mle2(minuslogl = poisson_ll, start = start, method = "L-BFGS-B", 
+    lower = c(b = 0.01))
+
+Coefficients:
+       b 
+1.203903 
+
+Log-likelihood: -88.61 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting just the maximum likelihood estimate for beta</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       b 
+1.203903 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You’ll notice that the estimate we get for <span class="math inline">\(\beta\)</span> using <code>mle2</code> is approximately equal to the one we obtain from our MLE algorithm coded by scratch (as we would expect) except that it is accurate to a far greater decimal place. This is because our MLE algorithm coded by hand is only incrementing through values of <span class="math inline">\(\beta\)</span> in steps of size <span class="math inline">\(0.01\)</span> for computational efficiency. The function <code>mle2</code> on the other hand employs much more sophisticated techniques to iterate through values of <span class="math inline">\(\beta\)</span> and calculating their log-likelihood, making the estimate it returns much more precise.</p>
+</div>
+</div>
 </section>
 </section>
 </section>
@@ -1043,48 +1127,48 @@ Note
 <p>The function <code>ode</code> returns a matrix whose first column is the time points specified in the input <code>times</code> and subsequent columns are the solutions to the model’s state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infectious, and recovered at a given time.</p>
 <p>Before we can call <code>ode</code>, we must code the function to be passed into the parameter <code>func</code>. For a classic SIR model on the proportion of individuals in each compartment (see <a href="#sec-the-classic-sir-epidemic-model" class="quarto-xref">Section&nbsp;2.3</a>) we do this using the following template function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ModelFunc <span class="ot">&lt;-</span> <span class="cf">function</span>(time,state,parameters){</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the state variables</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Since we are doing this in the context of SIR models, we have the state variables S, I, and R</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">&lt;-</span> state[<span class="st">"S"</span>]</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  I <span class="ot">&lt;-</span> state[<span class="st">"I"</span>]</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> state[<span class="st">"R"</span>]</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the model parameters</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We are doing this for an SIR model, so we have two parameters - the transmission and recovery rate</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> parameters[<span class="st">"beta"</span>]</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  gamma <span class="ot">&lt;-</span> parameters[<span class="st">"gamma"</span>]</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now we are going to use those previously extracted state variables and parameters to construct our model equations (differential equations)</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  dS <span class="ot">&lt;-</span> <span class="sc">-</span>(beta<span class="sc">*</span>I<span class="sc">*</span>S)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  dI <span class="ot">&lt;-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> (gamma<span class="sc">*</span>I)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  dR <span class="ot">&lt;-</span> (gamma<span class="sc">*</span>I)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now we will return those model equations as a list</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dS,dI,dR)))</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ModelFunc <span class="ot">&lt;-</span> <span class="cf">function</span>(time,state,parameters){</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the state variables</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Since we are doing this in the context of SIR models, we have the state variables S, I, and R</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">&lt;-</span> state[<span class="st">"S"</span>]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  I <span class="ot">&lt;-</span> state[<span class="st">"I"</span>]</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> state[<span class="st">"R"</span>]</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the model parameters</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We are doing this for an SIR model, so we have two parameters - the transmission and recovery rate</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> parameters[<span class="st">"beta"</span>]</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  gamma <span class="ot">&lt;-</span> parameters[<span class="st">"gamma"</span>]</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now we are going to use those previously extracted state variables and parameters to construct our model equations (differential equations)</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  dS <span class="ot">&lt;-</span> <span class="sc">-</span>(beta<span class="sc">*</span>I<span class="sc">*</span>S)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  dI <span class="ot">&lt;-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> (gamma<span class="sc">*</span>I)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  dR <span class="ot">&lt;-</span> (gamma<span class="sc">*</span>I)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now we will return those model equations as a list</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dS,dI,dR)))</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now all we need to do is specify the other parameters <code>y</code>, <code>parms</code>, and <code>times</code> and call <code>ode</code> with them like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(deSolve)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are specifying the initial values to be passed into the parameter y</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these initial values line up exactly with the state variables extracted in the model function from before</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>initial_vals <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S=</span><span class="fl">0.99</span>,<span class="at">I=</span><span class="fl">0.01</span>,<span class="at">R=</span><span class="dv">0</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are specifying the parameters of the model and their values</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these parameters line up exactly with the parameters extracted in the model function from before</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>model_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta=</span><span class="fl">1.5</span>,<span class="at">gamma=</span><span class="fl">0.5</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are specifying the times for which outputs are calculated</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># The closer together these times are, the higher the output resolution</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>output_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="at">by=</span><span class="dv">1</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we can call the function ode like so:</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">func=</span>ModelFunc,<span class="at">y=</span>initial_vals,<span class="at">parms=</span>model_parameters,<span class="at">times=</span>output_times)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the first 5 rows of the output matrix</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(output,<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(deSolve)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are specifying the initial values to be passed into the parameter y</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these initial values line up exactly with the state variables extracted in the model function from before</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>initial_vals <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S=</span><span class="fl">0.99</span>,<span class="at">I=</span><span class="fl">0.01</span>,<span class="at">R=</span><span class="dv">0</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are specifying the parameters of the model and their values</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these parameters line up exactly with the parameters extracted in the model function from before</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>model_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta=</span><span class="fl">1.5</span>,<span class="at">gamma=</span><span class="fl">0.5</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we are specifying the times for which outputs are calculated</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># The closer together these times are, the higher the output resolution</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>output_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="at">by=</span><span class="dv">1</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we can call the function ode like so:</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">func=</span>ModelFunc,<span class="at">y=</span>initial_vals,<span class="at">parms=</span>model_parameters,<span class="at">times=</span>output_times)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the first 5 rows of the output matrix</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(output,<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     time         S          I           R
 [1,]    0 0.9900000 0.01000000 0.000000000
@@ -1096,14 +1180,14 @@ Note
 </div>
 <p>Now that we have this matrix of the solved SIR model equations are at specified times, we can plot it like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(<span class="at">x =</span> output[,<span class="st">"time"</span>], <span class="at">y =</span> output[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">xlab =</span> <span class="st">"time"</span>, <span class="at">ylab =</span> <span class="st">"proportion"</span>, <span class="at">main =</span> <span class="st">"Solved Example: Epidemic SIR Model"</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>))</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a legend</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>,<span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Susceptible"</span>, <span class="st">"Infectious"</span>, <span class="st">"Recovered"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(<span class="at">x =</span> output[,<span class="st">"time"</span>], <span class="at">y =</span> output[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">xlab =</span> <span class="st">"time"</span>, <span class="at">ylab =</span> <span class="st">"proportion"</span>, <span class="at">main =</span> <span class="st">"Solved Example: Epidemic SIR Model"</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a legend</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>,<span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Susceptible"</span>, <span class="st">"Infectious"</span>, <span class="st">"Recovered"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="SIR_Module_RD_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="SIR_Module_RD_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1501,54 +1585,54 @@ Note
 <p>Both of these methods can be used to solve the endemic model as well, but we will only show an example of solving the endemic model using deSolve since Euler’s method is quite lengthy and is the exact same process as for the epidemic model just with different SIR equations.</p>
 <p>Below is a complete example of using the deSolve package to solve an endemic SIR model and plotting the results:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(deSolve)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>ModelFunc <span class="ot">&lt;-</span> <span class="cf">function</span>(time,state,parameters){</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the state variables</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Same compartments as before: susceptible, infectious, and recovered</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">&lt;-</span> state[<span class="st">"S"</span>]</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  I <span class="ot">&lt;-</span> state[<span class="st">"I"</span>]</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> state[<span class="st">"R"</span>]</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the model parameters</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We now have three parameters - the transmission rate, recovery rate, and mortality rate</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> parameters[<span class="st">"beta"</span>]</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  gamma <span class="ot">&lt;-</span> parameters[<span class="st">"gamma"</span>]</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> parameters[<span class="st">"mu"</span>]</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Using the previously extracted state variables and parameters to construct our model equations (differential equations)</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  dS <span class="ot">&lt;-</span> mu <span class="sc">-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> mu<span class="sc">*</span>S</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  dI <span class="ot">&lt;-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> (gamma<span class="sc">*</span>I) <span class="sc">-</span> mu<span class="sc">*</span>I</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  dR <span class="ot">&lt;-</span> (gamma<span class="sc">*</span>I) <span class="sc">-</span> mu<span class="sc">*</span>R</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Returning model equations as a list</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dS,dI,dR)))</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying the initial values to be passed into the parameter y</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these initial values line up exactly with the state variables extracted in the model function from before</span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>initial_vals <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S=</span><span class="fl">0.99</span>,<span class="at">I=</span><span class="fl">0.01</span>,<span class="at">R=</span><span class="dv">0</span>)</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying the parameters of the model and their values</span></span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these parameters line up exactly with the parameters extracted in the model function from before</span></span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>model_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta=</span><span class="fl">1.5</span>,<span class="at">gamma=</span><span class="fl">0.3</span>,<span class="at">mu=</span><span class="fl">0.2</span>)</span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Times for which outputs are calculated</span></span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="co"># The closer together these times are, the higher the output resolution</span></span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>output_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="at">by=</span><span class="dv">1</span>)</span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we can call the function ode</span></span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">func=</span>ModelFunc,<span class="at">y=</span>initial_vals,<span class="at">parms=</span>model_parameters,<span class="at">times=</span>output_times)</span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the output</span></span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(<span class="at">x =</span> output[,<span class="st">"time"</span>], <span class="at">y =</span> output[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">xlab =</span> <span class="st">"time"</span>, <span class="at">ylab =</span> <span class="st">"proportion"</span>, <span class="at">main =</span> <span class="st">"Solved Example: Endemic SIR Model"</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>))</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a legend</span></span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>,<span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Susceptible"</span>, <span class="st">"Infectious"</span>, <span class="st">"Recovered"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(deSolve)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>ModelFunc <span class="ot">&lt;-</span> <span class="cf">function</span>(time,state,parameters){</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the state variables</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Same compartments as before: susceptible, infectious, and recovered</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  S <span class="ot">&lt;-</span> state[<span class="st">"S"</span>]</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  I <span class="ot">&lt;-</span> state[<span class="st">"I"</span>]</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> state[<span class="st">"R"</span>]</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extracting the model parameters</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We now have three parameters - the transmission rate, recovery rate, and mortality rate</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> parameters[<span class="st">"beta"</span>]</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  gamma <span class="ot">&lt;-</span> parameters[<span class="st">"gamma"</span>]</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> parameters[<span class="st">"mu"</span>]</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Using the previously extracted state variables and parameters to construct our model equations (differential equations)</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  dS <span class="ot">&lt;-</span> mu <span class="sc">-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> mu<span class="sc">*</span>S</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  dI <span class="ot">&lt;-</span> (beta<span class="sc">*</span>I<span class="sc">*</span>S) <span class="sc">-</span> (gamma<span class="sc">*</span>I) <span class="sc">-</span> mu<span class="sc">*</span>I</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  dR <span class="ot">&lt;-</span> (gamma<span class="sc">*</span>I) <span class="sc">-</span> mu<span class="sc">*</span>R</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Returning model equations as a list</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="fu">c</span>(dS,dI,dR)))</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying the initial values to be passed into the parameter y</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these initial values line up exactly with the state variables extracted in the model function from before</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>initial_vals <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S=</span><span class="fl">0.99</span>,<span class="at">I=</span><span class="fl">0.01</span>,<span class="at">R=</span><span class="dv">0</span>)</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying the parameters of the model and their values</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure these parameters line up exactly with the parameters extracted in the model function from before</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>model_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta=</span><span class="fl">1.5</span>,<span class="at">gamma=</span><span class="fl">0.3</span>,<span class="at">mu=</span><span class="fl">0.2</span>)</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Times for which outputs are calculated</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="co"># The closer together these times are, the higher the output resolution</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>output_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="at">by=</span><span class="dv">1</span>)</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we can call the function ode</span></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">func=</span>ModelFunc,<span class="at">y=</span>initial_vals,<span class="at">parms=</span>model_parameters,<span class="at">times=</span>output_times)</span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the output</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(<span class="at">x =</span> output[,<span class="st">"time"</span>], <span class="at">y =</span> output[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">xlab =</span> <span class="st">"time"</span>, <span class="at">ylab =</span> <span class="st">"proportion"</span>, <span class="at">main =</span> <span class="st">"Solved Example: Endemic SIR Model"</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>))</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a legend</span></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>,<span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Susceptible"</span>, <span class="st">"Infectious"</span>, <span class="st">"Recovered"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>,<span class="st">"red"</span>,<span class="st">"green"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="SIR_Module_RD_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="SIR_Module_RD_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1755,6 +1839,12 @@ Note
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-docs_bbmle_mle2" class="csl-entry" role="listitem">
+n.d.a. <em>RDocumentation</em>. <a href="https://www.rdocumentation.org/packages/bbmle/versions/1.0.25.1/topics/mle2">https://www.rdocumentation.org/packages/bbmle/versions/1.0.25.1/topics/mle2</a>.
+</div>
+<div id="ref-docs_stats_optim" class="csl-entry" role="listitem">
+———. n.d.b. <em>RDocumentation</em>. <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/optim">https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/optim</a>.
+</div>
 <div id="ref-anderson_may_1982" class="csl-entry" role="listitem">
 Anderson, Roy M., and Robert M. May. 1982. <span>“Directly Transmitted Infectious Diseases: Control by Vaccination.”</span> <em>Science</em> 215 (4536): 1053–60. <a href="http://www.jstor.org/stable/1688362">http://www.jstor.org/stable/1688362</a>.
 </div>

@@ -5,6 +5,7 @@ format:
     toc: true
     toc-location: right
     number-sections: true
+    toc-depth: 4
 editor: visual
 bibliography: ../reference.bib
 ---
@@ -437,9 +438,56 @@ mle(2,data)
 
 The code above outputs that our maximum likelihood estimator for $\beta$ is 1.2 and this aligns directly with the $\beta$ we used to generate the data! Read on to the next section to see how we can code all of this in a much easier and faster way using the `bbmle` package. 
 
+
+**SECTION REFERENCE**
+
+https://daphnia.ecology.uga.edu/drakelab/wp-content/uploads/2014/07/likelihood.pdf
+
 #### MLE Using the bbmle Package in R {#sec-bblme}
 
+Although knowing how to code an MLE algorithm by hand is useful to first grasp the concept, in practicality it is inefficient which is why we often opt to use packages such as `bbmle` in R, which has the function `mle2` that makes it much easier.
 
+`mle2` has many arguments, which can be read up on in the (R documentation for  the `mle2` function)[@docs_bbmle_mle2], however there are only two required parameters:
+
+- `minuslogl`: A function or formula to calculate the *negative* log-likelihood given a value for our parameter of interest ($\beta$)
+
+- `start`: An initial guess for the value of the parameter of interest ($\beta$)
+
+We will also make use of two other parameters to ensure our code runs smoothly:
+
+- `method`: A string indicating what MLE algorithm method should be used. A summary of each method and how they change the MLE algorithm can be read up in the [R Documentation for the `optim` function @docs_stats_optim]. We will only make use of the method `"L-BFGS-B"`, or the *box constraint* method. This method allows for us to set a lower / upper bound on our parameter of interest $\beta$. This is useful since we know $\beta>=0$, so we can set our lower bound to be a very small number such as $0.01$ to ensure that no `NaN`s are produced when we call `mle2`. Likewise, we can set an optional upper bound on $\beta$ so we can avoid unnecessary computations if we reasonably know it to be below a certain value.
+
+- `lower` / `upper`: These parameters are specified when using the `"L-BFGS-B"` method. These take a named vector including the lower and upper bounds of the parameter(s) of interest. Note that `lower` is a required parameter when using the `"L-BFGS-B"` method but `upper` is an optional parameter. 
+
+```{r}
+require(bbmle)
+
+# This is the function to calculate the negative log-likelihood for a given beta
+poisson_ll <- function(b){
+  times <- data$day
+  parameters <- c(beta=b,gamma=0.7,N=1000)
+  predicted <- pred(parameters,times)
+  -sum(dpois(x=data$prevalence_count,lambda=predicted,log=TRUE))
+}
+
+# Our initial guess for what beta is
+# Try making the initial guess one that is "believable" since if it is too far off then mle2 might return some errors
+start <- list(b=2)
+
+# Using the L-BFGS-B algorithm / method for MLE 
+# Setting the lower bound to be a very small number because we know beta to be non-negative
+result <- mle2(minuslogl=poisson_ll,start=start,method="L-BFGS-B",lower=c(b=0.01))
+
+# Printing the result
+result
+
+# Extracting just the maximum likelihood estimate for beta
+coef(result)
+```
+
+:::{.callout-note}
+You'll notice that the estimate we get for $\beta$ using `mle2` is approximately equal to the one we obtain from our MLE algorithm coded by scratch (as we would expect) except that it is accurate to a far greater decimal place. This is because our MLE algorithm coded by hand is only incrementing through values of $\beta$ in steps of size $0.01$ for computational efficiency. The function `mle2` on the other hand employs much more sophisticated techniques to iterate through values of $\beta$ and calculating their  log-likelihood, making the estimate it returns much more precise.
+:::
 
 ## Solving SIR Equations {#sec-solving-sir-equations}
 
