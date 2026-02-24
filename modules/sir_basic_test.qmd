@@ -1,0 +1,424 @@
+---
+title: "Computational Thinking with SIR Models"
+subtitle: "A Disease Ecology Module"
+engine: knitr
+format:
+  live-html:
+    toc: true
+    toc-location: right
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    theme: cosmo
+webr:
+# bibliography: ../reference.bib
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+## About This Module
+
+Mathematical models of disease have been around for over a century, and by now there is no shortage of resources explaining the SIR model. So why another one?
+
+This module is different in one specific way: **the goal is not just to understand the SIR model, but to understand how code translates biological ideas into computable form.** This is computational thinking: the practice of structuring a problem so that a computer can help you explore it. It is a skill that belongs to biologists and ecologists just as much as it belongs to computer scientists.
+
+By the end of this module, you should be able to:
+
+- Read an SIR model equation and immediately identify its biological meaning
+- Translate that equation into working R code, line by line
+- Modify that code to explore how the system changes under different conditions
+- Recognize what assumptions are "baked in" to both the math and the code
+- Start thinking about real disease ecology problems from a computational perspective
+
+::: {.callout-important title="How to use this module"}
+Throughout this document, you will encounter **interactive code blocks**, these are live R sessions running directly in your browser. You do not need R installed. You are encouraged to **change the numbers, re-run the code, and see what happens.** That interaction is the point. Reading the math and reading the code together is how computational literacy develops.
+:::
+
+---
+
+## Part I: The Biology Before the Math
+
+### Epidemiology Terms
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of this section, you should be able to:
+
+-   Define basic terms in epidemiology and connect them to the compartments they represent in a model.
+:::
+
+For the purposes of mathematical models in epidemiology, individuals are classified based on their ability to transmit a pathogen — not on whether they feel sick. This distinction matters: a person can be infectious before they show symptoms, and can still feel sick after they are no longer infectious.
+
+The four primary categories used in SIR-type models are:
+
+- **Susceptible:** No pathogen is present. The individual can become infected if exposed.
+- **Exposed:** The individual has encountered an infected individual and has been infected, but pathogen levels are too low to allow transmission. This individual is infected but not yet infectious.
+- **Infectious:** Pathogen levels are high enough that this individual can actively transmit the disease to others.
+- **Recovered:** The individual's immune system has cleared enough of the pathogen that transmission is no longer possible. They may still feel ill, but they cannot spread the disease.
+
+::: {.callout-note}
+The "recovered" compartment is sometimes better thought of as "removed from transmission", as individuals are no longer infectious, regardless of whether they feel better.
+:::
+
+Overlapping with these compartments, individuals can also be described by their clinical status:
+
+- **Incubation period:** Infected but not yet showing symptoms. An individual can be in the infectious compartment while still in the incubation period — this is the basis of asymptomatic transmission.
+- **Diseased period:** Showing symptoms. An individual can still be in the recovered compartment (non-infectious) while experiencing lingering symptoms.
+
+*(Diagram of compartments and clinical periods to be added here)*
+
+**Section References:** @keeling_modeling_2008
+
+---
+
+### Introducing Compartmental Models {#introducing-compartmental-models}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of this section, you should be able to:
+
+-   Define what a compartmental model is and explain why it is useful.
+-   Identify the flow rates between compartments in a model diagram.
+:::
+
+Compartmental models describe how individuals move between defined states, called **compartments**, over time. The movement between compartments is governed by **flow rates**, which tell us how fast individuals transition from one state to another. The relationships between compartments are typically shown in a flowchart, where arrows represent transitions and symbols above each arrow represent the rate of that transition.
+
+Think of it like water flowing between tanks: each tank is a compartment, and the pipes between them (with their valves set to specific flow rates) determine the dynamics. The question a compartmental model answers is: *given how full each tank is right now and how fast the valves are set, what will the water levels look like in an hour? In a day? In a year?*
+
+In disease ecology, the "tanks" are the susceptible, exposed, infectious, and recovered populations. The "valves" are biological rates: transmission rates, recovery rates, mortality rates, that we estimate from field data or laboratory studies.
+
+Which compartments we include depends on the biology. Models where the exposed period is negligibly short are called **SIR models** — susceptible, infectious, recovered — because we can skip the exposed compartment. This module focuses on the SIR model as the foundational case.
+
+::: {.callout-note title="A note on terminology"}
+Some sources use "SIR model" to refer to any compartmental epidemiological model. Here we use it specifically to mean the three-compartment model with only S, I, and R. We use "SIR-type models" for the broader family.
+:::
+
+**Learning check:** Given the compartment labels in the acronyms below, try sketching the flowcharts for: SIS, SIRS, SEIR. What biological situations would each one represent?
+
+**Section References:** @keeling_modeling_2008
+
+---
+
+## Part II: Building the SIR Model
+
+### The Classic SIR Epidemic Model {#the-classic-sir-epidemic-model}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of this section, you should be able to:
+
+-   Write out the SIR epidemic model equations and identify each term's biological meaning.
+-   List the key assumptions of the epidemic model and explain their justifications.
+-   Distinguish between frequency-dependent and density-dependent transmission.
+:::
+
+The **classic SIR epidemic model** makes two core structural assumptions:
+
+1. **Closed population:** The epidemic moves fast enough that births and deaths are negligible. Population size $N$ is constant. This is the "epidemic" model as opposed to the "endemic" model, which we cover later.
+
+2. **No exposed period:** We omit the exposed compartment, assuming individuals become immediately infectious upon infection.
+
+Throughout this module:
+
+- $S$, $I$, $R$ = the **number** of individuals in each compartment
+- $\tilde{S} = S/N$, $\tilde{I} = I/N$, $\tilde{R} = R/N$ = the **proportion** in each compartment
+- $\tilde{S} + \tilde{I} + \tilde{R} = 1$ always (closed population)
+
+The SIR epidemic model equations for **proportions** are:
+
+$$
+\begin{aligned}
+\frac{d\tilde{S}}{dt} &= -\beta \tilde{I} \tilde{S} \\[10pt]
+\frac{d\tilde{I}}{dt} &= \beta \tilde{I} \tilde{S} - \gamma \tilde{I} \\[10pt]
+\frac{d\tilde{R}}{dt} &= \gamma \tilde{I}
+\end{aligned}
+$$
+
+::: {.callout-note title="Reading the equations"}
+Each equation follows the pattern: rate of change = (flow in) − (flow out).
+
+- Susceptibles **leave** at rate $\beta \tilde{I} \tilde{S}$ (they get infected).
+- Infecteds **gain** those susceptibles but **lose** individuals at rate $\gamma \tilde{I}$ (they recover).
+- Recovered individuals only **gain** — no one leaves once recovered (in the epidemic model).
+
+The parameters are:
+
+| Symbol | Name | Biological meaning |
+|--------|------|--------------------|
+| $\beta$ | Transmission rate | Rate at which susceptible–infectious contacts lead to new infections |
+| $\gamma$ | Recovery rate | Per-capita rate at which infectious individuals recover |
+:::
+
+**Section References:** @keeling_modeling_2008
+
+---
+
+### Formulating the Force of Infection
+
+The **force of infection** $\lambda$ is the per-capita rate at which susceptible individuals become infectious per unit time. Here is one way to derive it from first principles:
+
+> Consider a susceptible individual. They make $c$ contacts per unit time. Of those contacts, a proportion $\tilde{I}$ are infectious. Of those infectious contacts, a proportion $p$ actually result in transmission. So their per-capita rate of becoming infected is:
+>
+> $$\lambda = c \cdot \tilde{I} \cdot p = \beta \tilde{I}$$
+>
+> where $\beta = cp$ bundles the contact rate and transmission probability into a single parameter.
+
+::: {.callout-note title="Assumptions inside $\beta$"}
+This derivation assumes:
+
+1. Every individual contacts others at the same constant rate $c$ (everyone is equally social).
+2. **Homogeneous mixing:** every individual is equally likely to contact any other individual.
+
+These are significant simplifications. In reality, sick people may isolate, some individuals have far more contacts than others, and spatial structure matters enormously in wildlife systems. The value of the SIR model lies not in its realism but in its tractability, it gives us a baseline to reason from.
+:::
+
+The force of infection can be formulated in two main ways:
+
+| Approach | How $\beta$ is obtained | Best used when |
+|----------|------------------------|----------------|
+| **Empirical (blackbox)** | Fit $\beta$ to real case data | Abundant time-series data are available |
+| **First-principles** | Separately estimate $c$ and $p$ | Data on contacts and per-contact transmission probability are available |
+
+For this module we focus on the empirical approach, where $\beta$ is estimated by fitting model trajectories to observed case data.
+
+*(Section on parameter estimation to be expanded — link to MLE methods)*
+
+---
+
+## Part III: From Equations to Code
+
+This is the core of computational thinking: **each line of code is a direct translation of a mathematical or biological idea.** Nothing in the code is arbitrary. Reading the code and reading the math should feel like reading the same sentence in two different languages.
+
+### Euler Method: Building the Model from Scratch {#eulers-method}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of this section, you should be able to:
+
+-   Explain what the Euler method is doing conceptually.
+-   Implement the Euler method for the SIR model in R from scratch.
+-   Modify the implementation to explore how step size affects accuracy.
+:::
+
+Before we use a sophisticated solver, we build the model ourselves using the **Euler method**, a simple numerical technique that approximates the continuous ODE solution by taking small discrete steps through time. You can get an overview from [Wikipedia](https://en.wikipedia.org/wiki/Euler_method)
+
+The intuition: if we know the rate of change at time $t$, we can estimate the value at time $t + \Delta t$ by stepping forward:
+
+::: {.callout-note title="Reading this notation"}
+The vertical bar ∣t\bigg|_t
+​t​ means "evaluated at time tt
+t" — in other words, take this rate of change and compute it using the values of ss
+s, ii
+i, and rr
+r that exist right now, at this specific moment. It is a reminder that the rate of change is not fixed: as the compartments change, so does the rate. Euler's method freezes that rate at the current step, uses it to nudge the system forward by Δt\Delta t
+Δt, then recalculates. The smaller Δt\Delta t
+Δt is, the less error accumulates from that freezing.
+
+In plain language, each equation is saying: next value = current value + (step size × current rate of change).
+:::
+
+$$
+\begin{aligned}
+s_{t+\Delta t} &= s_t + \Delta t \cdot \frac{ds}{dt}\bigg|_t \\[6pt]
+i_{t+\Delta t} &= i_t + \Delta t \cdot \frac{di}{dt}\bigg|_t \\[6pt]
+r_{t+\Delta t} &= r_t + \Delta t \cdot \frac{dr}{dt}\bigg|_t
+\end{aligned}
+$$
+
+Substituting the SIR equations for $\frac{ds}{dt}$, $\frac{di}{dt}$, $\frac{dr}{dt}$:
+
+$$
+\begin{aligned}
+s_{t+1} &= s_t - \Delta t \cdot \beta i_t s_t \\[10pt]
+i_{t+1} &= i_t + \Delta t \cdot (\beta i_t s_t - \gamma i_t) \\[10pt]
+r_{t+1} &= r_t + \Delta t \cdot \gamma i_t
+\end{aligned}
+$$
+
+Where:
+
+-   $s_{t+1}$, $i_{t+1}$, and $r_{t+1}$ are the approximations for $S(t)$, $I(t)$, and $R(t)$ at the next node
+-   $s_{t}$, $i_{t}$, and $r_{t}$ are the approximations for $S(t)$, $I(t)$, and $R(t)$ at the previous node
+-   $\Delta t$ is the step size (how far each node is spaced apart on the $t$-axis)
+-   $\beta$ and $\gamma$ are the transmission and recovery rate, respectively
+
+This process can be a little confusing to grasp at first, so let's do an example.
+
+Suppose the following SIR model equations with initial values $s(0)=99$, $i(0)=1$, $r(0)=0$, transmission rate $\beta=1.5$, and recovery rate $\gamma=0.5$:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -1.5 \tilde{I} S \\[10pt]
+\frac{dI}{dt} &= 1.5 \tilde{I} S - 0.5 I \\[10pt]
+\frac{dR}{dt} &= 0.5 I
+\end{aligned}
+$$
+
+The following table illustrates the calculation process until $t=5$ with a step size of $\Delta t=1$:
+
+| **Time** | **Approximations** | **Calculation Process** |
+|------------------|------------------------|------------------------------|
+| $t=0$ | $s\left(0\right)=99.0$<br>$i\left(0\right)=1.0$<br>$r\left(0\right)=0.0$ | — |
+| $t=1$ | $s\left(1\right)\approx 97.5$<br>$i\left(1\right)\approx 2.0$<br>$r\left(1\right)=0.5$ | $s\left(1\right)=99-\left(1\right)\left(1.5\right)\left(\frac{1}{100}\right)\left(99\right)$<br>$i\left(1\right)=1+\left(1\right)\left[\left(1.5\right)\left(\frac{1}{100}\right)\left(99\right)-0.5\left(1\right)\right]$<br>$r\left(1\right)=0+\left(1\right)\left(0.5\right)\left(1\right)$ |
+| $t=2$ | $s\left(2\right)\approx 94.6$<br>$i\left(2\right)\approx 3.9$<br>$r\left(2\right)\approx 2.0$ | $s\left(2\right)=97.5-\left(1\right)\left(1.5\right)\left(\frac{2.0}{100}\right)\left(97.5\right)$<br>$i\left(2\right)=2.0+\left(1\right)\left[\left(1.5\right)\left(\frac{2.0}{100}\right)\left(97.5\right)-0.5\left(2.0\right)\right]$<br>$r\left(2\right)=0.5+\left(1\right)\left(0.5\right)\left(2.0\right)$ |
+| $t=3$ | $s\left(3\right)\approx 89.1$<br>$i\left(3\right)\approx 7.5$<br>$r\left(3\right)\approx 3.4$ | $s\left(3\right)=94.6-\left(1\right)\left(1.5\right)\left(\frac{3.9}{100}\right)\left(94.6\right)$<br>$i\left(3\right)=3.9+\left(1\right)\left[\left(1.5\right)\left(\frac{3.9}{100}\right)\left(94.6\right)-0.5\left(3.9\right)\right]$<br>$r\left(3\right)=2.0+\left(1\right)\left(0.5\right)\left(3.9\right)$ |
+| $t=4$ | $s\left(4\right)\approx 79.1$<br>$i\left(4\right)\approx 13.7$<br>$r\left(4\right)\approx 7.2$ | $s\left(4\right)=89.1-\left(1\right)\left(1.5\right)\left(\frac{7.5}{100}\right)\left(89.1\right)$<br>$i\left(4\right)=7.5+\left(1\right)\left[\left(1.5\right)\left(\frac{7.5}{100}\right)\left(89.1\right)-0.5\left(7.5\right)\right]$<br>$r\left(4\right)=3.4+\left(1\right)\left(0.5\right)\left(7.5\right)$ |
+| $t=5$ | $s\left(5\right)\approx 62.8$<br>$i\left(5\right)\approx 23.1$<br>$r\left(5\right)\approx 14.0$ | $s\left(5\right)=79.1-\left(1\right)\left(1.5\right)\left(\frac{13.7}{100}\right)\left(79.1\right)$<br>$i\left(5\right)=13.7+\left(1\right)\left[\left(1.5\right)\left(\frac{13.7}{100}\right)\left(79.1\right)-0.5\left(13.7\right)\right]$<br>$r\left(5\right)=7.2+\left(1\right)\left(0.5\right)\left(13.7\right)$ |
+
+As you might notice, the calculations above are very tedious, which is why Euler's method is most often calculated using code rather than by hand.
+
+Let's see how we can translate these concepts into code.
+
+---
+
+**Step 1: Define the biological parameters.**
+
+Every model starts with its parameters: the biological quantities that characterize the disease and host system. Here, we have two: how fast the disease spreads ($\beta$) and how fast individuals recover ($\gamma$).
+
+```{webr}
+# Transmission rate: contacts × probability of transmission per unit time
+beta <- 1.5
+
+# Recovery rate: 1/gamma gives the average duration of infection
+gamma <- 0.5
+
+# With these values, the average infectious period is:
+cat("Average infectious period:", 1/gamma, "time units")
+```
+
+---
+
+**Step 2: Set the initial conditions.**
+
+Before the model can run, we need to specify where the system starts. In an epidemic model, this means the proportion of the population in each compartment at time zero.
+
+```{webr}
+# Starting proportions — must sum to 1
+S0 <- 0.99   # 99% susceptible: nearly everyone is susceptible at the start
+I0 <- 0.01   # 1% infectious: a small "spark" of infection enters the population
+R0_start <- 0.00   # 0% recovered: no prior immunity
+
+# Verify they sum to 1 (a good sanity check to build into your code)
+cat("S0 + I0 + R0 =", S0 + I0 + R0_start, "\n")
+```
+
+This sanity check, confirming that proportions sum to 1 — is a simple example of a habit that will save you debugging time later. When you add more compartments (SEIR, endemic model), this check generalizes naturally.
+
+---
+
+**Step 3: Set up the time grid.**
+
+Euler's method steps through time discretely. We need to decide how far apart those steps are ($\Delta t$, the step size) and how long to simulate.
+
+```{webr}
+dt    <- 0.1   # step size — try making this larger later to see what breaks
+t_end <- 50    # total simulation time
+
+# Create a vector of all time points
+times   <- seq(0, t_end, by = dt)
+n_steps <- length(times)
+
+cat("Number of time steps:", n_steps, "\n")
+cat("Time points run from", times[1], "to", times[n_steps], "\n")
+```
+
+The step size is a computational choice, not a biological one, but it affects accuracy. A smaller $\Delta t$ gives a more accurate approximation of the continuous solution, at the cost of more computation. We will explore this tradeoff shortly.
+
+---
+
+**Step 4: Pre-allocate storage.**
+
+Before running the loop, we create empty vectors to hold the results at each time step. This is more efficient than growing a vector inside the loop.
+
+```{webr}
+# Empty vectors: one slot per time step, filled with zeros for now
+S <- numeric(n_steps)
+I <- numeric(n_steps)
+R <- numeric(n_steps)
+
+# Fill in the starting values
+S[1] <- S0
+I[1] <- I0
+R[1] <- R0_start
+
+cat("Storage ready. First values: S =", S[1], " I =", I[1], " R =", R[1], "\n")
+```
+
+Think of these vectors as the model's memory: they store the entire trajectory of the epidemic, one row per time step.
+
+---
+
+**Step 5: Run the Euler loop.**
+
+This is where the model actually runs. At each time step, we calculate the rates of change using the SIR equations and use them to update the compartment values. Each line in the loop maps directly to an equation.
+
+```{webr}
+for (t in 1:(n_steps - 1)) {
+
+  # Rate of change: these ARE the SIR equations, written as code
+  dS <- -beta * I[t] * S[t]                    # new infections leaving S
+  dI <-  beta * I[t] * S[t] - gamma * I[t]     # gain infections, lose recoveries
+  dR <-  gamma * I[t]                           # recoveries entering R
+
+  # Step forward: current value + (step size × rate of change)
+  S[t+1] <- S[t] + dt * dS
+  I[t+1] <- I[t] + dt * dI
+  R[t+1] <- R[t] + dt * dR
+}
+
+# Quick check: do the compartments still sum to 1 at the end?
+cat("Final values: S =", round(S[n_steps], 4),
+    " I =", round(I[n_steps], 4),
+    " R =", round(R[n_steps], 4), "\n")
+cat("Sum:", round(S[n_steps] + I[n_steps] + R[n_steps], 6), "\n")
+```
+
+The loop is doing exactly what the Euler update formulas say, mechanically, one step at a time. This is the computational equivalent of doing the hand calculations from the table shown earlier, just thousands of times faster.
+
+---
+
+**Step 6: Visualize the results.**
+
+The vectors `S`, `I`, and `R` now hold the full epidemic trajectory. We can plot them against time.
+
+```{webr}
+plot(times, S, type = "l", col = "steelblue", lwd = 2,
+     ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
+     main = paste0("SIR Epidemic (Euler)  |  β=", beta,
+                   "  γ=", gamma, "  R₀=", round(beta/gamma, 2)))
+lines(times, I, col = "firebrick", lwd = 2)
+lines(times, R, col = "seagreen",  lwd = 2)
+legend("right", legend = c("Susceptible", "Infectious", "Recovered"),
+       col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n")
+```
+
+::: {.callout-tip title="Try this"}
+Go back to **Step 1** and try the following changes, re-running each step in order:
+
+1. Change `gamma <- 0.5` to `gamma <- 0.2`. What does a slower recovery rate do to the epidemic peak?
+2. Change `beta <- 1.5` to `beta <- 0.4`. What happens when $\beta < \gamma$? Can you explain why biologically?
+3. Go back to **Step 3** and change `dt <- 0.1` to `dt <- 2.0`. What happens to the curves? This is the cost of a large step size.
+:::
+
+
+::: {.callout-note title="Computational note: why pre-allocate?"}
+Notice that we create `S`, `I`, and `R` as empty vectors before the loop using `numeric(n_steps)`. This is more efficient than growing a vector inside the loop. In R (and most languages), pre-allocating memory for results is good practice.
+:::
+
+---
+
+
+## Conclusion: What Computational Thinking Gets You
+
+The SIR model is simple. Three compartments, two parameters, three equations. And yet, working through this module computationally — not just mathematically — you have done something more than learned a model. You have learned to:
+
+- **Decompose** a biological process (disease spread) into computable pieces (state variables, rates, parameters)
+- **Translate** between mathematical notation and code, and recognize they are the same statement in different languages
+- **Interrogate** a model by changing its parameters and watching what changes and what doesn't
+- **Verify** analytical results numerically, and notice when they agree or diverge
+- **Extend** the framework: the endemic model uses the same structure as the epidemic model, just with added terms. From here, SEIR, SIRS, and host-pathogen models with predators follow the same logic.
+
+This is the computational literacy that makes quantitative ecology accessible. The math does not have to be a black box. The code does not have to be a black box either. When both are visible and connected, the biology becomes clearest.
+
+---
+
+## References
+
+::: {#refs}
+:::
