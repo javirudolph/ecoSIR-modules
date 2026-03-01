@@ -4,7 +4,6 @@ library(tidyverse)
 library(plotly)
 source("equilibrium_solver.R")
 
-# Define UI for application that draws a histogram
 ui <- page_sidebar(
   title = "Equilibrium Simulation",
   sidebar = sidebar(
@@ -18,7 +17,6 @@ ui <- page_sidebar(
   plotlyOutput("plot_sir"),
 )
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
 
      output$plot_sir <- renderPlotly({
@@ -37,5 +35,4 @@ server <- function(input, output) {
   }
   
 
-# Run the application 
 shinyApp(ui = ui, server = server)

@@ -1,19 +1,9 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    https://shiny.posit.co/
-#
-
 library(shiny)
 library(bslib)
 library(tidyverse)
 library(plotly)
 source("threshold_phenom_solver.R")
 
-# Define UI for application that draws a histogram
 ui <- page_sidebar(
   title = "Threshold Phenomenon Simulation",
   sidebar = sidebar(
@@ -27,7 +17,6 @@ ui <- page_sidebar(
   plotlyOutput("plot_sir"),
 )
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
   
   output$plot_sir <- renderPlotly({
@@ -42,5 +31,4 @@ server <- function(input, output) {
   output$threshold <- renderText(round(input$gamma/input$beta,3))
 }
 
-# Run the application 
 shinyApp(ui = ui, server = server)

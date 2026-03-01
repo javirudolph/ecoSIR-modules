@@ -213,6 +213,7 @@ r that exist right now, at this specific moment. It is a reminder that the rate 
 In plain language, each equation is saying: next value = current value + (step size × current rate of change).
 :::
 
+
 $$
 \begin{aligned}
 s_{t+\Delta t} &= s_t + \Delta t \cdot \frac{ds}{dt}\bigg|_t \\[6pt]

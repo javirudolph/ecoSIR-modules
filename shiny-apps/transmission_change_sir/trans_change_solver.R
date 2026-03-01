@@ -1,5 +1,3 @@
-#function to solve sir model using deSolve package
-#beta not input, contact rate and probability of infection per contact instead
 library(deSolve)
 
 solve_sir <- function(S0, I0, R0, c, p, g, len, dt) {

@@ -1,19 +1,31 @@
 ---
-title: "SIR Module Rough Draft"
+title: "Computational Thinking with SIR Models"
+subtitle: "A Disease Ecology Module"
+engine: knitr
 format:
-  html:
+  live-html:
+    fig-align: "center"
     toc: true
     toc-location: right
-    number-sections: true
     toc-depth: 4
-editor: visual
+    code-fold: false
+    code-tools: true
+    theme: cosmo
+    number-sections: true
 bibliography: ../reference.bib
+webr:
+  packages:
+    - pracma
+    - bbmle
+    - dplyr
 ---
 
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
 # Introduction and Course Learning Objectives
 
 # Introduction and The Classic Epidemic Model
+
 
 ## Epidemiology Terms {#sec-epidemiology-terms}
 
@@ -62,13 +74,57 @@ By the end of this section, you should be able to:
 
 Generally speaking, compartmental models are a way to represent the flow of populations between different states, known as compartments, using differential equations. Compartmental models show up in a wide variety of fields, not just epidemiology. Any field that can benefit from knowing how information flows between states can benefit from compartmental models.
 
-In the epidemiological context, compartmental models are analyzing how people flow through the four categories, which will be referred to simply as "compartments" from now on, introduced in [Section @sec-epidemiology-terms]: susceptible, exposed, infectious, and recovered. The relationships between these compartments are often represented using flowcharts like the one seen below.
+In the epidemiological context, compartmental models are analyzing how people flow through the four categories, which will be referred to simply as "compartments" from now on, introduced in [Section @sec-epidemiology-terms]: susceptible (S), exposed (E), infectious (I), and recovered (R). The relationships between these compartments are often represented using flowcharts like the one seen below.
 
-(INSERT IMAGE OF SEIR FLOWCHART THAT SPECIFICALLY SHOWS LAMBDA INSTEAD OF BETA AS THE FLOW RATE BETWEEN S AND E)
 
-The arrows between these compartments represent the direction of flow (susceptible individuals becoming exposed, exposed individuals becoming infectious, etc.) and the symbols above each arrow represent the *flow rate* between these compartments with respect to time.
+```{dot}
+//| fig-width: 8
+//| fig-height: 2
+//| fig-align: center
+
+
+digraph SEIR {
+  rankdir=LR;
+  node [shape=box, style=rounded, fontsize=14];
+
+  S [label="S"];
+  E [label="E"];
+  I [label="I"];
+  R [label="R"];
+
+  edge [fontsize=12];
+  S -> E [label="λ", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  E -> I [label="σ", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  I -> R [label="γ",  labelfontsize=12, labeldistance=2.0, labelangle=-90];
+}
+```
+
+The arrows between these compartments represent the direction of flow (susceptible individuals becoming exposed, exposed individuals becoming infectious, etc.) and the symbols above each arrow represent the *flow rates* between each compartment with respect to time.
 
 It's easiest to understand this conceptually through an example. Say in a very large population with the established presence of a pathogen, on average, 300 new people become exposed to a pathogen every day. Of those that are exposed to the pathogen, on average, 50 of them reach pathogen levels high enough to become infectious per day. Then, of those that are infectious and able to transmit the pathogen, on average, 40 of them recover from the pathogen (in the sense that they can no longer transmit it). We can model this specific example with the modified flowchart below:
+
+
+```{dot}
+//| fig-width: 8
+//| fig-height: 2
+//| fig-align: center
+
+
+digraph SEIRmod {
+  rankdir=LR;
+  node [shape=box, style=rounded, fontsize=14];
+
+  S [label="S"];
+  E [label="E"];
+  I [label="I"];
+  R [label="R"];
+
+  edge [fontsize=12];
+  S -> E [label="λ = 300", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  E -> I [label="σ = 50", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  I -> R [label="γ = 40",  labelfontsize=12, labeldistance=2.0, labelangle=-90];
+}
+```
 
 Which compartments we choose to include depends on the specific pathogen and disease we are modeling. Models where the exposed period is so small it can be considered negligible, or is ommited for the sake of simplicity, are specifically known as *SIR models* (standing for the three different compartments included in the model: susceptible, infectious, and recovered).
 
@@ -118,7 +174,7 @@ It is important to note that although "infected" and "infectious" are used inter
 
 These are not the only assumptions made by the epidemic SIR model, but they do clearly distinguish it from other compartmental models such as the SEIR model, which includes exposed compartment, and the endemic SIR model, which includes the flow in and out of each compartment due to demographics (births and death).
 
-Moving forward, $S$. $I$, and $R$ will refer to the *number* of individuals in the susceptible, infectious, and recovered compartments, respectively. The variables $\tilde{S}=\frac{S}{N}$, $\tilde{I}=\frac{I}{N}$, and $\tilde{R}=\frac{R}{N}$, will be used to refer to the *proportion* of individuals in the susceptible, infectious, and recovered compartments, respectively, where $N$ is the total number of individuals in the population defined as $N=S+I+R$.
+Moving forward, $S$. $I$, and $R$ will refer to the *number* of individuals in the susceptible, infectious, and recovered compartments, respectively. The variables $\tilde{S}=\frac{S}{N}$, $\tilde{I}=\frac{I}{N}$, and $\tilde{R}=\frac{webr}{N}$, will be used to refer to the *proportion* of individuals in the susceptible, infectious, and recovered compartments, respectively, where $N$ is the total number of individuals in the population defined as $N=S+I+R$.
 
 ::: {.callout-note}
 -   Since the epidemic model assumes a closed population with no births or deaths, $N$ is not a variable that can change but a constant.
@@ -150,7 +206,28 @@ $$
 The rate of change of the number of people in each compartment can be understood as following the basic pattern of $R_i-R_o$ where $R_i$ is the rate that people are flowing into the compartment per unit time and $R_o$ is the rate that people are flowing out of the compartment per unit time. This pattern can be used to construct any number of novel compartmental models.
 :::
 
-Notice that these equations mirror exactly the compartmental flowcharts introduced in the [Section @sec-introducing-compartmental-models]. The epidemic SIR model can be representing using the following flowchart:
+Notice that these equations mirror exactly the compartmental flowcharts introduced in the [Section @sec-introducing-compartmental-models]. The epidemic SIR model can be representing with the following flowchart:
+
+
+```{dot}
+//| fig-width: 8
+//| fig-height: 1
+//| fig-align: center
+
+
+digraph SIRepi {
+  rankdir=LR;
+  node [shape=box, style=rounded, fontsize=14];
+
+  S [label="S"];
+  I [label="I"];
+  R [label="R"];
+
+  edge [fontsize=12];
+  S -> I [label="λ", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  I -> R [label="γ",  labelfontsize=12, labeldistance=2.0, labelangle=-90];
+}
+```
 
 The flow rates between each compartment have specific names and symbology, summarized in the table below:
 
@@ -221,7 +298,7 @@ Models will often formulate $c$ and $p$ as functions of their own depending on a
 
 The specific formulations for the contact rate (or proximity rate) and infection probability utilized by this paper are unique to its context (the pathogen it is analyzing, the host population(s), etc.) and will vary widely from paper to paper. PROVIDE CITATIONS FOR MORE EXAMPLES OF DIFFERENT BETA CALCULATIONS HERE. 
 
-However, there are standardized procedures to obtain $\beta$ using the blackbox approach, of which one common method known as *maximum likelihood estimation* is covered in [Section @sec-formulating-transmission-rate].
+However, there are standardized procedures to obtain $\beta$ using the blackbox approach, of which one common method known as *maximum likelihood estimation*, or MLE for short, is covered in [Section @sec-formulating-transmission-rate]. But before we can cover MLE, we must go over how to solve our SIR model equations first, which is the topic of [Section @sec-solving-sir-equations].  
 
 ### Formulating the Recovery Rate {#sec-formulating-the-recovery-rate}
 
@@ -259,235 +336,6 @@ The table below provides some empirically-deduced average infectious periods for
 | Diphtheria             	| 14 to 21                     	|
 | Scarlet fever          	| 14 to 21                     	|
 
-### Formulating the Transmission Rate Using MLE {#sec-formulating-transmission-rate}
-
-*Maximum likelihood estimation*, often shorthanded as MLE, is a statistical technique that estimates the value of an unknown parameter to be that which maximizes the probability of observing real-world data from the scenario of interest. Recalling from [Section @sec-formulating-the-recovery-rate], the recovery rate is often found based on prior literature and held as a constant equal to the reciprocal of the average duration of infection. As such, for the epidemic SIR model, we generally only use MLE to estimate the value of the transmission rate $\beta$ [@parameter_estimation]. 
-
-MLE works by maximizing the *likelihood function*. The likelihood function provides the *likelihood*, or the probability of a given piece of data $D_n$ having occurred under a particular hypothesis (or model) $H$, and is typically noted as $\mathcal{L}(H,D_i)$. In other words, the likelihood function treats the model (i.e. particular values of $\beta$) as an independent variable, or input, and outputs the probability of observing a particular piece of disease data collected. The likelihood function only provides the probability of observing a particular piece of data under different values of $\beta$, but we are generally interested in finding and maximizing the probability of observing entire sets of data not just individual observations. Assuming the entire data set is *independent* (i.e. one observation in the data set does not affect what the other observations in the data set are), we can accomplish this by multiplying the individual likelihood functions $\mathcal{L}(H,D_n)$ for every individual piece of data $D_1,D_2 \cdots , D_n$ in the overall data set $D$ to get the overall likelihood of the entire set of data $\mathcal{L}(H,D)$:
-
-$$
-\mathcal{L}(H,D)=\mathcal{L}(H,D_1) \times \mathcal{L}(H,D_2) \times \cdots \times \mathcal{L}(H,D_n)
-$$
-
-What this likelihood function looks like highly depends on the disease data we have available to us. Disease data often comes in two forms:
-
-- Prevalence Count Data: Data that reports the total number of infected individuals at a time $t$. 
-
-- Incidence Data: Data that reports the number new infected individuals over a period of time from $t$ to $t+\Delta t$
-
-In this learning module, we will only cover the process for finding $\beta$ using MLE when we have prevalence count data, however. The MLE algorithm for prevalence count data follows these general steps:
-
-1. Make an assumption about the distribution of the likelihood function. Oftentimes, this means assuming that every piece of observed data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
-
-:::{.callout-note}
-In this context, the Poisson distribution describes the probability of having observed a particular count of infected individuals at a time $t$ when the the average number of infectious individuals $\lambda$ is known. 
-It's important to note that we are not saying the prediction from the SIR model is random but rather that each data point was drawn randomly from a distribution centered around the predicted value given by the SIR model, and that distribution is Poisson. We can imagine that for every time $t$ there is a separate Poisson distribution centered around the predicted prevalence count obtained from the SIR model from which the observed prevalence counts were drawn. 
-:::
-
-2. Set a range of plausible values for the parameter of interest ($\beta$) and iterate through all of them in tiny increments.
-
-3. For each plausible value of $\beta$, iterate through every data point in the set and calculate its likelihood $\mathcal{L}(H,D_n)$. Multiply the likelihoods of all the data points together and store that value as $\mathcal{L}(H,D)$.
-
-4. Repeat step 3 for every value of $\beta$ in the plausible range.
-
-5. Now that we have a collection of likelihoods for different SIR models, given by different values of $\beta$, we should find the maximum among them and estimate the value of $\beta$ to be what provides that maximum likelihood (i.e. the maximum likelihood estimator). We can also graph the likelihoods to get a better idea of what pattern they follow and a visual representation of where the maximum occurs.
-
-
-There are a few small optimizations we often make to the maximum likelihood algorithm, firstly: 
-
-- We use *log-likelihoods* instead of raw likelihoods. 
-
-  - Why do we do this?: The individual likelihoods $\mathcal{L}(H,D_i)$ represent the probability of observing a piece of data under a particular model, they are small numbers between $0$ and $1$ (since probability is always lies in the interval $[0,1]$). The MLE algorithm requires multiplying many of these small likelihoods together, and after a certain point (if our data set is big enough and we are multiplying enough individual likelihoods together), the computer might not be precise enough to represent such small number and simply round out our overall likelihood $\mathcal{L}(H,D)$ to be $0$! We obviously want to avoid this, so we often opt to using *log-likelihoods* instead since logarithms convert very small numbers between $0$ and $1$ into numbers larger in magnitude but negative (thus avoiding potential rounding errors). Log-likelihoods are simply obtained by taking the logarithm of the likelihood function $\mathcal{L}(H,D)$. When we do this, we must modify the way we calculate $\mathcal{L}(H,D)$, since we would no longer be multiplying the individual likelihoods $\mathcal{L}(H,D_i)$ but rather adding them. Remembering back to our properties of logarithms, we have:
-
-$$
-\log(a \times b) = \log(a) + \log(b)
-$$
-And from this we get:
-
-$$
-\log[\mathcal{L}(H,D)]=\log[\mathcal{L}(H,D_1) \times \cdots \times \mathcal{L}(H,D_n)]=\log[\mathcal{L}(H,D_1)] + \cdots +  \log[\mathcal{L}(H,D_n)]
-$$
-
-Taking the logarithm of the likelihood function will not change the results of MLE, making our maximum likelihood estimator for $\beta$ the same whether we use log-likelihoods or raw likelihoods. 
-
-:::{.callout-note}
-Why doesn't taking the logarithm of the likelihood function change the results of MLE?: The reason using log-likelihoods doesn't affect MLE is because the logarithm function is always increasing, so it doesn't actually change where the relative maxima of a function occur. If we have a function $f(x)$ with, say, relative maxima at $x=2,3,4$, then $\log[f(x)]$ would still have relative maxima at $x=2,3,4$. The process for MLE is dependent directly on finding where the relative maxima of the likelihood function occurs, so taking the logarithm doesn't affect its output.
-:::
-
-Including this optimization, our final modified MLE algorithm goes like so:
-
-1. Make an assumption about the distribution of the likelihood function. Oftentimes, this means assuming that every piece of observed data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
-
-2. Set a range of plausible values for the parameter of interest ($\beta$) and iterate through all of them in tiny increments.
-
-3. For each plausible value of $\beta$, iterate through every data point in the set and calculate its log-likelihood $\log[\mathcal{L}(H,D_i)]$. Add the log-likelihoods of all the data points together and store that value as $\log[\mathcal{L}(H,D)]$.
-
-4. Repeat step 3 for every value of $\beta$ in the plausible range.
-
-5. Now that we have a collection of likelihoods for different SIR models, given by different values of $\beta$, we should find the maximum among them and estimate the value of $\beta$ to be what provides that maximum likelihood (i.e. the maximum likelihood estimator). We can also graph the likelihoods to get a better idea of what pattern they follow and a visual representation of where the maximum occurs.
-
-This whole process can be really hard to conceptualize at first without concrete examples. We go over a few code examples of MLE coded from stratch and MLE using the `bblme` package in R in [Sections @sec-coding-scratch] and [@sec-bblme]. 
-
-#### Coding An MLE Algorithm From Scratch {#sec-coding-scratch}
-
-Suppose we have the following SIR epidemic model and we wish to use MLE to estimate the value of $\beta$:
-
-$$
-\begin{aligned}
-\frac{dS}{dt} &= -\beta \frac{I}{N} S \\[10pt]
-\frac{dI}{dt} &= \beta \frac{I}{N} S - \gamma I \\[10pt]
-\frac{dR}{dt} &= \gamma I
-\end{aligned}
-$$
-For this model, $t$ is in units of days, the total size of the population we are modelling is $N=1000$ people, and the initial number of susceptible, infected, and recovered individuals is $S=999$, $I=1$, and $R=0$, respectively. 
-
-:::{.callout-note}
-These SIR equations are providing the number, not proportion, of individuals in each compartment. This is important because the prevalence count data we will be using to find $\beta$ is also a number, not a proportion. Additionally, our assumption mentioned in [Section @sec-formulating-transmission-rate] that the data follows a Poisson distribution is only valid if both our data and model are counts of people, not proportions, since the Poisson distribution is a discrete distribution only able to take on non-negative integer values.
-:::
-
-Let's also assume that we know the recovery rate to be $\gamma=0.7$ people per day based on past literature. Substituting this into our SIR equations we have:
-
-$$
-\begin{aligned}
-\frac{dS}{dt} &= -\beta \frac{I}{N} S \\[10pt]
-\frac{dI}{dt} &= \beta \frac{I}{N} S - 0.7 I \\[10pt]
-\frac{dR}{dt} &= 0.7 I
-\end{aligned}
-$$
-Now that we have our basic model equations, we need prevalence count data to conduct MLE to find $\beta$. We will be using the following data set for this example:
-
-```{r}
-data <- read.csv("../data/mle_example.csv")
-data
-```
-
-:::{.callout-note}
-This data set was actually generated based on random Poisson samples from a $\beta=1.2$ SIR model with the same recovery rate ($\gamma=0.7$), total population size $N=1000$, initial state variables ($S=999$,$I=1$,$R=0$), and units of time $t$ (days) as our example model. Keep this in mind because we can actually see how accurate our estimate for $\beta$ found using MLE is by seeing how close it is to the $\beta$ used to generate the data. 
-:::
-
-Our first step is to code a function using the package `deSolve` to solve our given SIR model for any value of $\beta$ and output what it predicts the number of infected individuals to be at various times. This is very similar our code from [Section @sec-desolve]:
-
-```{r}
-library(deSolve)
-
-ModelFunc <- function(time,state,parameters){
-  S <- state["S"]
-  I <- state["I"]
-  R <- state["R"]
-  
-  beta <- parameters["beta"]
-  gamma <- parameters["gamma"]
-  N <- parameters["N"]
-  
-  dS <- -(beta*I*S/N)
-  dI <- (beta*I*S/N) - (gamma*I)
-  dR <- (gamma*I)
-  
-  return(list(c(dS,dI,dR)))
-}
-
-# Function to take in values of the model parameters and a vector of times and output the predicted prevalence count at those times
-pred <- function(parameters,t){
-  initial_vals <- c(S=999,I=1,R=0)
-  output <- ode(func=ModelFunc,y=initial_vals,parms=parameters,times=t,rtol = 1e-4,atol = 1e-4)
-  
-  # Extracting only the infected values (predicted prevalences)
-  I_pred <- output[, "I"]
-  
-  return(I_pred)
-}
-```
-
-Now that we have our function to output the predicted prevalence counts given by our SIR model, we need to code a function to iterate through plausible values of $\beta$ and calculate the overall log-likelihood at each using our data:
-
-```{r}
-# Function to take in a named vector of parameters (beta and gamma) and the set data and output the overall log-likelihood
-log_likelihood <- function(parameters,data){
-  times <- data$day
-  predicted <- pred(parameters,times)
-  
-  # The function dpois gives Poisson probabilities
-  # Note we are setting the mean of the Poisson distribution to be the predicted prevalence counts given by the SIR model
-  sum(dpois(x=data$prevalence_count,lambda=predicted,log=TRUE))
-}
-
-# Driver function to iterate through plausible values of beta, calculate the log-likelihood at each, and find the maximum likelihood estimator
-mle <- function(plausible_beta,data){
-  range_beta <- seq(0.01,plausible_beta,by=0.01)
-  
-  # Data frame of log-likelihoods for each beta
-  all_ll <- data.frame()
-  
-  for (beta in range_beta){
-    params <- c(beta=beta,gamma=0.7,N=1000)
-    new_ll <- data.frame(beta=beta,ll=log_likelihood(params,data))
-    all_ll <- rbind(all_ll,new_ll)
-  }
-  
-  # Plotting all the log-likelihoods against the betas
-  plot(all_ll$beta,all_ll$ll,type="l",xlab="beta",ylab="log-likelihood",main="Log-likelihood vs Beta")
-  
-  # Plotting a separate line where the maximum likelihood estimate for beta is and returning the estimate
-  beta_mle <- all_ll$beta[which.max(all_ll$ll)]
-  abline(v=beta_mle,lty=2)
-  return(beta_mle)
-}
-
-mle(2,data)
-```
-
-The code above outputs that our maximum likelihood estimator for $\beta$ is 1.2 and this aligns directly with the $\beta$ we used to generate the data! Read on to the next section to see how we can code all of this in a much easier and faster way using the `bbmle` package. 
-
-
-**SECTION REFERENCE**
-
-https://daphnia.ecology.uga.edu/drakelab/wp-content/uploads/2014/07/likelihood.pdf
-
-#### MLE Using the bbmle Package in R {#sec-bblme}
-
-Although knowing how to code an MLE algorithm by hand is useful to first grasp the concept, in practicality it is inefficient which is why we often opt to use packages such as `bbmle` in R, which has the function `mle2` that makes it much easier.
-
-`mle2` has many arguments, which can be read up on in the (R documentation for  the `mle2` function)[@docs_bbmle_mle2], however there are only two required parameters:
-
-- `minuslogl`: A function or formula to calculate the *negative* log-likelihood given a value for our parameter of interest ($\beta$)
-
-- `start`: An initial guess for the value of the parameter of interest ($\beta$)
-
-We will also make use of two other parameters to ensure our code runs smoothly:
-
-- `method`: A string indicating what MLE algorithm method should be used. A summary of each method and how they change the MLE algorithm can be read up in the [R Documentation for the `optim` function @docs_stats_optim]. We will only make use of the method `"L-BFGS-B"`, or the *box constraint* method. This method allows for us to set a lower / upper bound on our parameter of interest $\beta$. This is useful since we know $\beta>=0$, so we can set our lower bound to be a very small number such as $0.01$ to ensure that no `NaN`s are produced when we call `mle2`. Likewise, we can set an optional upper bound on $\beta$ so we can avoid unnecessary computations if we reasonably know it to be below a certain value.
-
-- `lower` / `upper`: These parameters are specified when using the `"L-BFGS-B"` method. These take a named vector including the lower and upper bounds of the parameter(s) of interest. Note that `lower` is a required parameter when using the `"L-BFGS-B"` method but `upper` is an optional parameter. 
-
-```{r}
-require(bbmle)
-
-# This is the function to calculate the negative log-likelihood for a given beta
-poisson_ll <- function(b){
-  times <- data$day
-  parameters <- c(beta=b,gamma=0.7,N=1000)
-  predicted <- pred(parameters,times)
-  -sum(dpois(x=data$prevalence_count,lambda=predicted,log=TRUE))
-}
-
-# Our initial guess for what beta is
-# Try making the initial guess one that is "believable" since if it is too far off then mle2 might return some errors
-start <- list(b=2)
-
-# Using the L-BFGS-B algorithm / method for MLE 
-# Setting the lower bound to be a very small number because we know beta to be non-negative
-result <- mle2(minuslogl=poisson_ll,start=start,method="L-BFGS-B",lower=c(b=0.01))
-
-# Printing the result
-result
-
-# Extracting just the maximum likelihood estimate for beta
-coef(result)
-```
-
-:::{.callout-note}
-You'll notice that the estimate we get for $\beta$ using `mle2` is approximately equal to the one we obtain from our MLE algorithm coded by scratch (as we would expect) except that it is accurate to a far greater decimal place. This is because our MLE algorithm coded by hand is only incrementing through values of $\beta$ in steps of size $0.01$ for computational efficiency. The function `mle2` on the other hand employs much more sophisticated techniques to iterate through values of $\beta$ and calculating their  log-likelihood, making the estimate it returns much more precise.
-:::
 
 ## Solving SIR Equations {#sec-solving-sir-equations}
 
@@ -496,15 +344,15 @@ By the end of this section, you should be able to:
 
 -   Solve basic SIR model equations using a combination of mathematical and computational techniques.
 
--   Identify the difference between common methods of solving SIR-type models, including Euler's method and the deSolve package in R.
+-   Identify the difference between common methods of solving SIR-type models, including Euler's method and using function in the `pracma` package in R.
 :::
 
 Two common methods of solving differential equations that are difficult to solve by hand (in an exact method, that is) is:
 
 1.  Euler's method
-2.  The deSolve package in R
+2.  The `pracma` package in R
 
-We will go over each method in [Sections @sec-euler-method] and [@sec-desolve] and the differences between the two.
+We will go over each method in [Sections @sec-euler-method] and [@sec-pracma] and the differences between the two.
 
 ### Euler's method {#sec-euler-method}
 
@@ -582,22 +430,155 @@ The following table illustrates the calculation process until $t=5$ with a step 
 | $t=4$ | $s\left(4\right)\approx 79.1$<br>$i\left(4\right)\approx 13.7$<br>$r\left(4\right)\approx 7.2$ | $s\left(4\right)=89.1-\left(1\right)\left(1.5\right)\left(\frac{7.5}{100}\right)\left(89.1\right)$<br>$i\left(4\right)=7.5+\left(1\right)\left[\left(1.5\right)\left(\frac{7.5}{100}\right)\left(89.1\right)-0.5\left(7.5\right)\right]$<br>$r\left(4\right)=3.4+\left(1\right)\left(0.5\right)\left(7.5\right)$ |
 | $t=5$ | $s\left(5\right)\approx 62.8$<br>$i\left(5\right)\approx 23.1$<br>$r\left(5\right)\approx 14.0$ | $s\left(5\right)=79.1-\left(1\right)\left(1.5\right)\left(\frac{13.7}{100}\right)\left(79.1\right)$<br>$i\left(5\right)=13.7+\left(1\right)\left[\left(1.5\right)\left(\frac{13.7}{100}\right)\left(79.1\right)-0.5\left(13.7\right)\right]$<br>$r\left(5\right)=7.2+\left(1\right)\left(0.5\right)\left(13.7\right)$ |
 
-
-As you might notice, the calculations above are very tedious, which is why Euler's method is most often calculated using code rather than by hand.
-
 ::: {.callout-tip title="Note"}
 The accuracy of the solution produced by Euler's method is a direct result of what we choose the step size to be. If the step size is larger, then the curvature of the true solution will be lost since we are repeatedly taking linear approximations, resulting in an approximate solution that deviates a lot from the true solution curve. On the other hand, as the step size gets smaller, the approximate solution provided by Euler's method converges to the true solution curve.
 
 See [Section @sec-evaluating-and-comparing-both-methods] for a simulation demonstrating what happens when you change the step size.
 :::
 
+As you might notice, the calculations above are very tedious, which is why Euler's method is most often calculated using code rather than by hand. Read on to [Section @sec-euler-code] for a demonstration on how to code Euler's Method.
+
+#### Euler's Method Code Demonstration {#sec-euler-code}
+
+This section contains a step by step walkthrough of how to code an Euler's Method algorithm in R. 
+
+**Step 1: Define the biological parameters.**
+
+Every model starts with its parameters: the biological quantities that characterize the disease and host system. Here, we have two: how fast the disease spreads ($\beta$) and how fast individuals recover ($\gamma$).
+
+```{webr}
+# Transmission rate: contacts × probability of transmission per unit time
+beta <- 1.5
+
+# Recovery rate: 1/gamma gives the average duration of infection
+gamma <- 0.5
+
+# With these values, the average infectious period is:
+cat("Average infectious period:", 1/gamma, "time units")
+```
+
+---
+
+**Step 2: Set the initial conditions.**
+
+Before the model can run, we need to specify where the system starts. In an epidemic model, this means the proportion of the population in each compartment at time zero.
+
+```{webr}
+# Starting proportions — must sum to 1
+S0 <- 0.99   # 99% susceptible: nearly everyone is susceptible at the start
+I0 <- 0.01   # 1% infectious: a small "spark" of infection enters the population
+R0_start <- 0.00   # 0% recovered: no prior immunity
+
+# Verify they sum to 1 (a good sanity check to build into your code)
+cat("S0 + I0 + R0 =", S0 + I0 + R0_start, "\n")
+```
+
+This sanity check, confirming that proportions sum to 1 — is a simple example of a habit that will save you debugging time later. When you add more compartments (SEIR, endemic model), this check generalizes naturally.
+
+---
+
+**Step 3: Set up the time grid.**
+
+Euler's method steps through time discretely. We need to decide how far apart those steps are ($\Delta t$, the step size) and how long to simulate.
+
+```{webr}
+dt    <- 0.1   # step size — try making this larger later to see what breaks
+t_end <- 50    # total simulation time
+
+# Create a vector of all time points
+times   <- seq(0, t_end, by = dt)
+n_steps <- length(times)
+
+cat("Number of time steps:", n_steps, "\n")
+cat("Time points run from", times[1], "to", times[n_steps], "\n")
+```
+
+The step size is a computational choice, not a biological one, but it affects accuracy. A smaller $\Delta t$ gives a more accurate approximation of the continuous solution, at the cost of more computation. We will explore this tradeoff shortly.
+
+---
+
+**Step 4: Pre-allocate storage.**
+
+Before running the loop, we create empty vectors to hold the results at each time step. This is more efficient than growing a vector inside the loop.
+
+```{webr}
+# Empty vectors: one slot per time step, filled with zeros for now
+S <- numeric(n_steps)
+I <- numeric(n_steps)
+R <- numeric(n_steps)
+
+# Fill in the starting values
+S[1] <- S0
+I[1] <- I0
+R[1] <- R0_start
+
+cat("Storage ready. First values: S =", S[1], " I =", I[1], " R =", R[1], "\n")
+```
+
+Think of these vectors as the model's memory: they store the entire trajectory of the epidemic, one row per time step.
+
+---
+
+**Step 5: Run the Euler loop.**
+
+This is where the model actually runs. At each time step, we calculate the rates of change using the SIR equations and use them to update the compartment values. Each line in the loop maps directly to an equation.
+
+```{webr}
+for (t in 1:(n_steps - 1)) {
+
+  # Rate of change: these ARE the SIR equations, written as code
+  dS <- -beta * I[t] * S[t]                    # new infections leaving S
+  dI <-  beta * I[t] * S[t] - gamma * I[t]     # gain infections, lose recoveries
+  dR <-  gamma * I[t]                          # recoveries entering R
+
+  # Step forward: current value + (step size × rate of change)
+  S[t+1] <- S[t] + dt * dS
+  I[t+1] <- I[t] + dt * dI
+  R[t+1] <- R[t] + dt * dR
+}
+
+# Quick check: do the compartments still sum to 1 at the end?
+cat("Final values: S =", round(S[n_steps], 4),
+    " I =", round(I[n_steps], 4),
+    " R =", round(R[n_steps], 4), "\n")
+cat("Sum:", round(S[n_steps] + I[n_steps] + R[n_steps], 6), "\n")
+```
+
+The loop is doing exactly what the Euler update formulas say, mechanically, one step at a time. This is the computational equivalent of doing the hand calculations from the table shown earlier, just thousands of times faster.
+
+---
+
+**Step 6: Visualize the results.**
+
+The vectors `S`, `I`, and `R` now hold the full epidemic trajectory. We can plot them against time.
+
+```{webr}
+plot(times, S, type = "l", col = "steelblue", lwd = 2,
+     ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
+     main = paste0("SIR Epidemic (Euler)  |  β=", beta,
+                   "  γ=", gamma, "  R₀=", round(beta/gamma, 2)))
+lines(times, I, col = "firebrick", lwd = 2)
+lines(times, R, col = "seagreen",  lwd = 2)
+legend("right", legend = c("Susceptible", "Infectious", "Recovered"),
+       col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n")
+```
+
+::: {.callout-tip title="Try this"}
+Go back to **Step 1** and try the following changes, re-running each step in order:
+
+1. Change `gamma <- 0.5` to `gamma <- 0.2`. What does a slower recovery rate do to the epidemic peak?
+2. Change `beta <- 1.5` to `beta <- 0.4`. What happens when $\beta < \gamma$? Can you explain why biologically?
+3. Go back to **Step 3** and change `dt <- 0.1` to `dt <- 2.0`. What happens to the curves? This is the cost of a large step size.
+:::
+
+
 **Section References**
 
 @ode_book
 
-### deSolve Package in R {#sec-desolve}
+### Solving SIR Equations in R Using `pracma` {#sec-pracma}
 
-The deSolve Package in R contains a variety of functions that "solve initial value problems of a system of first-order ordinary differential equations ('ODE'), of partial differential equations ('PDE'), of differential algebraic equations ('DAE'), and of delay differential equations" [@cran_desolve]
+The package `pracma` in R, short for "Practical Numerical Math Functions," provides a large repertoire of functions used in numerical analysis, linear algebra, numerical optimization, and differential equations [@pracma_cran]. 
 
 ::: {.callout-note}
 The SIR-type models we are going to cover deal with systems of first-order ordinary differential equations.
@@ -609,97 +590,524 @@ Breaking up each word in this description, we have:
 -   "Ordinary": The unknown function which we are trying to solve for depends only one independent variable.
 :::
 
-Since our applications will only deal with first-order ODEs, we will only cover the deSolve function `ode`, which is used to solve (as you can probably guess) initial value problems (IVPs) for first-order ordinary differential equations.
+Although `pracma` contains many mathematical functions, we are primarily interested in `rk4sys`, a function to solve systems of differential equations using an advanced method known as the *Classic Fourth-Order Runge-Kutta Method*. This method for solving differential equations is much more complex than Euler's method but outputs solutions to a much greater accuracy. In simple terms, the Fourth-Order Runge–Kutta method estimates the value of a solution at the next point by taking a weighted average of four slope calculations, each computed at different points within the step interval [@runge_kutta_background]. 
 
-The function `ode` takes in the following relevant parameters, summarized in the table below:
+The following table summarizes the values `rk4sys` takes in:
 
 | **Parameter Name** | **What Does It Take In?** |
 |-------------|-----------------------------------------------------------|
-| `func` | A user-defined function that defines and returns a list of the model equations (the differential equations to be solved). |
-| `y` | A vector specifying initial values. |
-| `parms` | A vector specifying the model parameters. |
-| `times` | A vector specifying the time points at which the solution of the model equations should be returned. This determines the resolution of the overall output but not the numerical accuracy of each output point. |
+| `f` | A user-defined function that defines the system of differential equations to be solved. |
+| `a` | A number specifying the starting point of the interval we want solutions for.  |
+| `b` | A number specifying the endpoint of the interval we want solutions for. |
+| `y0` | A vector specifying the initial values of the system. A system of $m$ differential equations must have a `y0` of length $m$. |
+| `n` | A number specifying the step size (i.e. the number of steps that should be taken from `a` to `b`. |
 
-The function `ode` returns a matrix whose first column is the time points specified in the input `times` and subsequent columns are the solutions to the model's state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infectious, and recovered at a given time.
+The function `rk4sys` returns a matrix. When that matrix is converted to a data frame using the function `as.data.frame`, its first column provides the time points at which the SIR model was solved and subsequent columns are the solutions to the model's state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infectious, and recovered at a given time.
 
-Before we can call `ode`, we must code the function to be passed into the parameter `func`. For a classic SIR model on the proportion of individuals in each compartment (see [Section @sec-the-classic-sir-epidemic-model]) we do this using the following template function:
+Before we can call `rk4sys`, let's go over how to code the function to be passed into the parameter `f`. The function below is specifying a classic SIR model on the proportion of individuals in each compartment (see [Section @sec-the-classic-sir-epidemic-model]).
 
-```{r}
-ModelFunc <- function(time,state,parameters){
+**Step 1: Code the model function.**
+
+```{webr}
+ModelFunc <- function(time,state){
   # Extracting the state variables
-  # Since we are doing this in the context of SIR models, we have the state variables S, I, and R
-  S <- state["S"]
-  I <- state["I"]
-  R <- state["R"]
+  # We have the state variables susceptible, infected, and recovered (S,I,R)
+  S <- state[1]
+  I <- state[2]
+  R <- state[3]
   
-  # Extracting the model parameters
-  # We are doing this for an SIR model, so we have two parameters - the transmission and recovery rate
-  beta <- parameters["beta"]
-  gamma <- parameters["gamma"]
+  # Specifying the model parameters
+  # We only have two parameters - the transmission and recovery rate
+  # These parameters will change depending on the model
+  beta <- 1.5
+  gamma <- 0.5
   
-  # Now we are going to use those previously extracted state variables and parameters to construct our model equations (differential equations)
+  # Constructing our SIR model equations
   dS <- -(beta*I*S)
   dI <- (beta*I*S) - (gamma*I)
   dR <- (gamma*I)
   
-  # Now we will return those model equations as a list
-  return(list(c(dS,dI,dR)))
+  # Now we will return those model equations as a vector
+  return(c(dS,dI,dR))
 }
+
+# Example call - Outputs the rates of change for S, I, and R given the inputs
+ModelFunc(1,c(S=0.99,I=0.01,R=0))
 ```
 
-Now all we need to do is specify the other parameters `y`, `parms`, and `times` and call `ode` with them like so:
+**Step 2: Specify the other parameters and call `rk4sys`.**
 
-```{r}
-library(deSolve)
+```{webr}
+library(pracma)
+
+# Here we are specifying the start and ending points of the solution interval
+start <- 0
+end <- 20
 
 # Here we are specifying the initial values to be passed into the parameter y
-# Make sure these initial values line up exactly with the state variables extracted in the model function from before
+# Make sure values line up with the state variables in the model function
 initial_vals <- c(S=0.99,I=0.01,R=0)
 
-# Here we are specifying the parameters of the model and their values
-# Make sure these parameters line up exactly with the parameters extracted in the model function from before
-model_parameters <- c(beta=1.5,gamma=0.5)
+# Here we are specifying how many steps to take from a to b
+# A common choice is to simply take b-a number of steps 
+# The more steps we take, the more accurate our resulting solutions will be
+step_size <- end-start
 
-# Here we are specifying the times for which outputs are calculated
-# The closer together these times are, the higher the output resolution
-output_times <- seq(0,50,by=1)
+# Now we can call the function rk4sys
+# We are wrapping the function ModelFunc in another function so we can pass 
+output <- rk4sys(f=ModelFunc,
+                 a=start,
+                 b=end,
+                 y0=initial_vals,
+                 n=step_size)
 
-# Now we can call the function ode like so:
-output <- ode(func=ModelFunc,y=initial_vals,parms=model_parameters,times=output_times)
-
-# Printing the first 5 rows of the output matrix
-print(head(output,5))
+# Converting the output matrix to a data frame and printing it
+output <- as.data.frame(output)
+print(output)
 ```
 
-Now that we have this matrix of the solved SIR model equations are at specified times, we can plot it like so:
+Now that we have this matrix of the solved SIR model equations are at specified times, we can plot it.
 
-```{r}
-matplot(x = output[,"time"], y = output[,2:4], type = "l", lty = 1, xlab = "time", ylab = "proportion", main = "Solved Example: Epidemic SIR Model", col = c("blue","red","green"))
+**Step 3: Plot the results.**
 
-# Adding a legend
-legend("topright",legend = c("Susceptible", "Infectious", "Recovered"), col = c("blue","red","green"), lty = 1)
+```{webr}
+times <- output$x
+S <- output$y.S
+I <- output$y.I
+R <- output$y.R
+beta <- 1.5
+gamma <- 0.5
+
+plot(times, S, type = "l", col = "steelblue", lwd = 2,
+     ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
+     main = paste0("SIR Epidemic (Runge-Kutta)  |  β=", beta,
+                   "  γ=", gamma, "  R₀=", round(beta/gamma, 2)))
+lines(times, I, col = "firebrick", lwd = 2)
+lines(times, R, col = "seagreen",  lwd = 2)
+
+legend("right", legend = c("Susceptible", "Infectious", "Recovered"),
+       col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n")
 ```
 
-**Section References**
-
-@desolve_intro
 
 ### Evaluating and Comparing Both Methods {#sec-evaluating-and-comparing-both-methods}
 
-The following table summarizes some potential benefits and drawbacks to using Euler's method or deSolve:
+The following table summarizes some potential benefits and drawbacks to using Euler's method or `rk4sys` in `pracma`:
 
 | **Solving Method** | **Potential Benefits** | **Potential Drawbacks** |
 |--------------|-----------------------|------------------------------------|
 | Euler's Method | \- Can be done by hand or implemented in code<br>- Simple to understand<br>- Full control over accuracy of model <br>- No external packages required | \- Low accuracy unless an extremely small step size is used<br>- Computationally inefficient for small step sizes or complex models<br>- Can be tedious to calculate by hand |
-| deSolve Package | \- Uses advanced solving methods with high accuracy<br>- Handles large models with many system equations well<br>- Efficient for complex models | \- Less transparent approach; not much understanding of what is going on "under the hood"<br>- Requires learning new functions and syntax<br>- Depends on external packages<br>- Less control over solving method and accuracy |
+| `rk4sys` | \- Uses an advanced solving method (Fourth-Order Runge-Kutta) that has a high accuracy<br>- Handles large models with many system equations well<br>- Efficient for complex models | \- Less transparent approach; not much understanding of what is going on "under the hood"<br>- Requires learning new functions and syntax<br>- Depends on the external package `pracma`<br> - Output accuracy depends greatly on step size|
 
-The following simulation shows the difference between the solution curves produced by Euler's method and the deSolve package for different values of the model parameters and step size:
+The following simulation shows the difference between the solution curves produced by Euler's method and `rk4sys` for different values of the model parameters and step size:
 
 <iframe src="http://127.0.0.1:4570"
         width="100%"
         height="700"
         style="border:none;"></iframe>
-     
+
+
+## Finding the Transmission Rate Using MLE {#sec-formulating-transmission-rate}
+
+*Maximum likelihood estimation*, often shorthanded as MLE, is a statistical technique that estimates the value of an unknown parameter to be that which maximizes the probability of observing real-world data from the scenario of interest. Recalling from [Section @sec-formulating-the-recovery-rate], the recovery rate is often found based on prior literature and held as a constant equal to the reciprocal of the average duration of infection. As such, for the epidemic SIR model, we generally only use MLE to estimate the value of the transmission rate $\beta$ [@parameter_estimation]. 
+
+MLE works by maximizing the *likelihood function*. The likelihood function provides the *likelihood*, or the probability of a given piece of data $D_n$ having occurred under a particular hypothesis (or model) $H$, and is typically noted as $\mathcal{L}(H,D_i)$. In other words, the likelihood function treats the model (i.e. particular values of $\beta$) as an independent variable, or input, and outputs the probability of observing a particular piece of disease data collected. The likelihood function only provides the probability of observing a particular piece of data under different values of $\beta$, but we are generally interested in finding and maximizing the probability of observing entire sets of data not just individual observations. Assuming the entire data set is *independent* (i.e. one observation in the data set does not affect what the other observations in the data set are), we can accomplish this by multiplying the individual likelihood functions $\mathcal{L}(H,D_n)$ for every individual piece of data $D_1,D_2 \cdots , D_n$ in the data set $D$ to get the overall likelihood of the entire set of data $\mathcal{L}(H,D)$:
+
+$$
+\mathcal{L}(H,D)=\mathcal{L}(H,D_1) \times \mathcal{L}(H,D_2) \times \cdots \times \mathcal{L}(H,D_n)
+$$
+
+What this likelihood function looks like highly depends on the disease data we have available to us. Disease data often comes in two forms:
+
+- Prevalence Count Data: Data that reports the total number of infected individuals at a time $t$. 
+
+- Incidence Data: Data that reports the number new infected individuals over a period of time from $t$ to $t+\Delta t$
+
+In this learning module, we will only cover the process for finding $\beta$ using MLE when we have prevalence count data, however. The MLE algorithm for prevalence count data follows these general steps:
+
+1. Make an assumption about the distribution of the likelihood function. Oftentimes, this means assuming that every piece of observed data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
+
+:::{.callout-note}
+In this context, the Poisson distribution describes the probability of having observed a particular count of infected individuals at a time $t$ when the the average number of infectious individuals $\lambda$ is known. 
+It's important to note that we are not saying the prediction from the SIR model is random but rather that each data point was drawn randomly from a distribution centered around the predicted value given by the SIR model, and that distribution is Poisson. We can imagine that for every time $t$ there is a separate Poisson distribution centered around the predicted prevalence count obtained from the SIR model from which the observed prevalence counts were drawn. 
+:::
+
+2. Set a range of plausible values for the parameter of interest ($\beta$) and iterate through all of them in tiny increments.
+
+3. For each plausible value of $\beta$, iterate through every data point in the set and calculate its likelihood $\mathcal{L}(H,D_n)$. Multiply the likelihoods of all the data points together and store that value as $\mathcal{L}(H,D)$.
+
+4. Repeat step 3 for every value of $\beta$ in the plausible range.
+
+5. Now that we have a collection of likelihoods for different SIR models, given by different values of $\beta$, we should find the maximum among them and estimate the value of $\beta$ to be what provides that maximum likelihood (i.e. the maximum likelihood estimator). We can also graph the likelihoods to get a better idea of what pattern they follow and a visual representation of where the maximum occurs.
+
+
+There are a few small optimizations we often make to the maximum likelihood algorithm, firstly: 
+
+- We use *log-likelihoods* instead of raw likelihoods. 
+
+  - Why do we do this?: The individual likelihoods $\mathcal{L}(H,D_i)$ represent the probability of observing a piece of data under a particular model, they are small numbers between $0$ and $1$ (since probability is always lies in the interval $[0,1]$). The MLE algorithm requires multiplying many of these small likelihoods together, and after a certain point (if our data set is big enough and we are multiplying enough individual likelihoods together), the computer might not be precise enough to represent such small number and simply round out our overall likelihood $\mathcal{L}(H,D)$ to be $0$! We obviously want to avoid this, so we often opt to using *log-likelihoods* instead since logarithms convert very small numbers between $0$ and $1$ into numbers larger in magnitude but negative (thus avoiding potential rounding errors). Log-likelihoods are simply obtained by taking the logarithm of the likelihood function $\mathcal{L}(H,D)$. When we do this, we must modify the way we calculate $\mathcal{L}(H,D)$, since we would no longer be multiplying the individual likelihoods $\mathcal{L}(H,D_i)$ but rather adding them. Remembering back to our properties of logarithms, we have:
+
+$$
+\log(a \times b) = \log(a) + \log(b)
+$$
+And from this we get:
+
+$$
+\log[\mathcal{L}(H,D)]=\log[\mathcal{L}(H,D_1) \times \cdots \times \mathcal{L}(H,D_n)]=\log[\mathcal{L}(H,D_1)] + \cdots +  \log[\mathcal{L}(H,D_n)]
+$$
+
+Taking the logarithm of the likelihood function will not change the results of MLE, making our maximum likelihood estimator for $\beta$ the same whether we use log-likelihoods or raw likelihoods. 
+
+:::{.callout-note}
+Why doesn't taking the logarithm of the likelihood function change the results of MLE?: The reason using log-likelihoods doesn't affect MLE is because the logarithm function is always increasing, so it doesn't actually change where the relative maxima of a function occur. If we have a function $f(x)$ with, say, relative maxima at $x=2,3,4$, then $\log[f(x)]$ would still have relative maxima at $x=2,3,4$. The process for MLE is dependent directly on finding where the relative maxima of the likelihood function occurs, so taking the logarithm doesn't affect its output.
+:::
+
+Including this optimization, our final modified MLE algorithm goes like so:
+
+1. Make an assumption about the distribution of the likelihood function. Oftentimes, this means assuming that every piece of observed data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
+
+2. Set a range of plausible values for the parameter of interest ($\beta$) and iterate through all of them in tiny increments.
+
+3. For each plausible value of $\beta$, iterate through every data point in the set and calculate its log-likelihood $\log[\mathcal{L}(H,D_i)]$. Add the log-likelihoods of all the data points together and store that value as $\log[\mathcal{L}(H,D)]$.
+
+4. Repeat step 3 for every value of $\beta$ in the plausible range.
+
+5. Now that we have a collection of likelihoods for different SIR models, given by different values of $\beta$, we should find the maximum among them and estimate the value of $\beta$ to be what provides that maximum likelihood (i.e. the maximum likelihood estimator). We can also graph the likelihoods to get a better idea of what pattern they follow and a visual representation of where the maximum occurs.
+
+This whole process can be really hard to conceptualize at first without concrete examples. We go over a few code examples of MLE coded from stratch and MLE using the `bbmle` package in R in [Sections @sec-coding-scratch] and [@sec-bbmle]. 
+
+#### Coding An MLE Algorithm From Scratch {#sec-coding-scratch}
+
+Suppose we have the following SIR epidemic model and we wish to use MLE to estimate the value of $\beta$:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta \left(\frac{I}{N}\right) S \\[10pt]
+\frac{dI}{dt} &= \beta \left(\frac{I}{N}\right)  S - \gamma I \\[10pt]
+\frac{dR}{dt} &= \gamma I
+\end{aligned}
+$$
+
+For this model, $t$ is in units of days, the total size of the population we are modelling is $N=1000$ people, and the initial number of susceptible, infected, and recovered individuals is $S=999$, $I=1$, and $R=0$, respectively. 
+
+:::{.callout-note}
+These SIR equations are providing the number, not proportion, of individuals in each compartment. This is important because the prevalence count data we will be using to find $\beta$ is also a number, not a proportion. Additionally, our assumption mentioned in [Section @sec-formulating-transmission-rate] that the data follows a Poisson distribution is only valid if both our data and model are counts of people, not proportions, since the Poisson distribution is a discrete distribution only able to take on non-negative integer values.
+:::
+
+Let's also assume that we know the recovery rate to be $\gamma=0.7$ people per day based on past literature. Substituting this into our SIR equations we have:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta \left(\frac{I}{N}\right)  S \\[10pt]
+\frac{dI}{dt} &= \beta \left(\frac{I}{N}\right)  S - 0.7 I \\[10pt]
+\frac{dR}{dt} &= 0.7 I
+\end{aligned}
+$$
+
+Now that we have our basic model equations, let's code an algorithm to find the maximum likelihood estimator for $\beta$.
+
+**Step 1: Generate test prevalence data.**
+
+```{webr}
+library(pracma)
+
+# Ensures that the random processes run the same every time
+set.seed(123)
+
+# Coding the SIR model function
+ModelFunc <- function(time,state,parameters){
+  S <- state[1]
+  I <- state[2]
+  R <- state[3]
+
+  beta <- parameters["beta"]
+  gamma <- parameters["gamma"]
+  N <- parameters["N"]
+
+  dS <- -(beta*I*S/N)
+  dI <- (beta*I*S/N) - (gamma*I)
+  dR <- (gamma*I)
+
+  return(c(dS,dI,dR))
+}
+
+# Parameters of the SIR model from which our data will be generated
+model_parameters <- c(beta = 1.2, gamma = 0.7, N = 1000)
+
+# Number of S,I,R at the beginning of the epidemic (initial state variables)
+initial_vals <- c(S = 999, I = 1, R = 0)
+
+# Specifying how many days to generate data for
+t_start <- 0
+t_end <- 35
+step_size <- t_end - t_start
+
+# Solving SIR equation at specified output times
+output <- rk4sys(y0=initial_vals,
+                 a = t_start,
+                 b = t_end,
+                 f = function(t,y) ModelFunc(t,y,model_parameters),
+                 n = step_size)
+
+# Extracting the true prevalence counts
+output_df <- as.data.frame(output)
+I_true <- output_df$y.I
+
+# Adding noise to the true prevalence counts (to mimic random sampling)
+I_observed <- rpois(length(I_true), lambda = I_true)
+
+# Saving the true and pseudo-sampled prevalence counts as a data frame
+data <- data.frame(day = t_start:t_end,
+                   prevalence_count = I_observed)
+
+print(data)
+```
+
+
+:::{.callout-note}
+We can actually test how accurate our estimate for $\beta$ found using MLE is by seeing how close it is to the $\beta$ used to generate the data (i.e. the value of `beta` in the named vector `model_parameters` in the code above)!
+:::
+
+Now that we have our data and a function for our SIR model called `ModelFunc`, our next step is to is to code a function to solve our SIR model for any value of $\beta$ and output what it predicts the number of infected individuals to be at various times.
+
+**Step 2: Code a function to return predicted prevalences.**
+
+```{webr}
+# Function Inputs: Model parameters and a vector of times
+# Function Outputs: Predicted prevalence counts at input times
+
+pred <- function(parameters,t){
+  initial_vals <- c(S=999,I=1,R=0)
+  t_start <- 0
+  t_end <- max(t)
+  step_size <- t_end - t_start
+  output <- rk4sys(y0=initial_vals,
+                 a=t_start,
+                 b=t_end,
+                 f=function(t,y) ModelFunc(t,y,parameters),
+                 n=step_size)
+  
+  # Extracting only the predicted prevalences at the input times
+  output_df <- as.data.frame(output)
+  prevalences <- output_df$y.I[t]
+
+  # Ensuring there are no NaNs or out of bounds numbers in the output
+  # NaNs are produced when a decimal becomes too small to represent
+  prevalences[is.nan(prevalences) | prevalences < 0 ] <- 0
+  return(prevalences)
+}
+
+# Example calls
+pred(c(beta=1.2,gamma=0.7,N=1000),c(13,14,15))
+```
+
+Now that we have our function to output the predicted prevalence counts given by our SIR model, we need to code a function to calculate the log-likelihood of the entire data set given certain model parameters.
+
+**Step 3: Code a function to calculate log-likelihoods given different parameter values.**
+
+```{webr}
+# Function Inputs: Named vector of model parameters and the data set
+# Function Outputs: Log-likelihood of entire data set
+log_likelihood <- function(parameters,data){
+  times <- data$day
+  predicted <- pred(parameters,times)
+  
+  # Note: The function dpois gives Poisson probabilities
+  sum(dpois(x=data$prevalence_count,lambda=predicted,log=TRUE))
+}
+
+# Example call
+log_likelihood(c(beta=1.4,gamma=0.7,N=1000),data)
+log_likelihood(c(beta=2.3,gamma=0.7,N=1000),data)
+```
+
+Our final step is to code a driver function that iterates through plausible values of $\beta$, calculating the log-likelihood of the entire set of data for each, and outputs the maximum likelihood estimator for $\beta$ (i.e. the $\beta$ which produces the greatest log-likelihood).
+
+**Step 4: Code a function to return the maximum likelihood estimator.**
+```{webr}
+# Function Inputs: Upper limit on the value of beta and the data set
+# Function Ouputs: A plot of the log-likelihoods and the estimate for beta
+mle <- function(plausible_beta,data){
+  range_beta <- seq(1,plausible_beta,by=0.01)
+  
+  # Data frame of log-likelihoods for each beta
+  all_ll <- data.frame()
+  
+  for (beta in range_beta){
+    params <- c(beta=beta,gamma=0.7,N=1000)
+    new_ll <- data.frame(beta=beta,ll=log_likelihood(params,data))
+    all_ll <- rbind(all_ll,new_ll)
+  }
+  
+  # Finding the beta that results in the greatest log-likelihood
+  beta_mle <- all_ll$beta[which.max(all_ll$ll)]
+  
+  
+  # Plotting all the log-likelihoods against the betas
+  plot(all_ll$beta,
+       all_ll$ll,
+       type="l",xlab="beta",
+       ylab="log-likelihood",
+       main="Log-likelihood vs Beta")
+  
+  # Plotting a separate line where the maximum likelihood estimate for beta is 
+  beta_mle <- all_ll$beta[which.max(all_ll$ll)]
+  abline(v=beta_mle,lty=2)
+
+  # Returning the estimate
+  return(beta_mle)
+}
+
+mle(5,data)
+```
+
+::: {.callout-tip title="Try this"}
+Go back to **Step 1** and try the following changes, re-running each step in order:
+
+1. Change `model_parameters <- c(beta = 1.2, gamma = 0.7, N = 1000)` to `model_parameters <- c(beta = 1.7, gamma = 0.7, N = 1000)` and re-run the other steps. Does the maximum likelihood estimate for $\beta$ returned in **Step 4** reflect this change? What about for other values of `beta`? 
+:::
+
+This code might seem like a lot, but not to worry: there is a much easier way of doing MLE in R using the `bbmle` package! Read on to [Section @sec-bbmle] to learn how we can utilize the function `mle2` in the `bbmle` package to simplify conducting MLE in R.
+
+
+**SECTION REFERENCE**
+
+https://daphnia.ecology.uga.edu/drakelab/wp-content/uploads/2014/07/likelihood.pdf
+
+#### MLE Using the bbmle Package in R {#sec-bbmle}
+
+Although knowing how to code an MLE algorithm by hand is useful to first grasp the concept, in practicality it is inefficient which is why we often opt to use packages such as `bbmle` in R, which has the function `mle2` that makes it much easier.
+
+Before we can use `bbmle` we must generate our data. This is the same code used to generate data in [Section @sec-coding-scratch]. 
+
+**Step 1: Generate test prevalence data.**
+
+```{webr}
+library(pracma)
+
+# Ensures that the random processes run the same every time
+set.seed(123)
+
+# SIR model function
+ModelFunc <- function(time,state,parameters){
+  S <- state[1]
+  I <- state[2]
+  R <- state[3]
+
+  beta <- parameters["beta"]
+  gamma <- parameters["gamma"]
+  N <- parameters["N"]
+
+  dS <- -(beta*I*S/N)
+  dI <- (beta*I*S/N) - (gamma*I)
+  dR <- (gamma*I)
+
+  return(c(dS,dI,dR))
+}
+
+# Parameters of the SIR model from which our data will be generated
+model_parameters <- c(beta = 1.2, gamma = 0.7, N = 1000)
+
+# Number of S,I,R at the beginning of the epidemic (initial state variables)
+initial_vals <- c(S = 999, I = 1, R = 0)
+
+# Specifying how many days to generate data for
+t_start <- 0
+t_end <- 35
+step_size <- t_end - t_start
+
+# Solving SIR equation at specified output times
+output <- rk4sys(y0=initial_vals,
+                 a = t_start,
+                 b = t_end,
+                 f = function(t,y) ModelFunc(t,y,model_parameters),
+                 n = step_size)
+
+# Extracting the true prevalence counts
+output_df <- as.data.frame(output)
+I_true <- output_df$y.I
+
+# Adding noise to the true prevalence counts (to mimic random sampling)
+I_observed <- rpois(length(I_true), lambda = I_true)
+
+# Saving the true and pseudo-sampled prevalence counts as a data frame
+data <- data.frame(day = t_start:t_end,
+                   prevalence_count = I_observed)
+
+print(data)
+```
+
+Now that we have our data, let's go over the basics `mle2`. `mle2` has many arguments, which can be read up on in the (R documentation for  the `mle2` function)[@docs_bbmle_mle2], however there are only two required parameters:
+
+- `minuslogl`: A function or formula to calculate the *negative* log-likelihood given a value for our parameter of interest ($\beta$)
+
+- `start`: An initial guess for the value of the parameter of interest ($\beta$)
+
+We will also make use of two other parameters to ensure our code runs smoothly:
+
+- `method`: A string indicating what MLE algorithm method should be used. A summary of each method and how they change the MLE algorithm can be read up in the [R Documentation for the `optim` function @docs_stats_optim]. We will only make use of the method `"L-BFGS-B"`, or the *box constraint* method. This method allows for us to set a lower / upper bound on our parameter of interest $\beta$. This is useful since we know $\beta>=0$, so we can set our lower bound to be a very small number such as $0.01$ to ensure that no `NaN`s are produced when we call `mle2`. Likewise, we can set an optional upper bound on $\beta$ so we can avoid unnecessary computations if we reasonably know it to be below a certain value.
+
+- `lower` / `upper`: These parameters are specified when using the `"L-BFGS-B"` method. These take a named vector including the lower and upper bounds of the parameter(s) of interest. Note that `lower` is a required parameter when using the `"L-BFGS-B"` method but `upper` is an optional parameter. 
+
+**Step 2: Call `mle2` and return maximum likelihood estimate.**
+
+```{webr}
+library(bbmle)
+
+# Function Inputs: A named vector of model Parameters and a time t
+# Function Outputs: The predicted prevalence count at time t
+pred <- function(parameters,t){
+  initial_vals <- c(S=999,I=1,R=0)
+  t_start <- 0
+  t_end <- max(t)
+  step_size <- t_end - t_start
+  output <- rk4sys(y0=initial_vals,
+                 a=t_start,
+                 b=t_end,
+                 f=function(t,y) ModelFunc(t,y,parameters),
+                 n=step_size)
+  
+  # Extracting predicted prevalences
+  output_df <- as.data.frame(output)
+  prevalences <- output_df$y.I[t]
+
+  # Ensuring there are no NaNs or out of bounds numbers in the output
+  prevalences[is.nan(prevalences) | prevalences < 0 ] <- 0
+  return(prevalences)
+}
+  
+# Function Inputs: A named list containing a value for beta
+# Function Ouputs: The log-likelihood of the data given the input beta
+poisson_ll <- function(b){
+  times <- data$day
+  parameters <- c(beta=b,gamma=0.7,N=1000)
+  predicted <- pred(parameters,times)
+    # mle2 only takes in a negative log-likelihood hence the negative sign
+  -sum(dpois(x=data$prevalence_count,lambda=predicted,log=TRUE))
+}
+
+# Our initial guess for what beta is
+# Try making the initial guess one that is plausibly close to the true parameter
+# If our guess is too far off then mle2 might return some errors
+start <- list(b=2)
+
+# Using the L-BFGS-B algorithm / method for MLE 
+# Setting the lower bound to be small but positive since beta is non-negative
+result <- mle2(minuslogl=poisson_ll,
+                         start=start,
+                         method="L-BFGS-B",
+                         lower=c(b=0.01))
+
+# Printing the result
+result
+
+# Extracting just the maximum likelihood estimate for beta
+coef(result)
+```
+
+:::{.callout-note}
+You'll notice that the estimate we get for $\beta$ using `mle2` is approximately equal to the one we obtain from our MLE algorithm coded by scratch (as we would expect) except that it is accurate to a far greater decimal place. This is because our MLE algorithm coded by hand is only incrementing through values of $\beta$ in steps of size $0.01$ for computational efficiency. The function `mle2` on the other hand employs much more sophisticated techniques to iterate through values of $\beta$ and calculating their  log-likelihood, making the estimate it returns much more precise.
+:::
 
 ## Reproduction Numbers {#sec-reproduction-numbers}
 
@@ -759,8 +1167,6 @@ Make sure you understand the definitions and intuition behind the formulas for $
 @Handel2021_IDEMA_ch5
 
 ### The Threshold Phenomenon {#sec-the-threshold-phenomenon}
-
-First described by Kermack and McKendrick, the threshold phenomenon refers to the critical point whereby an infection will either invade the population or fail to. To find this critical point, observe the change in the proportion of infectious individuals given by:
 
 $$
 \frac{d\tilde{I}}{dt} = \beta \tilde{I} \tilde{S} - \gamma \tilde{I}
@@ -925,10 +1331,17 @@ Prior to mass-vaccination campaigns, large British cities exhibited regular meas
 
 **Data For Our Model**
 
-HOW TO DO CITATION FOR DATA?
+The data we will be utilizing for this example is publicly avaliable through the Ottar Bjørnstad Lab at Penn State University [@bjornstad_measles_data]. The data set contains prevalence count data and annual number of births for 60 British cities from 1944 to 1966 (inclusive) as well as the median population size of each city between 1944 and 1966 (inclusive). 
 
+Our example will only utilize the prevalence count data from 1944 to 1945 (52 weeks) and the median population size between 1944 and 1966 for the cities of Blackburn, Exeter, and Leeds, as seen in the table below:
 
-Mention we assume a constant population as well. 
+```{r, echo=FALSE}
+library(readxl)
+library(DT)
+
+data <- read_excel("../data/measles_ex_data.xlsx")
+DT::datatable(data)
+```
 
 **Understanding Our Model**
 
@@ -945,25 +1358,112 @@ We can even see model process reflected in our data: in weeks 2 through 20 of 19
 
 However, in week $22$ there is one new measles case that manages to successfully spread further and start the epidemic. The epidemic continues until the chain of transmission breaks sometime around week $50$ to $52$ of $1944$ and declines back down to nearly $0$ cases through most of 1945, with the exception of a few stray cases that don't manage to re-start the epidemic cycle. 
 
-We are looking to model this measles outbreak by following the proportions of susceptible, infected, and recovered individuals using an epidemic SIR model, giving the following model equations:
+We are looking to model this measles outbreak by following the number of susceptible, infected, and recovered individuals using an epidemic SIR model, giving the following model equations:
 
 $$
 \begin{aligned}
-\frac{d\tilde{S}}{dt} &= -\lambda \tilde{S} \\[10pt]
-\frac{d\tilde{I}}{dt} &= \lambda \tilde{S} - \gamma \tilde{I} \\[10pt]
-\frac{d\tilde{R}}{dt} &= \gamma \tilde{I}
+\frac{dS}{dt} &= -\beta \left(\frac{I}{N}\right)  S \\[10pt]
+\frac{dI}{dt} &= \beta \left(\frac{I}{N}\right)  S - \gamma I \\[10pt]
+\frac{dR}{dt} &= \gamma I
 \end{aligned}
 $$
+
+:::{.callout-note}
+Since our data is given in week intervals, the rates in our model ($\beta$, $\gamma$, $\frac{dS}{dt}$,  $\frac{dI}{dt}$,  $\frac{dR}{dt}$) are in units of weeks as well.
+:::
 
 Now that we have an outline for our model, our next step is to find suitable values for the transmission rate $\beta$ and recovery rate $\gamma$. 
 
 **Finding Our Model Parameters**
 
-The epidemic SIR model only has two parameters, the transmission rate $\beta$ and the recovery rate $\gamma$. From past literature, it is known that the average infectious period of measles is $6$ to $7$ days [@anderson_may_1982]. Recalling the average infectious period as equal to $\frac{1}{\gamma}$, we can obtain and estimated recovery rate of $\gamma=\frac{1}{6.5}=\frac{2}{13}$. 
+The epidemic SIR model only has two parameters, the transmission rate $\beta$ and the recovery rate $\gamma$. From past literature, it is known that the average infectious period of measles is $6$ to $7$ days, which we will estimate to be about $6.5$ days or $\frac{6.5}{7}\approx0.93$ weeks [@anderson_may_1982]. Recalling the average infectious period as equal to $\frac{1}{\gamma}$, we can obtain and estimated recovery rate of $\gamma=\frac{7}{6.5}=\frac{14}{13}$. 
 
+Now that we have our estimate for $\gamma$, let's use the same method covered in [Section @sec-bbmle] to find the transmission rate $\beta$ using MLE:
 
+```{webr}
+library(bbmle)
+library(dplyr)
+library(pracma)
 
-Find beta using MLE
+# Importing our prevalence count data for Blackburn
+data <- read.csv("https://raw.githubusercontent.com/javirudolph/ecoSIR-modules/refs/heads/main/data/mle_example.csv")
+data <- filter(data, city == "Blackburn")
+counts <- data$prevalence_count
+pop_size <- data$population_size[1]
+
+# Truncating the data to be only entries after the first infection appears
+first_infect <- which(counts!=0)[1]
+data_trunc <- data[first_infect:nrow(data),]
+
+# Normalizing the data to make the week the first infection appears be week 0
+# This is not strictly necessary but greatly simplifies the code to come
+data_trunc$week <- data_trunc$week - first_infect*2
+
+# SIR model function
+ModelFunc <- function(time,state,parameters){
+  S <- state[1]
+  I <- state[2]
+  R <- state[3]
+  
+  beta <- parameters["beta"]
+  gamma <- parameters["gamma"]
+  N <- parameters["N"]
+  
+  dS <- -(beta*I*S/N)
+  dI <- (beta*I*S/N) - (gamma*I)
+  dR <- (gamma*I)
+  
+  return(c(dS,dI,dR))
+}
+
+# Outputs predicted prevalence counts
+pred <- function(parameters,t){
+  # S = population size - prevalence at first non-zero prevalence
+  # I = first non-zero prevalence count
+  # R = 0
+  initial_vals <- c(S=pop_size - data_trunc$prevalence_count[1],
+                    I=data_trunc$prevalence_count[1]
+                    ,R=0)
+
+  t_start <- 0
+  t_end <- max(t)
+  step_size <- t_end - t_start
+  
+  output <- rk4sys(y0=initial_vals,
+                   a=t_start,
+                   b=t_end,
+                   f=function(t,y) ModelFunc(t,y,parameters),
+                   n=step_size)
+
+  # Extracting predicted prevalences
+  output_df <- as.data.frame(output)
+  prevalences <- output_df$y.I[t+1]
+  
+  # Ensuring there are no NaNs or out of bounds numbers in the output
+  prevalences[is.nan(prevalences) | prevalences < 0 ] <- 0
+  return(prevalences)
+}
+
+# Likelihood function
+poisson_ll <- function(b){
+  times <- data_trunc$week
+  parameters <- c(beta=b,gamma=14/13,N=pop_size)
+  predicted <- pred(parameters,times)
+  -sum(dpois(x=counts,lambda=predicted,log=TRUE))
+}
+
+# Setting our initial guess as beta = 2
+start <- list(b=4)
+
+# Calling mle2
+result <- mle2(minuslogl=poisson_ll,
+               start=start,
+               method="L-BFGS-B",
+               lower=c(b=0.01))
+
+# Printing the maximum likelihood estimate for beta
+coef(result)
+```
 
 
 **Visualizing Our Model**
@@ -1018,7 +1518,36 @@ The other assumptions made for the classic epidemic SIR apply to the endemic SIR
 
 The flowchart for the classic endemic model can be seen below:
 
-INSERT FLOWCHART OF ENDEMIC MODEL
+```{dot}
+//| fig-width: 8
+//| fig-height: 5
+//| fig-align: center
+
+digraph SIRend {
+  rankdir=TB;
+  node [shape=box, style=rounded, fontsize=14];
+  
+  I [label="I"];
+  R [label="R"];
+
+  topS [label="", shape=none, width=0.01];
+  bottomS [label="", shape=none, width=0.01];
+  bottomI [label="", shape=none, width=0.01];
+  bottomR [label="", shape=none, width=0.01];
+
+  { rank=same; S; I; R; }
+  { rank=min; topS; }
+  { rank=max; bottomS; bottomI; bottomR; }
+
+  topS -> S:n [label="  μ"];
+  S -> I [label="λ", labelfontsize=12, labeldistance=2.0, labelangle=-90]
+  I -> R [label="γ",  labelfontsize=12, labeldistance=2.0, labelangle=-90]
+
+  S:s -> bottomS [label="  μ"];
+  I:s -> bottomI [label="  μ"];
+  R:s -> bottomR [label="  μ"];
+}
+```
 
 From this flowchart, we can deduce the following equations for the number of people in each compartment according to the endemic SIR model:
 
@@ -1040,9 +1569,9 @@ $$
 \end{aligned}
 $$
 
-Notice that the force of infection for the endemic model is the same as the epidemic model ($\lambda=\beta \tilde{I}$.
+Notice that the force of infection for the endemic model is the same as the epidemic model ($\lambda=\beta \tilde{I}$).
 
-The following sections are mostly reviews of concepts covered previously in the epidemic model. For this reason, they are mostly short sections but do cover important distinctions between the epidemic and endemic model, including how their reproduction numbers are calculated and how to solve them using deSolve just to name a few.
+The following sections are mostly reviews of concepts covered previously in the epidemic model. For this reason, they are mostly short sections but do cover important distinctions between the epidemic and endemic model, including how their reproduction numbers are calculated and how to solve them using `rk4sys` just to name a few.
 
 ## Formulating the Death Rate
 
@@ -1052,66 +1581,92 @@ The average host lifespan, like the average duration of infection, is often obta
 
 ## Solving the Endemic SIR Model - Example
 
-The endemic SIR model can be solved using many of the same methods as the epidemic SIR model. In [Section @sec-solving-sir-equations] on solving the epidemic SIR model, we covered two main methods of doing so: Euler's method and the deSolve package in R.
+The endemic SIR model can be solved using many of the same methods as the epidemic SIR model. In [Section @sec-solving-sir-equations] on solving the epidemic SIR model, we covered two main methods of doing so: Euler's method and the function `rk4sys` in the `pracma` package in R.
 
-Both of these methods can be used to solve the endemic model as well, but we will only show an example of solving the endemic model using deSolve since Euler's method is quite lengthy and is the exact same process as for the epidemic model just with different SIR equations.
+Both of these methods can be used to solve the endemic model as well, but we will only show an example of solving the endemic model using `rk4sys` since Euler's method is quite lengthy and is the exact same process as for the epidemic model just with different SIR equations.
 
-Below is a complete example of using the deSolve package to solve an endemic SIR model and plotting the results:
+Below is a complete example of using `rk4sys` to solve an endemic SIR model and plot the results:
 
-```{r}
-library(deSolve)
+**Step 1: Find solutions to the SIR model using `rk4sys`.**
 
-ModelFunc <- function(time,state,parameters){
+```{webr}
+library(pracma)
+
+ModelFunc <- function(time,state){
   # Extracting the state variables
-  # Same compartments as before: susceptible, infectious, and recovered
-  S <- state["S"]
-  I <- state["I"]
-  R <- state["R"]
+  # Same compartments as before: susceptible, infectious, and recovered (S,I,R)
+  S <- state[1]
+  I <- state[2]
+  R <- state[3]
   
-  # Extracting the model parameters
-  # We now have three parameters - the transmission rate, recovery rate, and mortality rate
-  beta <- parameters["beta"]
-  gamma <- parameters["gamma"]
-  mu <- parameters["mu"]
+  # Specifying the model parameters
+  # We now have three parameters - the transmission, recovery, and mortality rate
+  # These parameters will change depending on the model
+  beta <- 1.5
+  gamma <- 0.3
+  mu <- 0.2
   
-  # Using the previously extracted state variables and parameters to construct our model equations (differential equations)
+  # Constructing our SIR model equations
   dS <- mu - (beta*I*S) - mu*S
   dI <- (beta*I*S) - (gamma*I) - mu*I
   dR <- (gamma*I) - mu*R
   
-  # Returning model equations as a list
-  return(list(c(dS,dI,dR)))
+  # Now we will return those model equations as a vector
+  return(c(dS,dI,dR))
 }
 
-# Specifying the initial values to be passed into the parameter y
-# Make sure these initial values line up exactly with the state variables extracted in the model function from before
+# Start and ending points of the solution interval
+start <- 0
+end <- 25
+
+# Initial values to be passed into the parameter y
 initial_vals <- c(S=0.99,I=0.01,R=0)
 
-# Specifying the parameters of the model and their values
-# Make sure these parameters line up exactly with the parameters extracted in the model function from before
-model_parameters <- c(beta=1.5,gamma=0.3,mu=0.2)
+# How many steps to take from a to b
+step_size <- end-start
 
-# Times for which outputs are calculated
-# The closer together these times are, the higher the output resolution
-output_times <- seq(0,50,by=1)
+# Calling rk4sys
+output <- rk4sys(f=ModelFunc,
+                 a=start,
+                 b=end,
+                 y0=initial_vals,
+                 n=step_size)
 
-# Now we can call the function ode
-output <- ode(func=ModelFunc,y=initial_vals,parms=model_parameters,times=output_times)
+# Converting the output matrix to a data frame and printing it
+output <- as.data.frame(output)
+print(output)
+```
 
-# Plotting the output
-matplot(x = output[,"time"], y = output[,2:4], type = "l", lty = 1, xlab = "time", ylab = "proportion", main = "Solved Example: Endemic SIR Model", col = c("blue","red","green"))
+**Step 2: Plot the results.**
 
-# Adding a legend
-legend("topright",legend = c("Susceptible", "Infectious", "Recovered"), col = c("blue","red","green"), lty = 1)
+```{webr}
+# Plotting results
+times <- output$x
+S <- output$y.S
+I <- output$y.I
+R <- output$y.R
+beta <- 1.5
+gamma <- 0.3
+mu <- 0.2
+
+plot(times, S, type = "l", col = "steelblue", lwd = 2,
+     ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
+     main = paste0("SIR Endemic (Runge-Kutta)  |  β=", beta,
+                   "  γ=", gamma, "  μ=",mu, "  R₀=", round(beta/(gamma+mu), 2)))
+lines(times, I, col = "firebrick", lwd = 2)
+lines(times, R, col = "seagreen",  lwd = 2)
+
+legend("right", legend = c("Susceptible", "Infectious", "Recovered"),
+       col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n")
 ```
 
 ::: {.callout-note}
-Notice that the curves above seem to "even out" after a while? This is a really important distinction between the epidemic and endemic SIR model, and is explained in detail in [the future section on model equilibriums](#disease-free-and-endemic-equilibrium). 
+Notice that the curves above seem to "even out" after a while? This is a really important distinction between the epidemic and endemic SIR model, and is explained in detail in [Section @sec-dfe-ee]. 
 :::
 
 ## Reproduction Numbers
 
-The basic and effective reproduction numbers for the endemic SIR model have the same interpretation as they do for the epidemic SIR model. Refer back to [this section](#reproduction-numbers) on reproduction numbers in the epidemic SIR model if you need a refresher of these definitions. 
+The basic and effective reproduction numbers for the endemic SIR model have the same interpretation as they do for the epidemic SIR model. Refer back to [Section @sec-reproduction-numbers] on reproduction numbers in the epidemic SIR model if you need a refresher of these definitions. 
 
 Although they have the same interpretations before, the formulas for the basic and reproductive number are different for the endemic SIR model. 
 
@@ -1133,7 +1688,7 @@ $$
 R_e=R_0 \tilde{S}=\left(\frac{\beta}{\gamma+\mu} \right) \tilde{S}
 $$
 
-## Disease Free and Endemic Equilibrium
+## Disease Free and Endemic Equilibrium {#sec-dfe-ee}
 
 ::: {.callout-tip title="Learning Objectives"}
 By the end of this section, you should be able to:
@@ -1234,7 +1789,6 @@ The next question that arises is when do these equilibrium points occur? The ans
 The stability of model systems can be a difficult concept to grasp, but in general we can think of the above statement as saying that when $R_0\leq 1$ or the initial proportion of infected individuals equals 0, all valid solution paths (solutions which exist for all positive time and are unique) approach the disease-free equilibrium given by $(\tilde{S}^*,\tilde{I}^*,\tilde{R}^*)=(1,0,0)$. Similarly, when $R_0>1$, all valid solution paths with an initial proportion of infected individuals greater than $0$ will approach the endemic equilibrium [@hethcote_math_infection].
 
 This makes sense intuitively, as if $R_0\leq1$ the pathogen can't invade the population since every new infectious individual would only, on average, pass on the disease to one or fewer hosts. Eventually the chain of transmission would break and the disease-free equilibrium  would be approached asymptotically (over time). 
-
 Likewise, if $R_0>1$ the pathogen can invade the population with even just the smallest introduction of infectious individuals since they will successively infect more people (who will then infect more even more people, etc.). The chain of transmission will not break either like it does in the epidemic SIR model since the population of susceptibles is constantly being "replenished" via new births, so the disease-free equilibrium is approached asymptotically. 
 :::
 
