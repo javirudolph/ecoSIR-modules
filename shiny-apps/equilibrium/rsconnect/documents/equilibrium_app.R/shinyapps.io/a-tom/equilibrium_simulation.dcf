@@ -1,0 +1,12 @@
+name: equilibrium_simulation
+title: equilibrium_simulation
+username: a-tom
+account: a-tom
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16840421
+bundleId: 11678013
+url: https://a-tom.shinyapps.io/equilibrium_simulation/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

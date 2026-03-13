@@ -1,0 +1,12 @@
+name: transmission_simulation
+title: transmission_simulation
+username: a-tom
+account: a-tom
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16843182
+bundleId: 11680609
+url: https://a-tom.shinyapps.io/transmission_simulation/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

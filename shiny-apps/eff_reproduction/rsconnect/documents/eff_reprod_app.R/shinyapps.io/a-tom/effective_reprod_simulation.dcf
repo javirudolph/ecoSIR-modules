@@ -1,0 +1,12 @@
+name: effective_reprod_simulation
+title: effective_reprod_simulation
+username: a-tom
+account: a-tom
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16840306
+bundleId: 11680589
+url: https://a-tom.shinyapps.io/effective_reprod_simulation/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

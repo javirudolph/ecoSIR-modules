@@ -1,0 +1,12 @@
+name: euler_vs_rk_simulation
+title: euler_vs_rk_simulation
+username: a-tom
+account: a-tom
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16840513
+bundleId: 11689658
+url: https://a-tom.shinyapps.io/euler_vs_rk_simulation/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

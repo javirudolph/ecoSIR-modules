@@ -15,6 +15,6 @@ solve_sir <- function(S0, I0, R0, c, p, g, len, dt) {
   parameters <- c(beta=c*p, gamma=g)
   times <- seq(0, len, by = dt)
   out <- as.data.frame(ode(y = init, times = times, func = sir, parms = parameters))
-  out <- out |> pivot_longer(cols=c("S","I","R"),names_to = "n",values_to = "v")
-  ggplot(out,aes(x=time,y=v,color=n)) + geom_line(linewidth=1) + labs(x="Time (t)",y="Proportion n(t)",color="Population") + scale_color_discrete(labels = c("S" = "Susceptible","I" = "Infected","R" = "Recovered"),limits=c("S","I","R"))
+  
+  return(out)
 }

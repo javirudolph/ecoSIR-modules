@@ -26,11 +26,9 @@ euler_sir <- function(S0, I0, R0, beta, gamma, len, dt) {
     R <- R + dR
   }
 
-  df <- data.frame(times,S.vect,I.vect,R.vect) |> pivot_longer(cols=c(S.vect,I.vect,R.vect),names_to="n" ,values_to="v")
+  df <- data.frame(times,S.vect,I.vect,R.vect)
   
-  View(df)
-  
-  ggplot(df,aes(x=times,y=v,color=n)) + geom_line(linewidth=1) + labs(title="SIR System Solved Using Euler's Method",x="Time (t)",y="Proportion n(t)",color="Population") + scale_color_discrete(labels = c("S.vect" = "Susceptible","I.vect" = "Infected","R.vect" = "Recovered"),limits=c("S.vect","I.vect","R.vect"))
+  return(df)
 }
 
 rk4_sir <- function(S0, I0, R0, b, g, len, dt) {
@@ -64,7 +62,7 @@ rk4_sir <- function(S0, I0, R0, b, g, len, dt) {
   out <- output |> pivot_longer(cols=c("y.S","y.I","y.R"),names_to = "n",values_to = "v")
   out <- rename(out,time=x)
   
-  ggplot(out,aes(x=time,y=v,color=n)) + geom_line(linewidth=1) + labs(title="SIR System Solved Using rk4sys",x="Time (t)",y="Proportion n(t)",color="Population") + scale_color_discrete(labels = c("y.S" = "Susceptible","y.I" = "Infected","y.R" = "Recovered"),limits=c("y.S","y.I","y.R"))
+  return(out)
 }
 
 euler_sir_df <- function(S0, I0, R0, beta, gamma, len, dt) {
@@ -128,7 +126,7 @@ rk4_sir_df <- function(S0, I0, R0, b, g, len, dt) {
   output <- as.data.frame(output)
   out <- output |> pivot_longer(cols=c("y.S","y.I","y.R"),names_to = "n",values_to = "v")
   out <- rename(out,time=x)
-  out$method <- "rk4sys"
+  out$method <- "Runge-Kutta"
   return(out)
 }
 
@@ -147,9 +145,8 @@ euler_rk4_combined <- function(S0, I0, R0, beta, gamma, len, dt){
   
   combined_df <- rbind(euler,rk4)
   
-  View(combined_df)
   
-  ggplot(combined_df, aes(x = time, y = v, color = n, linetype = method)) + geom_line(linewidth = 1) + scale_color_manual(values = c("S" = "green", "I" = "red", "R" = "blue")) + scale_linetype_manual(values = c("Euler" = "dotted", "rk4sys" = "solid")) + labs(title = "Euler's method vs rk4sys", x = "Time (t)", y = "Proportion (n(t))", color = "Compartment", linetype = "Solving Method") + scale_color_discrete(labels = c("S" = "Susceptible","I" = "Infected","R" = "Recovered"),limits=c("S","I","R"))
+  return(combined_df)
   
 }
 

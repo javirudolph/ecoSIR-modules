@@ -59,16 +59,6 @@ pred <- function(parameters,t){
   return(prevalences)
 }
 
-find_incidence <- function(solutions){
-  # Not estimating the first observation (week 6)
-  # We do this because there are no values before it to integrate over
-  incidence_times <- data_trunc$week[-1]
-  incidence_times <- sapply(incidence_times,
-                            incidence_func,
-                            solutions = solutions)
-  return(incidence_times)
-}
-
 incidence_func <- function(t_start,solutions){
   # Extracting the values needed to do trapezoidal integration
   times <- filter(solutions, x >= t_start-2, solutions$x <= t_start) |> pull(x)
@@ -83,23 +73,47 @@ incidence_func <- function(t_start,solutions){
   return(incidence)
 }
 
+find_incidence <- function(solutions){
+  # Not estimating the first observation (week 6)
+  # We do this because there are no values before it to integrate over
+  incidence_times <- data_trunc$week[-1]
+  incidence_times <- sapply(incidence_times,
+                            incidence_func,
+                            solutions = solutions)
+  return(incidence_times)
+}
+
 # Likelihood function
 poisson_ll <- function(b){
   times <- data_trunc$week
-  parameters <- c(beta=b,gamma=1.3,N=pop_size)
+  parameters <- c(beta=b,gamma=2.15,N=pop_size)
   predicted <- pred(parameters,times)
   incidence <- find_incidence(predicted)
   print(b)
   print(incidence)
-  sum(dpois(x=data_trunc$prevalence_count[-1],lambda=incidence,log=TRUE))
+  sum(dpois(x=data_trunc$prevalence_count[-1],lambda=incidence*0.5,log=TRUE))
 }
 
 # Setting our initial guess as beta = 2
-start <- list(b=4)
 
+start <- list(b=4)
 beta_seq <- seq(1,5,by=0.1)
 neg_ll <- sapply(beta_seq,poisson_ll)
 plot(beta_seq,neg_ll,type="l",xlab="beta",ylab="negative log-likelihood")
 
-beta_seq[which.max(neg_ll)]
+mle <- beta_seq[which.max(neg_ll)]
+mle
+
+
+dev.off()
+plot(data_trunc$week,data_trunc$prevalence_count)
+
+times <- data_trunc$week
+parameters <- c(beta=2.28,gamma=2.15,N=pop_size)
+predicted <- pred(parameters,times)
+incidence <- find_incidence(predicted)
+length(times[-1])
+length(incidence)
+points(times[-1],incidence,col="blue")
+
 
