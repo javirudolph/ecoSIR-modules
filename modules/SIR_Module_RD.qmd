@@ -771,7 +771,7 @@ Although `pracma` contains many mathematical functions, we are primarily interes
 :::{.callout-note collapse="true"}
 ## How exactly does RK4 work?
 
-In simple terms, RK4 estimates the value of a solution at the next point by taking a weighted average of four slope calculations, each computed at different points within the step interval [@runge_kutta_background]. 
+In simple terms, RK4 estimates the value of a solution at the next point by taking a weighted average of four slope calculations, each computed at different points within the step interval. The Wikipedia article on Runge-Kutta methods goes more into the specific mathematical formulation of RK4 [@wiki_rk4].
 :::
 
 The following table summarizes the values `rk4sys` takes in:
@@ -945,91 +945,85 @@ By the end of @sec-formulating-transmission-rate, you should be able to:
 
 - Explain the step-by-step algorithm for MLE as it relates to estimating the transmission rate of an SIR model. 
 
-- Explain the use of logarithms in the process for MLE and why they are used. 
+- Explain how and why logarithms are used in MLE. 
 :::
 
 *Maximum likelihood estimation*, often shorthanded as MLE, is a statistical method used to estimate the value of an unknown parameter by choosing the value that makes some observed (real-world) data most probable. 
 
-Recalling from [Section @sec-formulating-the-recovery-rate], we estimate the recovery rate using prior literature on the average duration of infection. Since we estimate the recovery rate using means other than MLE, we hold it constant when doing MLE and only use MLE to estimate the value of the transmission rate $\beta$ [@parameter_estimation]. We are only going to go over MLE as it directly applies to estimating $\beta$ for an epidemic SIR model, but the Wikipedia article on maximum likelihood estimation provides a comprehensive overview of its general mathematical framework [@wiki_mle].
+Recalling from [Section @sec-formulating-the-recovery-rate], we estimate the recovery rate using prior literature on the average duration of infection. Since we estimate the recovery rate using means other than MLE, we hold it constant when doing MLE and only use MLE to estimate the value of the transmission rate $\beta$ [@parameter_estimation]. We are only going to go over MLE as it directly applies to estimating $\beta$ for an epidemic SIR model, but the Wikipedia article on maximum likelihood estimation goes more into its general mathematical framework [@wiki_mle].
 
-MLE works by maximizing the *likelihood function*. The likelihood function provides the probability of some disease data ($D_i$) occurring under different values of $\beta$. We will denote the likelihood as $\mathcal{L}(\beta,D_i)$. The likelihood function takes in a value of $\beta$ and outputs the probability of observing the data point $D_i$. 
+MLE works by maximizing the *likelihood function*. The likelihood function provides the probability of some data point ($D_i$) occurring under different values of $\beta$. We will denote the likelihood for a data point as $\mathcal{L}(\beta,D_i)$. The likelihood function takes in a value of $\beta$ and outputs the probability of observing the data point $D_i$. 
 
-The likelihood function $\mathcal{L}(\beta,D_i)$ only provides the probability of observing a one particular data point under different values of $\beta$, but we are generally interested in finding and maximizing the probability of observing entire sets of data not just individual observations. Assuming the entire data set is *independent* (i.e. one observation in the data set does not affect what the other observations in the data set are), we multiply the individual likelihood functions $\mathcal{L}(\beta,D_i)$ for every individual piece of data $D_1,D_2 \cdots , D_n$ in the entire data set (denoted by $S$) to get the overall likelihood of the entire set of data denoted as $\mathcal{L}(\beta,S)$:
+The likelihood function $\mathcal{L}(\beta,D_i)$ only provides the probability of observing a one particular data point under different values of $\beta$, but we are generally interested in finding and maximizing the probability of observing entire sets of data not just individual observations. Assuming the entire data set is *independent* (i.e. one observation in the data set does not affect what the other observations in the data set are), we multiply the likelihood functions $\mathcal{L}(\beta,D_i)$ for every individual piece of data $D_1,D_2 \cdots , D_n$ in the entire data set (denoted by $S$) to get the overall likelihood of the entire set of data denoted as $\mathcal{L}(\beta,S)$:
 
 $$
-\mathcal{L}(H,S)=\mathcal{L}(H,D_1) \times \mathcal{L}(H,D_2) \times \cdots \times \mathcal{L}(H,D_n)
+\mathcal{L}(\beta,S)=\mathcal{L}(\beta,D_1) \times \mathcal{L}(\beta,D_2) \times \cdots \times \mathcal{L}(\beta,D_n)
 $$
-
-What the actual likelihood function looks like depends on the disease data we have available to us. Disease data often comes in two forms:
-
-- *Prevalence Count Data:* Data that reports the total number of infected individuals at a time $t$. 
-
-- *Incidence Data:* Data that reports the number new infected individuals over a period of time from $t$ to $t+\Delta t$.
 
 :::{.callout-note collapse="true"}
-## What does "$t$ to $t+\Delta t$" mean?
+## What does $\cdots$ mean? 
 
-The notation $t$ to $t+\Delta t$ represents the time interval that begins at time $t$ and ends some time later at $t+\Delta t$. Here, $\Delta t$ is some increment of time, like one day, one week, two months, etc. 
+The three dots notation (also called an ellipses) in math is a placeholder for omitted terms in a sequence or pattern. If we have a very long statement that repeats (or has an ambiguous number of terms like the one above), mathematicians use $\cdots$ to condense the expression. For example, instead of writing $1+2+3+4+5+6+7+8+9+10$, we could write it much more compactly as $1+2+\cdots+10$.  
 :::
 
-It is generally more straightforward to estimate $\beta$ when we have prevalence count data, so we will stick to that for this introductory module. The MLE algorithm for prevalence count data follows these general steps:
+We will call $\mathcal{L}(\beta,D_i)$ the point likelihood function (because it gives the likelihood of individual data points) and $\mathcal{L}(\beta,S)$ the sample likelihood function (because it gives the likelihood of the entire sample of data). What these likelihood functions look like depend on the type of disease data we are using. Disease data often comes in two forms:
 
-1.  Make an assumption about the distribution of the likelihood function. Oftentimes, this means assuming that every piece of observed data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
+| **Name**   | **Explanation**                                                                                                                                                                                                                                                                                                            |
+|------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Prevalence | Data that reports the total number of infected individuals at a time $t$.                                                                                                                                                                                                                                                  |
+| Incidence  | Data that reports the number new infected individuals over a period of time from $t$ to $t+\Delta t$ (an interval that begins at time $t$ and ends some time later at $t+\Delta t$). $\Delta t$ is some increment of time, like one day, one week, two months, etc. |
 
-:::{.callout-note}
-In this context, the Poisson distribution describes the probability of having observed a particular count of infected individuals at a time $t$ when the the average number of infectious individuals $\lambda$ is known. 
-It's important to note that we are not saying the prediction from the SIR model is random but rather that each data point was drawn randomly from a distribution centered around the predicted value given by the SIR model, and that distribution is Poisson. We can imagine that for every time $t$ there is a separate Poisson distribution centered around the predicted prevalence count obtained from the SIR model from which the observed prevalence counts were drawn. 
+
+It is generally more straightforward to estimate $\beta$ when we have prevalence data, so we will stick to that for this introductory module. Let's go over the MLE algorithm using prevalence data step-by-step.
+
+* **Step 1:** Make an assumption about the distribution of the observed data. Oftentimes, this means assuming that every piece of data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
+
+:::{.callout-note collapse="true"}
+## What is the Poisson distribution? 
+
+In this context, the Poisson distribution describes the probability of having observed a particular number of infected individuals at a time $t$ given that the the average number of infectious individuals $\lambda$ is known. It's important to note that we are not saying the prediction from the SIR model is random. What we are really saying is that we assume each data point in the sample was drawn randomly from a Poisson distribution centered around the SIR model's prediction for what that data point should be.  
+
+The Wikipedia article on the Poisson goes more into the specifics of the distribution itself [@wiki_poisson].  
 :::
 
-2. Set a range of plausible values for the parameter of interest ($\beta$) and iterate through all of them in tiny increments.
+:::{.callout-note collapse="true"}
+## Do we have to use the Poisson distribution?
 
-3. For each plausible value of $\beta$, iterate through every data point in the set and calculate its likelihood $\mathcal{L}(H,D_i)$. Multiply the likelihoods of all the data points together and store that value as $\mathcal{L}(H,D)$.
+No! The likelihood function can correspond to many different distributions; it all depends on the data. It is common to assume a Normal or Negative Binomial distribution for the observed data when constructing the likelihood. Choosing a distribution can be difficult and requires assessing which one best describes the data. For the purposes of this module, however, we will always assume that the observed data are drawn from a Poisson distribution because it makes for a relatively simple likelihood function.
+:::
 
-4. Repeat step 3 for every value of $\beta$ in the plausible range.
+* **Step 2:** Set a range of plausible values for $\beta$. If we notice our prevalence data grows at a rapid rate, then we would want our range of $\beta$s to include values that are large (relative to our recovery rate). Likewise, if we notice our data grows at a very slow rate, we would set our range of $\beta$s to include values that are close to (but slightly larger than) our recovery rate. 
 
-5. Now that we have a collection of likelihoods for different SIR models, given by different values of $\beta$, we should find the maximum among them and estimate the value of $\beta$ to be what provides that maximum likelihood (i.e. the maximum likelihood estimator). We can also graph the likelihoods to get a better idea of what pattern they follow and a visual representation of where the maximum occurs.
+* **Step 3:** For each plausible value of $\beta$, iterate through every data point in the set and calculate its likelihood REWORD: PROBABILITY OF DATA . . . ($\mathcal{L}(\beta,D_i)$). Multiply the likelihoods of all the data points together and store that value. This is the sample likelihood ($\mathcal{L}(\beta,S)$).
 
-| **Step 1** | Make an assumption about the distribution of the likelihood function. Oftentimes, this means assuming that every piece of observed data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. |
-| **Step 2** | Set a range of plausible values for the parameter of interest ($\beta$) and iterate through all of them in tiny increments. |
-| **Step 3** | For each plausible value of $\beta$, iterate through every data point in the set and calculate its likelihood $\mathcal{L}(H,D_i)$. Multiply the likelihoods of all the data points together and store that value as $\mathcal{L}(H,D)$. |
-| **Step 4** | Repeat **Step 3** for every value of $\beta$ in the plausible range. |
-| **Step 5** | Now that we have a collection of likelihoods for different SIR models, given by different values of $\beta$, we should find the maximum among them and estimate the value of $\beta$ to be what provides that maximum likelihood (i.e. the maximum likelihood estimator). We can also graph the likelihoods to get a better idea of what pattern they follow and a visual representation of where the maximum occurs. |
+* **Step 4:** Repeat **Step 3** for values of $\beta$ in the plausible range, incrementing by a small amount each time. We want the values of $\beta$ that we calculate likelihoods for to be spaced relatively close together so we aren't missing potentially "good" estimates. 
 
+* **Step 5:** Now that we have a collection of sample likelihoods for different values of $\beta$, we find the maximum likelihood among them. We will estimate the value of $\beta$ to be what provides that maximum likelihood. And that's it! We can also graph the likelihoods to get a better idea of their pattern a visual representation of where the maximum occurs. 
 
-There are a few small optimizations we often make to the maximum likelihood algorithm, firstly: 
-
-- We use *log-likelihoods* instead of raw likelihoods. 
-
-  - Why do we do this?: The individual likelihoods $\mathcal{L}(H,D_i)$ represent the probability of observing a piece of data under a particular model, they are small numbers between $0$ and $1$ (since probability is always lies in the interval $[0,1]$). The MLE algorithm requires multiplying many of these small likelihoods together, and after a certain point (if our data set is big enough and we are multiplying enough individual likelihoods together), the computer might not be precise enough to represent such small number and simply round out our overall likelihood $\mathcal{L}(H,D)$ to be $0$! We obviously want to avoid this, so we often opt to using *log-likelihoods* instead since logarithms convert very small numbers between $0$ and $1$ into numbers larger in magnitude but negative (thus avoiding potential rounding errors). Log-likelihoods are simply obtained by taking the logarithm of the likelihood function $\mathcal{L}(H,D)$. When we do this, we must modify the way we calculate $\mathcal{L}(H,D)$, since we would no longer be multiplying the individual likelihoods $\mathcal{L}(H,D_i)$ but rather adding them. Remembering back to our properties of logarithms, we have:
+Notice that MLE requires multiplying many point likelihoods ($\mathcal{L}(\beta,D_i)$) together to find the sample likelihood $\mathcal{L}(\beta,S)$. The point likelihoods are always small because they represent probabilities (which are always between $0$ and $1$). After a certain point (if our data set is big enough and we are multiplying enough point likelihoods together), the computer might not be precise enough to represent the sample likelihood and round it down to $0$! This is known as an *underflow error* in programming. To avoid this, we take the logarithm of all the point likelihoods since logarithms convert very small numbers into large, negative numbers. We call these transformed likelihoods *log-likelihoods*. When we use these log-likelihoods, it changes the way we calculate $\mathcal{L}(\beta,S)$: we would have to add, not multiply, all of the point likelihoods together to get the sample likelihood. Remembering back to our properties of logarithms, we have:
 
 $$
 \log(a \times b) = \log(a) + \log(b)
 $$
-And from this we get:
+Using this property, we can say:
 
 $$
-\log[\mathcal{L}(H,D)]=\log[\mathcal{L}(H,D_1) \times \cdots \times \mathcal{L}(H,D_n)]=\log[\mathcal{L}(H,D_1)] + \cdots +  \log[\mathcal{L}(H,D_n)]
+\log[\mathcal{L}(\beta,S)]=\log[\mathcal{L}(\beta,D_1) \times \cdots \times \mathcal{L}(\beta,D_n)]=\log[\mathcal{L}(\beta,D_1)] + \cdots +  \log[\mathcal{L}(\beta,D_n)]
 $$
 
 Taking the logarithm of the likelihood function will not change the results of MLE, making our maximum likelihood estimator for $\beta$ the same whether we use log-likelihoods or raw likelihoods. 
 
-:::{.callout-note}
-Why doesn't taking the logarithm of the likelihood function change the results of MLE?: The reason using log-likelihoods doesn't affect MLE is because the logarithm function is always increasing, so it doesn't actually change where the relative maxima of a function occur. If we have a function $f(x)$ with, say, relative maxima at $x=2,3,4$, then $\log[f(x)]$ would still have relative maxima at $x=2,3,4$. The process for MLE is dependent directly on finding where the relative maxima of the likelihood function occurs, so taking the logarithm doesn't affect its output.
+:::{.callout-note collapse="true"}
+## Why doesn't taking the logarithm of the likelihood function change the results of MLE?
+
+Using log-likelihoods doesn't affect the estimate MLE produces because the logarithm function is always increasing. This means that taking the logarithm of a function doesn't actually change where the relative maxima of that function occurs. If we have a function $f(x)$ with, say, relative maxima at $x=2,3,4$, then $\log[f(x)]$ would still have relative maxima at $x=2,3,4$. The estimate output by MLE depends directly on where the relative maxima of the likelihood function occurs, so taking the logarithm of the likelihood function doesn't affect the final estimate produced.
 :::
 
-Including this optimization, our final modified MLE algorithm goes like so:
+Including this major improvement, our final modified MLE algorithm goes like so:
 
-1. Make an assumption about the distribution of the likelihood function. Oftentimes, this means assuming that every piece of observed data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
+REWORD -> copy paste shit
 
-2. Set a range of plausible values for the parameter of interest ($\beta$) and iterate through all of them in tiny increments.
-
-3. For each plausible value of $\beta$, iterate through every data point in the set and calculate its log-likelihood $\log[\mathcal{L}(H,D_i)]$. Add the log-likelihoods of all the data points together and store that value as $\log[\mathcal{L}(H,D)]$.
-
-4. Repeat Step 3 for every value of $\beta$ in the plausible range.
-
-5. Now that we have a collection of likelihoods for different SIR models, given by different values of $\beta$, we should find the maximum among them and estimate the value of $\beta$ to be what provides that maximum likelihood (i.e. the maximum likelihood estimator). We can also graph the likelihoods to get a better idea of what pattern they follow and a visual representation of where the maximum occurs.
-
-This whole process can be really hard to conceptualize at first without concrete examples. We go over a few code examples of MLE coded from stratch and MLE using the `bbmle` package in R in [Sections @sec-coding-scratch] and [@sec-bbmle]. 
+This whole process can be really hard to conceptualize at first without concrete examples. We go over a few code examples of MLE coded from scratch and MLE using the `bbmle` package in R in [Sections @sec-coding-scratch] and [@sec-bbmle]. 
 
 ### Coding An MLE Algorithm From Scratch {#sec-coding-scratch}
 
@@ -1046,7 +1040,7 @@ $$
 For this model, $t$ is in units of days, the total size of the population we are modelling is $N=1000$ people, and the initial number of susceptible, infected, and recovered individuals is $S=999$, $I=1$, and $R=0$, respectively. 
 
 :::{.callout-note}
-These SIR equations are providing the number, not proportion, of individuals in each compartment. This is important because the prevalence count data we will be using to find $\beta$ is also a number, not a proportion. Additionally, our assumption mentioned in [Section @sec-formulating-transmission-rate] that the data follows a Poisson distribution is only valid if both our data and model are counts of people, not proportions, since the Poisson distribution is a discrete distribution only able to take on non-negative integer values.
+These SIR equations are providing the number, not proportion, of individuals in each compartment. This is important because the prevalence data we will be using to find $\beta$ is also a number, not a proportion. Additionally, our assumption mentioned in [Section @sec-formulating-transmission-rate] that the data follows a Poisson distribution is only valid if both our data and model are counts of people, not proportions, since the Poisson distribution is a discrete distribution only able to take on non-negative integer values.
 :::
 
 Let's also assume that we know the recovery rate to be $\gamma=0.7$ people per day based on past literature. Substituting this into our SIR equations we have:
@@ -1124,12 +1118,12 @@ We can actually test how accurate our estimate for $\beta$ found using MLE is by
 #Extracting only the prevalences (infected counts)
 I_true <- output$y.I
 
-# Adding noise to the true prevalence counts (to mimic random sampling)
+# Adding noise to the true prevalence (to mimic random sampling)
 # NOTE: "noise" refers to random errors / variation in the data
 # Following from our assumptions, the noise is Poisson distributed
 I_observed <- rpois(length(I_true), lambda = I_true)
 
-# Saving the predicted prevalence counts as a data frame
+# Saving the predicted prevalences as a data frame
 data <- data.frame(day = t_start:t_end,
                    prevalence_count = I_observed)
 data
@@ -1143,7 +1137,7 @@ Now that we have our data and a function for our SIR model called `ModelFunc`, o
 
 ```{webr}
 # Function Inputs: Named vector of model parameters and a vector of times
-# Function Outputs: Predicted prevalence counts at input times
+# Function Outputs: Predicted prevalences at input times
 pred <- function(parameters,t){
   initial_vals <- c(S=999,I=1,R=0)
   t_start <- 0
@@ -1172,7 +1166,7 @@ pred <- function(parameters,t){
 pred(c(beta=1.2,gamma=0.7,N=1000),c(13,14,15))
 ```
 
-Now that we have our function to output the predicted prevalence counts given by our SIR model, we need to code a function to calculate the log-likelihood of the entire data set given certain model parameters.
+Now that we have our function to output the predicted prevalences given by our SIR model, we need to code a function to calculate the log-likelihood of the entire data set given certain model parameters.
 
 ---
 
@@ -1299,14 +1293,14 @@ output <- rk4sys(f = function(t,y) ModelFunc(t,y,model_parameters),
                  y0=initial_vals,
                  n = step_size)
 
-# Extracting the true prevalence counts
+# Extracting the true prevalences
 output_df <- as.data.frame(output)
 I_true <- output_df$y.I
 
-# Adding noise to the true prevalence counts
+# Adding noise to the true prevalences
 I_observed <- rpois(length(I_true), lambda = I_true)
 
-# Saving the predicted prevalence counts as a data frame
+# Saving the predicted prevalences as a data frame
 data <- data.frame(day = t_start:t_end,
                    prevalence_count = I_observed)
 
@@ -1341,7 +1335,7 @@ The reason `poisson_ll` takes in different values this time is because `mle2` re
 library(bbmle)
 
 # Function Inputs: Named vector of model parameters and a vector of times
-# Function Outputs: Predicted prevalence counts at input times
+# Function Outputs: Predicted prevalences at input times
 pred <- function(parameters,t){
   initial_vals <- c(S=999,I=1,R=0)
   t_start <- 0
@@ -1650,9 +1644,9 @@ Prior to mass-vaccination campaigns, large British cities exhibited regular meas
 
 **Data For Our Model**
 
-The data we will be utilizing for this example is publicly avaliable through the Ottar Bjørnstad Lab at Penn State University [@bjornstad_measles_data]. The data set contains prevalence count data and annual number of births for 60 British cities from 1944 to 1966 (inclusive) as well as the median population size of each city between 1944 and 1966 (inclusive). 
+The data we will be utilizing for this example is publicly avaliable through the Ottar Bjørnstad Lab at Penn State University [@bjornstad_measles_data]. The data set contains prevalence data and annual number of births for 60 British cities from 1944 to 1966 (inclusive) as well as the median population size of each city between 1944 and 1966 (inclusive). 
 
-Our example will only utilize the prevalence count data from 1944 to 1945 (52 weeks) and the median population size between 1944 and 1966 for the cities of Blackburn, Exeter, and Leeds, as seen in the table below:
+Our example will only utilize the prevalence data from 1944 to 1945 (52 weeks) and the median population size between 1944 and 1966 for the cities of Blackburn, Exeter, and Leeds, as seen in the table below:
 
 ```{r, echo=FALSE}
 library(readxl)
@@ -1703,7 +1697,7 @@ Now that we have our estimate for $\gamma$, let's use the same method covered in
 library(bbmle)
 library(pracma)
 
-# Importing our prevalence count data for Blackburn
+# Importing our prevalence data for Blackburn
 data <- read.csv("https://raw.githubusercontent.com/javirudolph/ecoSIR-modules/refs/heads/main/data/measles_ex_data.csv")
 data <- data[data$city=="Blackburn",]
 counts <- data$prevalence_count
@@ -1734,10 +1728,10 @@ ModelFunc <- function(time,state,parameters){
   return(c(dS,dI,dR))
 }
 
-# Outputs predicted prevalence counts
+# Outputs predicted prevalences
 pred <- function(parameters,t){
   # S = population size - prevalence at first non-zero prevalence
-  # I = first non-zero prevalence count
+  # I = first non-zero prevalence
   # R = 0
   initial_vals <- c(S=pop_size - data_trunc$prevalence_count[1],
                     I=data_trunc$prevalence_count[1]
