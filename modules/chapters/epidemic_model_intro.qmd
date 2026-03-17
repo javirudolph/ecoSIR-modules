@@ -1,0 +1,274 @@
+---
+title: "The SIR Epidemic Model"
+format: live-html
+bibliography: reference.bib
+---
+
+## Intro to the Classic Epidemic Model {#sec-the-classic-sir-epidemic-model}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-the-classic-sir-epidemic-model, you should be able to:
+
+-   Justify the assumptions made by the classic epidemic model and how those assumptions potentially deviate from reality.
+
+-   Connect the classic epidemic model's equations and parameters to the real-world disease dynamics behind them. 
+
+-   Construct equations for novel compartmental models given the flow rates between each of the compartments.
+:::
+
+The classic SIR epidemic model is a type of compartmental epidemiological model. People are interested in making SIR models because they allow us to predict the number / proportion of people who are in various stages of the disease timeline (susceptible, infectious, recovered) throughout time. This knowledge is extremely powerful: it allows us to know how much a disease will affect a population, estimate the duration of an outbreak, and evaluate / make informed public health decisions (how many people should we aim to vaccinate, how effective will mask / social distancing mandates be, etc.). 
+
+Going right into it, the SIR epidemic model makes the following key assumptions:
+
+1.  The epidemic invades the population and concludes itself quickly enough that demographic processes, namely births and deaths, are not very influential to the overall process and can be omitted from the model. This is sometimes called the *closed population* assumption.
+
+2.  Individuals move between the compartments of susceptible, infectious, and recovered only. Other compartments, namely the exposed compartment, are omitted for simplicity.
+
+::: {.callout-note}
+Since this module covers only the epidemic SIR models, which lacks the exposed compartment, the terms "infected" and "infectious" will be used interchangeably moving forward. When we include only the susceptible, infectious, and recovered compartments, we assume that once an individual gets infected they become infectious immediately as well.
+:::
+
+These are not the only assumptions made by the epidemic SIR model, but they do distinguish it from other compartmental models such as the SEIR model (which includes the "Exposed" compartment) and the endemic SIR model (which includes new flows in and out of each compartment due to births and deaths).
+
+Moving forward, we will use $S$, $I$, and $R$ to refer to the **number** of individuals in the susceptible, infectious, and recovered compartments, respectively. The variables $\tilde{S}=\frac{S}{N}$, $\tilde{I}=\frac{I}{N}$, and $\tilde{R}=\frac{R}{N}$, will be used to refer to the **proportion** of individuals in each compartment, Here, $N$ represents the total number of individuals in the population, defined as the sum of the individuals in each compartment: $N=S+I+R$.
+
+::: {.callout-important title="Notes about $N$"}
+-   Since the epidemic model assumes a closed population with no births or deaths, $N$ is not a variable that can change but a constant.
+
+-   Notice that $\tilde{S}+\tilde{I}+\tilde{R}=1$.
+:::
+
+The following equations provide the rates of change, with respect to time, for the number of susceptible, infectious, and recovered individuals in a population:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\lambda S \\[10pt]
+\frac{dI}{dt} &= \lambda S - \gamma I \\[10pt]
+\frac{dR}{dt} &= \gamma I
+\end{aligned}
+$$
+
+Dividing each equation by the population size $N$, we can rewrite the SIR equations above to provide the rates of change, with respect to time, for the proportion of individuals in each compartment:
+
+$$
+\begin{aligned}
+\frac{d\tilde{S}}{dt} &= -\lambda \tilde{S} \\[10pt]
+\frac{d\tilde{I}}{dt} &= \lambda \tilde{S} - \gamma \tilde{I} \\[10pt]
+\frac{d\tilde{R}}{dt} &= \gamma \tilde{I}
+\end{aligned}
+$$
+
+::: {.callout-tip title="Structure of SIR Equations"}
+The rate of change of the number of people in each compartment can be understood as following the basic pattern of $R_i-R_o$ where $R_i$ is the rate that people are flowing into the compartment per unit time and $R_o$ is the rate that people are flowing out of the compartment per unit time. This pattern can be used to construct any number of novel compartmental models.
+:::
+
+Notice that these equations mirror exactly the compartmental flowcharts introduced in the [Section @sec-introducing-compartmental-models]. The epidemic SIR model can be representing with the flowchart below:
+
+```{dot}
+//| fig-width: 7.5
+//| fig-height: 1
+//| fig-align: center
+
+
+digraph SIRepi {
+  rankdir=LR;
+  node [shape=box, style=rounded, fontsize=14];
+
+  S [label="S"];
+  I [label="I"];
+  R [label="R"];
+
+  edge [fontsize=12];
+  S -> I [label="λ", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  I -> R [label="γ",  labelfontsize=12, labeldistance=2.0, labelangle=-90];
+}
+```
+
+The flow rates between each compartment have specific names and symbols, summarized in the table below:
+
+
+| **Model Parameter** | **Common Symbol** | **Interpretation** |
+|-------------------|------------------|-----------------------------------|
+| Force of Infection | $\lambda$ | The per capita rate at which susceptible individuals are becoming infectious per unit time. |
+| Recovery Rate | $\gamma$ | The per capita rate at which infectious individuals are recovering from infection per unit time. |
+
+:::{.callout-note collapse="true"}
+## What is a "model parameter"? 
+
+Similar to its definition in statistics, a "parameter" for an SIR model is just a value that characterizes how it looks and behaves. When we talk about model parameters in the context of SIR models, we are almost always referring to the flow rates between each compartment in the model. 
+
+As such, they determine how fast people recover and get infected in the model. [Section @sec-formulating-foi] let's you experiment with what happens when you change the transmission and recovery rate!
+:::
+
+
+::: {.callout-note collapse="true"}
+## What does "per capita" mean?
+
+The phrase "per capita" here refers to a rate that is divided among each person in the given compartment. Take the following example: let's say we know people are pouring water into a large bucket and the total inflow of water into the bucket is $15$ cups per minute. If we were to find out that $3$ people were pouring water into the bucket, then we would divide the total rate of $15$ cups per minute by $3$ to get a per capita rate of $5$ cups per minute. This means each person is pouring water into the bucket, on average, at a rate of 5 cups per minute. 
+
+A similar logic is utilized to get the force of infection: the total rate at which susceptible people are becoming infected is divided by how many susceptible people there are, $S$, to get the per capita rate at which people are "entering" the infectious compartment. Similarly, the total rate at which infected people are recovering is divided by how many infected people there are, $I$, to get per capita rate of recovery.
+:::
+
+
+Note that we are assuming these per capita rates are the same for every individual in the population (i.e. every susceptible individual in the population is becoming infectious at the same rate and every infected individual is recovering from illness at the same rate). 
+
+## Estimating the Recovery Rate {#sec-formulating-the-recovery-rate}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-formulating-the-recovery-rate, you should be able to:
+
+- Justify the formula for the recovery rate both mathematically (as a rate) and biologically (what it represents in the disease timeline).
+
+- Explain the primary assumption behind the recovery rate and come up with real-world situations where it might not hold.
+:::
+
+We can think of the recovery rate as the rate at which individuals are "leaving" the infectious compartment. A pretty good estimate for this is the reciprocal of the average infectious period $D$ (i.e. how long, on average, individuals are infectious with the disease) [@keeling_modeling_2008]:
+
+$$
+\gamma=\frac{1}{D}
+$$
+
+The average infectious period $D$ (also often called the "average duration of infection") is typically estimated based on medical literature instead of disease data from our situation of interest [@parameter_estimation]. We can think of the recovery rate as dependent on the biology of the disease (how long people are typically sick with the disease). Meanwhile, the transmission rate is dependent on context-specific factors (which is why we opt to use real-world data to estimate it, as we will see in section [Section @sec-formulating-transmission-rate]).  
+
+The table below provides some empirically-deduced average infectious periods for various common diseases [@anderson_may_1982]:
+
+<br>
+
+| **Infectious Disease** 	| **Infectious Period (days)** 	|
+|------------------------	|------------------------------	|
+| Measles                	| 6 to 7                       	|
+| Whooping cough         	| 21 to 23                     	|
+| Poliomyelitis          	| 14 to 20                     	|
+| Chicken pox            	| 10 to 11                     	|
+| Rubella                	| 11 to 12                     	|
+| Mumps                  	| 4 to 8                       	|
+| Diphtheria             	| 14 to 21                     	|
+| Scarlet fever          	| 14 to 21                     	|
+
+<br>
+
+It's important to note that the literature gives us averages for the infectious period, not absolutes. In actuality, how long a person is infectious with a disease varies greatly depending on their lifestyle (do they eat well, are they active, etc.), their medical history (are they pregnant, do they have immune disorders, etc.), and other personal / lifestyle factors. Since these factors are so complicated and diverse, we often assume that everyone recovers from the disease at a constant rate to keep things simple. 
+
+
+## Finding the Force of Infection {#sec-formulating-foi}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-formulating-foi, you should be able to:
+
+- Justify the formula for the force of infection based on first principles.
+
+- Explain the assumptions made by the formula for the force of infection and come up with real-world situations where those assumptions might not hold.
+
+- Visualize how the SIR curves will change as the contact rate $c$ and probability of infection $p$ are changed.
+
+- Identify situations in which using an empirically deduced transmission rate is more feasible and beneficial than one calculated from first principles, and vice versa.
+:::
+
+The force of infection, or the rate at which an individual gets sick by coming into contact with an infectious individual, can be understood and formulated based on first principles in epidemiology:
+
+> Consider the perspective of a susceptible individual in the population at any given time. Let's say this individual makes, on average, $c$ contacts with other people per unit time. Then, suppose that of those $c$ people this individual makes contact with per unit time, the proportion of them that will be infectious is $\tilde{I}$. Then, of those $c\tilde{I}$ contacts this individual makes with infectious people, the proportion of them that will actually succeed at spreading the infection to them is $p$. Multiplying these together, we can obtain the per capita (per person) rate which susceptible people are becoming infectious, or the force of infection as follows: $$
+> \lambda=cp\tilde{I}
+> $$
+
+:::{.callout-note collapse = "true"}
+## Can we find the force of infection another way?
+
+Yes! The force of infection is calculated in many ways; we just provided one of many here. The justification and formula we used for the force of infection is known as *frequency dependent* transmission. There is also *density dependent* transmission, which assumes the force of infection depends on the population density [@dd_trans].
+:::
+
+Although this formulation of $\lambda$ is based on first principles, there are still a number of assumptions being made:
+
+1.  We assume every individual in the population comes into contact with other individuals at a constant rate $c$. This means we assume everyone in the population is equally sociable and, on average, comes into contact with the same number of people per unit time.
+
+    - When is this not true in real life? Is everyone you know equally sociable?
+
+2. We assume the probability of infection upon contact with an infectious individual is the same for every susceptible in the population.
+
+    - When is this not true in real life? Consider the differences in lifestyle choices people make (choosing to wear a mask, washing hands, etc.) and differences in health status (people who are immunocompromised, pregnant, etc.). 
+
+3.  We assume *homogeneous mixing* of the population. That is, we assume everyone has an equal probability of contacting any other individual in the population. 
+  
+    - When is this not true in real life? Would an infected person going to the hospital (which is filled with other sick people) affect their chances of encountering other infectious people? What if they quarantined instead?
+
+
+Notice that the terms $c$ and $p$ in the formula for $\lambda$ are independent of the number of individuals in each compartment throughout time. For this reason, they are grouped together into a singular term, known as the *transmission rate* $\beta$ given by $\beta=cp$.
+
+The simulation below lets you experiment with different values of the contact rate $c$ and probability of infection $p$ to see how they affect the trajectory of the SIR curves:
+
+<iframe src="https://a-tom.shinyapps.io/transmission_simulation/"
+        width="100%"
+        height="700"
+        style="border:none;"></iframe>
+
+:::{.callout-note collapse="true"}
+## What are these curves telling us?
+
+Going back to the original purpose of constructing an SIR model, these curves predict the proportion of people who will be susceptible, infectious, and recovered (see the y-axis) at various times (see the x-axis) for different values of the model parameters. 
+
+Note that these specific curves don't actually have a specific unit for time (you can imagine it as days, weeks, biweekly, etc.) butvSIR models constructed for real-world applications must keep consistent units for time. 
+:::
+
+:::{.callout-tip title="Try this"}
+1. Try changing the contact rate ($c$) and probability of infection ($p$) to get a transmission rate ($\beta$) less than the set recovery rate. What happens to the curves when you do this (i.e. when $\beta < \gamma$)? Can you explain why biologically?
+
+2. Try changing the contact rate to $1.5$, the probability of infection to $0.5$, and the recovery rate to $0.5$. Now, keeping the contact rate and probability of infection the same, change the recovery rate to $0.4$. What does a slower recovery rate do to the epidemic peak?
+:::
+
+Putting this all together, we can rewrite the SIR model equations from [Section @sec-the-classic-sir-epidemic-model]:
+
+::: {.columns}
+::: {.column width="50%"}
+<div style="text-align: center;">
+**For Counts:**
+</div>
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta \tilde{I} S \\[10pt]
+\frac{dI}{dt} &= \beta \tilde{I} S - \gamma I \\[10pt]
+\frac{dR}{dt} &= \gamma I
+\end{aligned}
+$$
+:::
+
+::: {.column width="50%"}
+<div style="text-align: center;">
+**For Proportions:**
+</div>
+
+$$
+\begin{aligned}
+\frac{d\tilde{S}}{dt} &= -\beta \tilde{I} \tilde{S} \\[10pt]
+\frac{d\tilde{I}}{dt} &= \beta \tilde{I} \tilde{S} - \gamma \tilde{I} \\[10pt]
+\frac{d\tilde{R}}{dt} &= \gamma \tilde{I}
+\end{aligned}
+$$
+:::
+:::
+
+Now comes the question of how we even find the transmission rate $\beta$? The table below presents two common methods for calculating $\beta$:
+
+| **Method** | **What is it?** | **Best Used When** |
+|------------------|----------------------------------|---------------------|
+| Blackbox method | This is a data-driven method wherein $\beta$ is calculated empirically (based on data). We can think of this as finding a value of $\beta$ that makes our model accurately reflect real-world disease dynamics. | There is an abundance of disease *incidence* or *prevalence* data available. |
+| First-Principles method | This method utilizes the formulation $\beta=cp$, which was obtained using first-principles, and separately calculates appropriate values for $c$ and $p$. | There is not much available prevalence or incidence data but there is data to estimate the contact rate $c$ and the probability of infection $p$. |
+
+:::{.callout-note}
+What is incidence and prevalence data?: 
+
+- **Incidence data:** Tracks the number of new infections over intervals of time. 
+
+- **Prevalence data:** Tracks the number of infectious people in the population at various times. 
+:::
+
+For the purposes and scope of this introductory module, we will only provide examples and insights into the blackbox method for calculating the transmission rate $\beta$. This is because specifics of how $c$ and $p$ are calculated using the first-principles method depends heavily on model context and complexity, meaning there is no "one size fits all" way of finding $\beta$ using this method. 
+
+Models will often formulate $c$ and $p$ as functions of their own depending on a number of external variables. An example of this can be found in this paper [@deer_covid], where the transmission rate $\beta$ is formulated as the product of the proximity rate $\omega_{ij}$, or "frequency per day that host $i$ and recipient $j$ are within 1.5 meters (m) of each other" and $\sigma^{Aero}$, or the "probability of infection from aerosols." The paper further decomposes $\omega_{ij}$ and $\sigma^{Aero}$ into functions of their own depending on a variety of external variables. 
+
+The specific formulations for the contact rate (or proximity rate) and infection probability utilized by this paper are unique to its context (the pathogen it is analyzing, the host population(s), etc.) and will vary widely from paper to paper.
+
+However, there are standardized procedures to obtain $\beta$ using the blackbox approach, of which one common method known as *maximum likelihood estimation*, or MLE for short, is covered in [Section @sec-formulating-transmission-rate]. But before we can cover MLE, we must go over how to solve our SIR model equations first, which is the topic of [Section @sec-solving-sir-equations].  
+
+## Chapter References {.unnumbered .unlisted}
+
+

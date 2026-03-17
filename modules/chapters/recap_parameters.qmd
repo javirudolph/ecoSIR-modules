@@ -1,0 +1,18 @@
+---
+format: live-html
+bibliography: reference.bib
+---
+
+## Short Recap: Estimating Model Parameters {#sec-recap}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-recap, you should be able to:
+
+- Recall the parameters of the SIR model and the methods we use to estimate them. 
+:::
+
+| **Parameter**     	| **Common Symbol** 	| **How Can We Estimate It?** |
+|---------------------------|----------------------------|----------------------------------------------------------------------|
+| Transmission Rate 	| $\beta$           	| Use an MLE algorithm coded from scratch or the function `mle2` in `bbmle` (recommended) to estimate $\beta$ to be the value that makes our observed data most probable.              	|
+| Recovery Rate     	| $\gamma$          	| Read through past literature to find the average duration of infection ($d$) for the disease. Estimate the recovery rate to be $\gamma=\frac{1}{d}$. 	|
+  

@@ -12,14 +12,13 @@ format:
     code-tools: true
     theme: cosmo
     number-sections: true
-bibliography: ../reference.bib
+bibliography: ./chapters/reference.bib
 webr:
   packages:
     - pracma
     - bbmle
     - dplyr
     - tidyr
-    - plotly
 ---
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
@@ -33,9 +32,13 @@ This module is different in one specific way: **the goal is not just to understa
 By the end of this module, you should be able to:
 
 - Read an SIR model equation and immediately identify its biological meaning
+
 - Translate that equation into working R code, line by line
+
 - Modify that code to explore how the system changes under different conditions
+
 - Recognize what assumptions are "baked in" to both the math and the code
+
 - Start thinking about real disease ecology problems from a computational perspective
 
 ::: {.callout-important title="How to use this module"}
@@ -256,6 +259,8 @@ digraph SIRepi {
 
 The flow rates between each compartment have specific names and symbols, summarized in the table below:
 
+<br>
+
 | **Model Parameter** | **Common Symbol** | **Interpretation** |
 |-------------------|------------------|-----------------------------------|
 | Force of Infection | $\lambda$ | The per capita rate at which susceptible individuals are becoming infectious per unit time. |
@@ -277,6 +282,8 @@ The phrase "per capita" here refers to a rate that is divided among each person 
 
 A similar logic is utilized to get the force of infection: the total rate at which susceptible people are becoming infected is divided by how many susceptible people there are, $S$, to get the per capita rate at which people are "entering" the infectious compartment. Similarly, the total rate at which infected people are recovering is divided by how many infected people there are, $I$, to get per capita rate of recovery.
 :::
+
+<br>
 
 Note that we are assuming these per capita rates are the same for every individual in the population (i.e. every susceptible individual in the population is becoming infectious at the same rate and every infected individual is recovering from illness at the same rate). 
 
@@ -303,6 +310,8 @@ The average infectious period $d$ (also often called the "average duration of in
 
 The table below provides some empirically-deduced average infectious periods for various common diseases [@anderson_may_1982]:
 
+<br>
+
 | **Infectious Disease** 	| **Infectious Period (days)** 	|
 |------------------------	|------------------------------	|
 | Measles                	| 6 to 7                       	|
@@ -314,6 +323,7 @@ The table below provides some empirically-deduced average infectious periods for
 | Diphtheria             	| 14 to 21                     	|
 | Scarlet fever          	| 14 to 21                     	|
 
+<br>
 
 It's important to note that the literature gives us averages for the infectious period, not absolutes. In actuality, how long a person is infectious with a disease varies greatly depending on their lifestyle (do they eat well, are they active, etc.), their medical history (are they pregnant, do they have immune disorders, etc.), and other personal / lifestyle factors. Since these factors are so complicated and diverse, we often assume that everyone recovers from the disease at a constant rate to keep things simple. 
 
@@ -425,9 +435,9 @@ Now comes the question of how we even find the transmission rate $\beta$? The ta
 :::{.callout-note}
 What is incidence and prevalence data?: 
 
-- **Disease incidence data:** Tracks the number of new infections over consecutive time intervals.
+- **Incidence data:** Tracks the number of new infections over intervals of time. 
 
-- **Disease prevalence data:** Tracks the number of infectious people in the population at various times. 
+- **Prevalence data:** Tracks the number of infectious people in the population at various times. 
 :::
 
 For the purposes and scope of this introductory module, we will only provide examples and insights into the blackbox method for calculating the transmission rate $\beta$. This is because specifics of how $c$ and $p$ are calculated using the first-principles method depends heavily on model context and complexity, meaning there is no "one size fits all" way of finding $\beta$ using this method. 
@@ -574,6 +584,8 @@ Remember that $\tilde{I}=\frac{I}{N}$.
 
 The following table illustrates the calculation process until $t=5$ with a step size of $\Delta t=1$:
 
+<br>
+
 | **Time** | **Approximations** | **Calculation Process** |
 |-----------------|---------------------|----------------------------------|
 | $t=0$    | $\textcolor{blue}{s(0)=99.0}$ <br> $\textcolor{red}{i(0)=1.0}$ <br> $\textcolor{green}{r(0)=0.0}$   | —                                                                                                                                                                                                                                                                                                                                                  |
@@ -590,11 +602,13 @@ The symbol $\approx$ means "approximately equal to" and indicates that the numbe
 :::
 
 
-::: {.callout-tip title="Important Note"}
+::: {.callout-important title="Important Note"}
 The accuracy of the solution produced by Euler's method is a direct result of what we choose the step size to be. If the step size is larger, then the curvature of the true solution will be lost since we are repeatedly taking linear approximations, resulting in an approximate solution that deviates a lot from the true solution curve. On the other hand, as the step size gets smaller, the approximate solution provided by Euler's method converges to the true solution curve.
 
 Read on to [Section @sec-euler-code] to experiment with what happens when you change the step size.
 :::
+
+<br>
 
 As you might notice, the calculations above are very tedious, which is why Euler's method is most often calculated using code rather than by hand. Read on to [Section @sec-euler-code] for a demonstration on how to code Euler's method.
 
@@ -742,12 +756,12 @@ Go back to **Step 3** and try the following changes, re-running each step in ord
 
 @ode_book
 
-### Solving SIR Equations in R Using `pracma` {#sec-pracma}
+### Solving SIR Equations Using the `bbmle` package in R {#sec-pracma}
 
 ::: {.callout-tip title="Learning Objectives"}
 By the end of @sec-pracma, you should be able to:
 
-- Identify what values the function `rk4sys` in `pracma` takes in. 
+- Explain what values the function `rk4sys` in `pracma` takes in. 
 
 - Translate an SIR model to a function and solve it using `rk4sys`.
 :::
@@ -776,13 +790,17 @@ In simple terms, RK4 estimates the value of a solution at the next point by taki
 
 The following table summarizes the values `rk4sys` takes in:
 
-| **Parameter Name** | **What Does It Take In?** |
+<br>
+
+| **Variable Name** | **What Does It Take In?** |
 |-------------|-----------------------------------------------------------|
 | `f` | A user-defined function that defines the system of differential equations to be solved. |
 | `a` | A number specifying the starting point of the interval we want solutions for.  |
 | `b` | A number specifying the endpoint of the interval we want solutions for. |
 | `y0` | A vector specifying the initial values of the system. A system of $m$ differential equations must have a `y0` of length $m$. |
 | `n` | A number specifying the step size (i.e. the number of steps that should be taken from `a` to `b`. |
+
+<br>
 
 The function `rk4sys` returns a matrix. When that matrix is converted to a data frame using the function `as.data.frame`, its first column provides the time points at which the SIR model was solved and subsequent columns are the solutions to the model's state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infectious, and recovered at a given time.
 
@@ -861,8 +879,6 @@ output <- as.data.frame(output)
 output
 ```
 
----
-
 Now that we have a data frame of the solved SIR model equations at specified times, let's plot it.
 
 ---
@@ -907,6 +923,7 @@ By the end of @sec-evaluating-and-comparing-both-methods, you should be able to:
 :::
 
 The following table summarizes some potential benefits and drawbacks to using Euler's method or `rk4sys` in `pracma`:
+<br>
 
 | **Solving Method** | **Potential Benefits** | **Potential Drawbacks** |
 |--------------|-------------------------|------------------------------|
@@ -918,6 +935,8 @@ Although the accuracy of the solutions output by Euler's method and the Fourth-O
 
 This means we can "get away" with using a smaller step size when using `rk4sys` over Euler's method (thus saving us some computational cost / time).
 :::
+
+<br>
 
 The following simulation shows the difference between the solution curves produced by Euler's method and `rk4sys` for different values of the model parameters and step size:
 
@@ -952,12 +971,64 @@ By the end of @sec-formulating-transmission-rate, you should be able to:
 
 Recalling from [Section @sec-formulating-the-recovery-rate], we estimate the recovery rate using prior literature on the average duration of infection. Since we estimate the recovery rate using means other than MLE, we hold it constant when doing MLE and only use MLE to estimate the value of the transmission rate $\beta$ [@parameter_estimation]. We are only going to go over MLE as it directly applies to estimating $\beta$ for an epidemic SIR model, but the Wikipedia article on maximum likelihood estimation goes more into its general mathematical framework [@wiki_mle].
 
-MLE works by maximizing the *likelihood function*. The likelihood function provides the probability of some data point ($D_i$) occurring under different values of $\beta$. We will denote the likelihood for a data point as $\mathcal{L}(\beta,D_i)$. The likelihood function takes in a value of $\beta$ and outputs the probability of observing the data point $D_i$. 
+MLE works by maximizing the *likelihood function*. The likelihood function provides the probability of some data point ($D_i$) occurring under different values of $\beta$. We will denote the likelihood for a data point as $\mathcal{L}(\beta;D_i)$. When we have *discrete* data, the likelihood function takes in a value of $\beta$ and outputs the probability of observing the data point $D_i$. 
 
-The likelihood function $\mathcal{L}(\beta,D_i)$ only provides the probability of observing a one particular data point under different values of $\beta$, but we are generally interested in finding and maximizing the probability of observing entire sets of data not just individual observations. Assuming the entire data set is *independent* (i.e. one observation in the data set does not affect what the other observations in the data set are), we multiply the likelihood functions $\mathcal{L}(\beta,D_i)$ for every individual piece of data $D_1,D_2 \cdots , D_n$ in the entire data set (denoted by $S$) to get the overall likelihood of the entire set of data denoted as $\mathcal{L}(\beta,S)$:
+:::{.callout-note collapse="true"}
+## What do we mean by "discrete" data?
+
+Discrete data means data that takes on values we can count (like $1,2,3,4,5,$ and so on). This is different than *continuous* data, which can take on any value within a range (like probabilities, which can be any value from $0$ to $1$)
+:::
+
+
+In this module, we will only focus on MLE for discrete data since the two most common types of disease data (incidence and prevalence data) are discrete. We defined incidence and prevalence data in @sec-formulating-foi, but you can review the chart below if you need a quick refresh: 
+
+<br>
+
+| **Name**   | **Explanation**                                                                                                                                                                                                                                                                                                            |
+|------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Prevalence | Data that reports the total number of infected individuals at a time $t$.                                                                                                                                                                                                                                                  |
+| Incidence  | Data that reports the number new infected individuals over a period of time from $t$ to $t+\Delta t$ (an interval that begins at time $t$ and ends some time later at $t+\Delta t$). $\Delta t$ is some increment of time, like one day, one week, two months, etc. |
+
+<br>
+
+It is generally more straightforward to estimate $\beta$ when we have prevalence data, so we will stick to that for this introductory module. To figure out our likelihood function, we first need to make an assumption about the *distribution* our data comes from. We are interested in the *probability mass function* (PMF) of this distribution, which gives us the probability of observing some piece of data (exactly what we need!). It's common to assume that prevalence data comes from a binomial distribution, so we will use that going forward.
+
+:::{.callout-note collapse="true"}
+## Not familiar with the binomial?
+
+The Khan Academy article on the binomial gives a slow and thourough introduction to the binomial [@khan_binomial]. 
+:::
+
+The PMF of the binomial fixes the sample size ($n$) and the probability of success ($p$) and takes in the observed number of successes in the sample ($x$). It outputs the probability of observing $x$ number of successes:     
 
 $$
-\mathcal{L}(\beta,S)=\mathcal{L}(\beta,D_1) \times \mathcal{L}(\beta,D_2) \times \cdots \times \mathcal{L}(\beta,D_n)
+P(X=x)={n \choose x}p^x(1-p)^{n-x} 
+$$
+The likelihood function is just a reinterpretation of the PMF: instead of fixing $n$ and $p$ then taking in values for $x$, the likelihood function fixes the value of $x$ and takes in values for $n$ and $p$. The output is still the same: the probability of observing $x$.
+
+<br>
+
+| **Function**   | **Formula** | **Input(s)** | **Output**|                                                                                                                                                                                                                       
+|--------------------|--------------------------------------|---------------------------|---------------------------|
+| Probability Mass Function (PMF) | $P(X=x)={n \choose x}p^x(1-p)^{n-x}$ |  The observed number of successes ($x$) | The probability of observing the input $x$ given a fixed sample size ($n$) and probability of success ($p$) |
+Likelihood Function | $\mathcal{L}(n,p;x)={n \choose x}p^x(1-p)^{n-x}$ | The sample size ($n$) and probability of success ($p$) | The probability of observing a fixed $x$ given the inputs $n$ and $p$ | 
+
+<br>
+
+Interpreting this in the context of finding the likelihood function for our prevalence data $\mathcal{L}(\beta;D_i)$, our sample size ($n$) is the size of the population our data was collected from ($N$), our probability of success ($p$) is the predicted number of infectious people at a time $t$ given by our SIR model (which we will denote as $I(t,\beta)$) divided by the population size $N$, and our number of observed successes $x$ is our observed prevalence at a particular time $t$ (or in other words, our data point $D_i$). Putting this together, we have:
+
+<br>
+
+| **Function**   | **Formula** | **Input(s)** | **Output**|                                                                                                                                                                                                                      
+|--------------------|--------------------------------------|---------------------------|---------------------------|
+Likelihood Function | $\mathcal{L}(\beta;D_i)={N \choose D_i}\left(\frac{I(t,\beta)}{N}\right)^{D_i}\left(1-\frac{I(t,\beta)}{N}\right)^{N-D_i}$ | The SIR model (defined by its transmission rate $\beta$) | The probability of observing a fixed piece of prevalence data $D_i$ (observed at a time $t$) given the transmission rate $\beta$ | 
+
+<br>
+
+The likelihood function $\mathcal{L}(\beta;D_i)$ only provides the probability of observing one piece of data at a particular time $t$ under different values of $\beta$, but we are generally interested in finding and maximizing the probability of observing entire sets of data not just individual observations. Assuming the entire data set is *independent* (i.e. one observation in the data set does not affect what the other observations in the data set are), we multiply the likelihood functions $\mathcal{L}(\beta;D_i)$ for every individual piece of data $D_1,D_2 \cdots , D_n$ in the entire data set (denoted by $S$) to get the overall likelihood of the entire set of data denoted as $\mathcal{L}(\beta;S)$:
+
+$$
+\mathcal{L}(\beta;S)=\mathcal{L}(\beta;D_1) \times \mathcal{L}(\beta;D_2) \times \cdots \times \mathcal{L}(\beta;D_n)
 $$
 
 :::{.callout-note collapse="true"}
@@ -966,41 +1037,38 @@ $$
 The three dots notation (also called an ellipses) in math is a placeholder for omitted terms in a sequence or pattern. If we have a very long statement that repeats (or has an ambiguous number of terms like the one above), mathematicians use $\cdots$ to condense the expression. For example, instead of writing $1+2+3+4+5+6+7+8+9+10$, we could write it much more compactly as $1+2+\cdots+10$.  
 :::
 
-We will call $\mathcal{L}(\beta,D_i)$ the point likelihood function (because it gives the likelihood of individual data points) and $\mathcal{L}(\beta,S)$ the sample likelihood function (because it gives the likelihood of the entire sample of data). What these likelihood functions look like depend on the type of disease data we are using. Disease data often comes in two forms:
+We will call $\mathcal{L}(\beta;D_i)$ the point likelihood function (because it gives the likelihood of individual data points) and $\mathcal{L}(\beta;S)$ the sample likelihood function (because it gives the likelihood of the entire sample of data). Using our previously found point likelihoods, the sample likelihood for our prevalence data (assuming it comes from a binomial distribution) is:
 
-| **Name**   | **Explanation**                                                                                                                                                                                                                                                                                                            |
-|------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Prevalence | Data that reports the total number of infected individuals at a time $t$.                                                                                                                                                                                                                                                  |
-| Incidence  | Data that reports the number new infected individuals over a period of time from $t$ to $t+\Delta t$ (an interval that begins at time $t$ and ends some time later at $t+\Delta t$). $\Delta t$ is some increment of time, like one day, one week, two months, etc. |
+$$
+\mathcal{L}(\beta;D_i)={N \choose D_i}\left(\frac{I(t,\beta)}{N}\right)^{D_i}\left(1-\frac{I(t,\beta)}{N}\right)^{N-D_i}
+$$
+
+Now that we have our sample likelihood function, the hard part is over! All we have to do now is iterate through plausible values of $\beta$, calculate the sample likelihood $\mathcal{L}(\beta;S)$ for each, and find the maximum sample likelihood among them. We estimate the $\beta$ in our model to be whatever gives this maximum likelihood, and we are done! 
 
 
-It is generally more straightforward to estimate $\beta$ when we have prevalence data, so we will stick to that for this introductory module. Let's go over the MLE algorithm using prevalence data step-by-step.
+Putting the whole process of MLE on prevalence data into steps, we have:
 
-* **Step 1:** Make an assumption about the distribution of the observed data. Oftentimes, this means assuming that every piece of data was randomly drawn from a Poisson distribution whose mean $\lambda$ is equal to the predicted value for the number of infectious individuals given by the SIR model at a time $t$. 
+<br>
 
-:::{.callout-note collapse="true"}
-## What is the Poisson distribution? 
-
-In this context, the Poisson distribution describes the probability of having observed a particular number of infected individuals at a time $t$ given that the the average number of infectious individuals $\lambda$ is known. It's important to note that we are not saying the prediction from the SIR model is random. What we are really saying is that we assume each data point in the sample was drawn randomly from a Poisson distribution centered around the SIR model's prediction for what that data point should be.  
-
-The Wikipedia article on the Poisson goes more into the specifics of the distribution itself [@wiki_poisson].  
-:::
+* **Step 1:** Make an assumption about the distribution of our prevalence data. Oftentimes, this means assuming that every piece of data was randomly drawn from a binomial distribution with sample size ($n$) equal to the population size ($N$) and probability of success ($p$) equal to $\frac{I(t,\beta)}{N}$ where $I(t,\beta)$ is the predicted number of infectious individuals given by the SIR model (with transmission rate $\beta$) at a time $t$. 
 
 :::{.callout-note collapse="true"}
-## Do we have to use the Poisson distribution?
+## Do we have to use the binomial distribution?
 
-No! The likelihood function can correspond to many different distributions; it all depends on the data. It is common to assume a Normal or Negative Binomial distribution for the observed data when constructing the likelihood. Choosing a distribution can be difficult and requires assessing which one best describes the data. For the purposes of this module, however, we will always assume that the observed data are drawn from a Poisson distribution because it makes for a relatively simple likelihood function.
+No! The likelihood function can correspond to many different distributions; it all depends on the data. The binomial is a common distribution choice for prevalence data, but incidence data is often assumed to come from a Poisson distribution. If you're curious, you can read the Wikipedia article on the Poisson distribution to learn more [@wiki_poisson]. 
 :::
 
-* **Step 2:** Set a range of plausible values for $\beta$. If we notice our prevalence data grows at a rapid rate, then we would want our range of $\beta$s to include values that are large (relative to our recovery rate). Likewise, if we notice our data grows at a very slow rate, we would set our range of $\beta$s to include values that are close to (but slightly larger than) our recovery rate. 
+* **Step 2:** Set a range of plausible values for $\beta$. If we notice our prevalence data grows at a rapid rate, then we would want our range of $\beta$s to include values that are large (relative to our recovery rate). Likewise, if we notice our data grows at a very slow rate, we would set our range of $\beta$s to include values that are close to (but still larger than) our recovery rate. 
 
-* **Step 3:** For each plausible value of $\beta$, iterate through every data point in the set and calculate its likelihood REWORD: PROBABILITY OF DATA . . . ($\mathcal{L}(\beta,D_i)$). Multiply the likelihoods of all the data points together and store that value. This is the sample likelihood ($\mathcal{L}(\beta,S)$).
+* **Step 3:** Given a plausible value of $\beta$, iterate through every data point in the set and calculate its likelihood ($\mathcal{L}(\beta;D_i)$). Multiply the likelihoods of all the data points together and store that value. This is the sample likelihood ($\mathcal{L}(\beta;S)$).
 
 * **Step 4:** Repeat **Step 3** for values of $\beta$ in the plausible range, incrementing by a small amount each time. We want the values of $\beta$ that we calculate likelihoods for to be spaced relatively close together so we aren't missing potentially "good" estimates. 
 
 * **Step 5:** Now that we have a collection of sample likelihoods for different values of $\beta$, we find the maximum likelihood among them. We will estimate the value of $\beta$ to be what provides that maximum likelihood. And that's it! We can also graph the likelihoods to get a better idea of their pattern a visual representation of where the maximum occurs. 
 
-Notice that MLE requires multiplying many point likelihoods ($\mathcal{L}(\beta,D_i)$) together to find the sample likelihood $\mathcal{L}(\beta,S)$. The point likelihoods are always small because they represent probabilities (which are always between $0$ and $1$). After a certain point (if our data set is big enough and we are multiplying enough point likelihoods together), the computer might not be precise enough to represent the sample likelihood and round it down to $0$! This is known as an *underflow error* in programming. To avoid this, we take the logarithm of all the point likelihoods since logarithms convert very small numbers into large, negative numbers. We call these transformed likelihoods *log-likelihoods*. When we use these log-likelihoods, it changes the way we calculate $\mathcal{L}(\beta,S)$: we would have to add, not multiply, all of the point likelihoods together to get the sample likelihood. Remembering back to our properties of logarithms, we have:
+<br>
+
+Notice that MLE requires multiplying many point likelihoods ($\mathcal{L}(\beta;D_i)$) together to find the sample likelihood $\mathcal{L}(\beta;S)$. The point likelihoods are always small because they represent probabilities (which are always between $0$ and $1$). After a certain point (if our data set is big enough and we are multiplying enough point likelihoods together), the computer might not be precise enough to represent the sample likelihood and round it down to $0$! This is known as an *underflow error* in programming. To avoid this, we take the logarithm of all the point likelihoods since logarithms convert very small numbers into large, negative numbers. We call these transformed likelihoods *log-likelihoods*. When we use these log-likelihoods, it changes the way we calculate $\mathcal{L}(\beta;S)$: we would have to add, not multiply, all of the point likelihoods together to get the sample likelihood. Remembering back to our properties of logarithms, we have:
 
 $$
 \log(a \times b) = \log(a) + \log(b)
@@ -1008,7 +1076,7 @@ $$
 Using this property, we can say:
 
 $$
-\log[\mathcal{L}(\beta,S)]=\log[\mathcal{L}(\beta,D_1) \times \cdots \times \mathcal{L}(\beta,D_n)]=\log[\mathcal{L}(\beta,D_1)] + \cdots +  \log[\mathcal{L}(\beta,D_n)]
+\log[\mathcal{L}(\beta;S)]=\log[\mathcal{L}(\beta,D_1) \times \cdots \times \mathcal{L}(\beta,D_n)]=\log[\mathcal{L}(\beta,D_1)] + \cdots +  \log[\mathcal{L}(\beta,D_n)]
 $$
 
 Taking the logarithm of the likelihood function will not change the results of MLE, making our maximum likelihood estimator for $\beta$ the same whether we use log-likelihoods or raw likelihoods. 
@@ -1021,11 +1089,29 @@ Using log-likelihoods doesn't affect the estimate MLE produces because the logar
 
 Including this major improvement, our final modified MLE algorithm goes like so:
 
-REWORD -> copy paste shit
+<br>
+
+* **Step 1:** Make an assumption about the distribution of our prevalence data. Oftentimes, this means assuming that every piece of data was randomly drawn from a binomial distribution with sample size ($n$) equal to the population size ($N$) and probability of success ($p$) equal to $\frac{I(t,\beta)}{N}$ where $I(t,\beta)$ is the predicted number of infectious individuals given by the SIR model (with transmission rate $\beta$) at a time $t$. 
+
+* **Step 2:** Set a range of plausible values for $\beta$. If we notice our prevalence data grows at a rapid rate, then we would want our range of $\beta$s to include values that are large (relative to our recovery rate). Likewise, if we notice our data grows at a very slow rate, we would set our range of $\beta$s to include values that are close to (but still larger than) our recovery rate. 
+
+* **Step 3:** Given a plausible value of $\beta$, iterate through every data point in the set and calculate its log-likelihood ($log[\mathcal{L}(\beta;D_i)]$). Add the log-likelihoods of all the data points together and store that value. This is the sample log-likelihood ($log[\mathcal{L}(\beta;S)]$).
+
+* **Step 4:** Repeat **Step 3** for values of $\beta$ in the plausible range, incrementing by a small amount each time. We want the values of $\beta$ that we calculate likelihoods for to be spaced relatively close together so we aren't missing potentially "good" estimates. 
+
+* **Step 5:** Now that we have a collection of sample likelihoods for different values of $\beta$, we find the maximum likelihood among them. We will estimate the value of $\beta$ to be what provides that maximum likelihood. And that's it! We can also graph the likelihoods to get a better idea of their pattern a visual representation of where the maximum occurs. 
+
+<br>
 
 This whole process can be really hard to conceptualize at first without concrete examples. We go over a few code examples of MLE coded from scratch and MLE using the `bbmle` package in R in [Sections @sec-coding-scratch] and [@sec-bbmle]. 
 
 ### Coding An MLE Algorithm From Scratch {#sec-coding-scratch}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-coding-scratch, you should be able to:
+
+-   Translate the process of maximum likelihood estimation using prevalence data into code.
+:::
 
 Suppose we have the following SIR epidemic model and we wish to use MLE to estimate the value of $\beta$:
 
@@ -1040,7 +1126,7 @@ $$
 For this model, $t$ is in units of days, the total size of the population we are modelling is $N=1000$ people, and the initial number of susceptible, infected, and recovered individuals is $S=999$, $I=1$, and $R=0$, respectively. 
 
 :::{.callout-note}
-These SIR equations are providing the number, not proportion, of individuals in each compartment. This is important because the prevalence data we will be using to find $\beta$ is also a number, not a proportion. Additionally, our assumption mentioned in [Section @sec-formulating-transmission-rate] that the data follows a Poisson distribution is only valid if both our data and model are counts of people, not proportions, since the Poisson distribution is a discrete distribution only able to take on non-negative integer values.
+These SIR equations are providing the number, not proportion, of individuals in each compartment. This is important because the prevalence data we will be using to find $\beta$ is also a number, not a proportion.
 :::
 
 Let's also assume that we know the recovery rate to be $\gamma=0.7$ people per day based on past literature. Substituting this into our SIR equations we have:
@@ -1055,9 +1141,9 @@ $$
 
 Now that we have our basic model equations, let's code an algorithm to find the maximum likelihood estimator for $\beta$.
 
-**Step 1: Generate test prevalence data.**
+**Step 1: Generate some test prevalence data.**
 
-The code below seems like a lot, but most of it is a rehash of the code from [Section @sec-pracma]. The main difference is that we code our model function `ModelFunc` to take in a vector of model parameters as well.
+The code below seems like a lot, but most of it is a rehash of the code from [Section @sec-pracma]. You don't have to understand this code in its entirety: just know that we are solving an SIR model for just the number of infected individuals at a set of consecutive times and then adding variation to these solutions.
 
 ```{webr}
 library(pracma)
@@ -1103,25 +1189,17 @@ output <- rk4sys(f = function(t,y) ModelFunc(t,y,model_parameters),
 
 # Converting the output matrix to a data frame
 output <- as.data.frame(output)
-output
-```
 
-:::{.callout-note}
-We can actually test how accurate our estimate for $\beta$ found using MLE is by seeing how close it is to the $\beta$ used to generate the data (i.e. the value of `beta` in the named vector `model_parameters` in the code above)!
-:::
-
----
-
-**Step 2: Extract predicted incidences only and make our data readable.**
-
-```{webr}
 #Extracting only the prevalences (infected counts)
 I_true <- output$y.I
 
 # Adding noise to the true prevalence (to mimic random sampling)
 # NOTE: "noise" refers to random errors / variation in the data
-# Following from our assumptions, the noise is Poisson distributed
-I_observed <- rpois(length(I_true), lambda = I_true)
+# Following from our assumptions, the noise is binomially distributed
+pop_size <- sum(initial_vals)
+I_observed <- rbinom(length(I_true), 
+                     size = pop_size, 
+                     prob = I_true/pop_size)
 
 # Saving the predicted prevalences as a data frame
 data <- data.frame(day = t_start:t_end,
@@ -1133,7 +1211,9 @@ Now that we have our data and a function for our SIR model called `ModelFunc`, o
 
 ---
 
-**Step 3: Code a function to return predicted prevalences.**
+**Step 2: Code a function to return predicted prevalences.**
+
+We now have our data and a function for our SIR model called `ModelFunc` (if you are doing this for a real application where you don't have to pre-generate data, you would start this process at **Step 2** and code the model function here). Our next step is to is to code a function to solve our SIR model for any value of $\beta$ and output what it predicts the number of infected individuals to be at various times.
 
 ```{webr}
 # Function Inputs: Named vector of model parameters and a vector of times
@@ -1148,7 +1228,7 @@ pred <- function(parameters,t){
   output <- rk4sys(f=function(t,y) ModelFunc(t,y,parameters),
                    a=t_start,
                    b=t_end,
-                   y0=initial_values,
+                   y0=initial_vals,
                    n=step_size)
   
   # Extracting only the predicted prevalences at the input times
@@ -1170,29 +1250,33 @@ Now that we have our function to output the predicted prevalences given by our S
 
 ---
 
-**Step 4: Code a function to calculate log-likelihoods given different parameter values.**
+**Step 3: Code a function to calculate log-likelihoods given different parameter values.**
 
 ```{webr}
 # Function Inputs: Named vector of model parameters and the data set
 # Function Outputs: Log-likelihood of entire data set
-poisson_ll <- function(parameters,data){
+binomial_ll <- function(parameters,data){
   times <- data$day
   predicted <- pred(parameters,times)
+  pop_size <- parameters["N"]
   
-  # Note: The function dpois gives Poisson probabilities
-  sum(dpois(x=data$prevalence_count,lambda=predicted,log=TRUE))
+  # Note: The function dbinom gives binomial probabilities
+  sum(dbinom(x=data$prevalence_count,
+             size = pop_size, 
+             prob = predicted/pop_size,
+             log=TRUE))
 }
 
 # Example call
-poisson_ll(c(beta=1.4,gamma=0.7,N=1000),data)
-poisson_ll(c(beta=2.3,gamma=0.7,N=1000),data)
+binomial_ll(c(beta=1.4,gamma=0.7,N=1000),data)
+binomial_ll(c(beta=2.3,gamma=0.7,N=1000),data)
 ```
 
 Our final step is to code a driver function that iterates through plausible values of $\beta$, calculating the log-likelihood of the entire set of data for each, and outputs the maximum likelihood estimator for $\beta$ (i.e. the $\beta$ which produces the greatest log-likelihood).
 
 ---
 
-**Step 5: Code a function to return the maximum likelihood estimator.**
+**Step 4: Code a function to return the maximum likelihood estimator.**
 
 ```{webr}
 # Function Inputs: Upper limit on the value of beta and the data set
@@ -1205,7 +1289,7 @@ mle <- function(plausible_beta,data){
   
   for (beta in range_beta){
     params <- c(beta=beta,gamma=0.7,N=1000)
-    new_ll <- data.frame(beta=beta,ll=poisson_ll(params,data))
+    new_ll <- data.frame(beta=beta,ll=binomial_ll(params,data))
     all_ll <- rbind(all_ll,new_ll)
   }
   
@@ -1234,21 +1318,29 @@ mle(5,data)
 ::: {.callout-tip title="Try this"}
 Go back to **Step 1** and try the following changes, re-running each step in order:
 
-1. Change `model_parameters <- c(beta = 1.2, gamma = 0.7, N = 1000)` to `model_parameters <- c(beta = 1.7, gamma = 0.7, N = 1000)`. Does the maximum likelihood estimate for $\beta$ returned in **Step 5** reflect this change? Try testing this with other values of `beta` in `model_parameters`. Does the estimate for $\beta$ produced each time reflect the changes made?  
+1. Change `model_parameters <- c(beta = 1.2, gamma = 0.7, N = 1000)` in line 25 to `model_parameters <- c(beta = 1.7, gamma = 0.7, N = 1000)`. Does the maximum likelihood estimate for $\beta$ returned in **Step 4** reflect this change? Try testing this with other values of `beta` in `model_parameters`. Does the estimate for $\beta$ produced each time reflect the changes made?  
 :::
 
 This code might seem like a lot, but not to worry: there is a much easier way of doing MLE in R using the `bbmle` package! Read on to [Section @sec-bbmle] to learn how we can utilize the function `mle2` in the `bbmle` package to simplify conducting MLE in R.
 
 
-**SECTION REFERENCE**
+**Section References**
 
-https://daphnia.ecology.uga.edu/drakelab/wp-content/uploads/2014/07/likelihood.pdf
+@drake_mle
 
 ### MLE Using the bbmle Package in R {#sec-bbmle}
 
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-bbmle, you should be able to:
+
+- Explain what values the function `mle2` in `bbmle` takes in. 
+
+- Translate the process of MLE to code using the function `mle2`.
+:::
+
 Although knowing how to code an MLE algorithm by hand is useful to first grasp the concept, in practicality it is inefficient which is why we often opt to use packages such as `bbmle` in R, which has the function `mle2` that makes it much easier.
 
-Before we can use `bbmle` we must generate our data. This is the same code that was used to generate data in [Section @sec-coding-scratch] (see **Step 1** and **Step 2** there). 
+Before we can use `bbmle` we must generate our data. This is the same code that was used to generate data in [Section @sec-coding-scratch] (see **Step 1** there). 
 
 **Step 1: Generate test prevalence data.**
 
@@ -1309,17 +1401,18 @@ data
 
 Now that we have our data, let's go over the basics of `mle2`. 
 
-`mle2` has many arguments, which can be read up on in the R documentation for  the `mle2` function [@docs_bbmle_mle2], however there are only ones we need to pass in values for:
+`mle2` has many arguments, which can be read up on in the R documentation for  the `mle2` function [@docs_bbmle_mle2], but the table below summarizes the ones useful to us:
 
-- `minuslogl`: A function or formula to calculate the *negative* log-likelihood given a value for our parameter of interest ($\beta$).
+<br>
 
-- `start`: An initial guess for the value of the parameter of interest ($\beta$).
+| **Variable Name** | **What Does It Take In?** |
+|-------------|-----------------------------------------------------------|
+| `minuslogl` | A function or formula to calculate the *negative* log-likelihood given a value of $\beta$.|
+| `start` | An initial guess for $\beta$.  |
+| `method` | A string indicating what MLE algorithm method should be used. A summary of each method and how they change the MLE algorithm can be read up in the R Documentation for the `optim` function [@docs_stats_optim]. We will only make use of the method `"L-BFGS-B"`, or the *box constraint* method. This method allows for us to set a lower / upper bound on our parameter of interest $\beta$. This is useful since we know $\beta\geq0$, so we can set our lower bound to be a very small number such as $0.01$ to ensure that no `NaN`s are produced when we call `mle2`. Likewise, we can set an optional upper bound on $\beta$ so we can avoid unnecessary computations if we reasonably know it to be below a certain value. |
+| `lower` | Used with the `"L-BFGS-B"` method. Takes in a named vector of the lower bound of $\beta$. |
 
-We will also make use of two other optional parameters to ensure our code runs smoothly:
-
-- `method`: A string indicating what MLE algorithm method should be used. A summary of each method and how they change the MLE algorithm can be read up in the [R Documentation for the `optim` function @docs_stats_optim]. We will only make use of the method `"L-BFGS-B"`, or the *box constraint* method. This method allows for us to set a lower / upper bound on our parameter of interest $\beta$. This is useful since we know $\beta\geq0$, so we can set our lower bound to be a very small number such as $0.01$ to ensure that no `NaN`s are produced when we call `mle2`. Likewise, we can set an optional upper bound on $\beta$ so we can avoid unnecessary computations if we reasonably know it to be below a certain value.
-
-- `lower` / `upper`: These are specified when using the `"L-BFGS-B"` method. These take a named vector including the lower and upper bounds of the parameter(s) of interest. Note that a value for `lower` must be passed in when using the `"L-BFGS-B"` method but `upper` is optional. 
+<br>
 
 Before we can call `mle2`, let's first code the function we will pass into `minuslogl`.
 
@@ -1327,9 +1420,9 @@ Before we can call `mle2`, let's first code the function we will pass into `minu
 
 **Step 2: Code a function to output negative log-likelihoods.**
 
-This is nearly identical to the code that was used to output predicted prevalences and log-likelihoods in [Section @sec-coding-scratch] (see **Step 3** and **Step 4** there). The main difference is that our function `poisson_ll` takes in slightly different values and outputs negative log-likelihoods instead of positive log-likelihoods. 
+This is nearly identical to the code that was used to output predicted prevalences and log-likelihoods in [Section @sec-coding-scratch] (see **Step 2** and **Step 3** there). The main difference is that our function `binomial_ll` takes in slightly different values and outputs negative log-likelihoods instead of positive log-likelihoods. 
 
-The reason `poisson_ll` takes in different values this time is because `mle2` requires that our likelihood function only take in the model equation parameters to be estimated ($\beta$). 
+The reason `binomial_ll` takes in different values this time is because `mle2` requires that our likelihood function only take in the model equation parameters to be estimated ($\beta$). 
 
 ```{webr}
 library(bbmle)
@@ -1361,16 +1454,20 @@ pred <- function(parameters,t){
   
 # Function Inputs: A named list containing a value for beta
 # Function Outputs: The log-likelihood of the data given the input beta
-poisson_ll <- function(b){
+binomial_ll <- function(b){
   times <- data$day
   parameters <- c(beta=b,gamma=0.7,N=1000)
   predicted <- pred(parameters,times)
-    # Returns the negative log-likelihood
-  -sum(dpois(x=data$prevalence_count,lambda=predicted,log=TRUE))
+  
+  # Returns the negative log-likelihood
+  -sum(dbinom(x=data$prevalence_count,
+           size = parameters["N"], 
+           prob = predicted/parameters["N"],
+           log=TRUE))
 }
 
 # Example call
-poisson_ll(1.5)
+binomial_ll(1.5)
 ```
 
 All we have left to do now is specify the other values to be passed (for `start`, `method`, and `lower`) and call `mle2`. 
@@ -1387,22 +1484,12 @@ start <- list(b=2)
 
 # Using the L-BFGS-B algorithm / method for MLE 
 # Setting the lower bound to be small but positive since beta is non-negative
-result <- mle2(minuslogl=poisson_ll,
+result <- mle2(minuslogl=binomial_ll,
                          start=start,
                          method="L-BFGS-B",
                          lower=c(b=0.01))
 
-# Printing the result of our call to mle2
-result
-```
-
-`mle2` returns an object with the associated function `coef`, which returns just the MLE estimate for $\beta$. 
-
----
-
-**Step 4: Extracting our estimate for $\beta$.**
-
-```{webr}
+# Printing our estimate for beta
 coef(result)
 ```
 
@@ -1410,63 +1497,65 @@ coef(result)
 Notice that the estimate we get for $\beta$ using `mle2` is approximately equal to the one we obtain from our MLE algorithm coded by scratch (as we would expect) except that it is accurate to a far greater decimal place. This is because our MLE algorithm coded by hand is only incrementing through values of $\beta$ in steps of size $0.01$ for computational efficiency. The function `mle2` on the other hand employs much more sophisticated techniques, making the estimate it returns much more precise.
 :::
 
-## Short Recap: Estimating Model Parameters
+::: {.callout-tip title="Try this"}
+Go back to **Step 1** and try the following changes, re-running each step in order:
 
-| **Parameter**     	| **Common Symbol** 	| **How Can We Estimate It?**                                                                                                                                       	|
-|---------------------------	|-----------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+1. Like we did when we coded MLE from scratch, try changing the value of `beta` in `model_parameters` in **Step 1** (line 24) and see if the the maximum likelihood estimate for $\beta$ returned by `mle2` in **Step 3** reflects these changes.
+:::
+
+## Short Recap: Estimating Model Parameters {#sec-recap}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-recap, you should be able to:
+
+- Recall the parameters of the SIR model and the methods we use to estimate them. 
+:::
+
+| **Parameter**     	| **Common Symbol** 	| **How Can We Estimate It?** |
+|---------------------------|----------------------------|----------------------------------------------------------------------|
 | Transmission Rate 	| $\beta$           	| Use an MLE algorithm coded from scratch or the function `mle2` in `bbmle` (recommended) to estimate $\beta$ to be the value that makes our observed data most probable.              	|
 | Recovery Rate     	| $\gamma$          	| Read through past literature to find the average duration of infection ($d$) for the disease. Estimate the recovery rate to be $\gamma=\frac{1}{d}$. 	|
   
 ## Reproduction Numbers {#sec-reproduction-numbers}
 
 ::: {.callout-tip title="Learning Objectives"}
-By the end of this section, you should be able to:
+By the end of @sec-reproduction-numbers, you should be able to:
 
--   Define what the basic and effective reproduction number is and recall primary differences between the two.
+-   Explain the what the basic and effective reproduction number are and how they are different.
 
--   Interpret the basic and effective reproduction number in context.
+-   Interpret the basic and effective reproduction number in the disease context.
 
--   Recall the formulas for the basic and effective reproduction numbers.
-
--   Explain what the "threshold phenomenon" is.
+-   Justify the formula for the basic and effective reproduction numbers based on their biological interpretations.
 :::
 
-The reproductive number is defined as "the average number of secondary infectious cases caused by one infectious individual (before they recover or die or are otherwise not able to further transmit)" [@Handel2021_IDEMA_ch5].
+The reproduction number is defined as "the average number of secondary infectious cases caused by one infectious individual (before they recover or die or are otherwise not able to further transmit)" [@Handel2021_IDEMA_ch5].
 
 The table below summarizes the two types of reproduction numbers we will focus on:
 
-| **Name** | **Symbol** | **Interpretation** |
-|-------------|-------------|-----------------------------------------------|
-| Basic Reproduction Number | $R_0$ | The average number of secondary infections produced by a single infectious individual in a *completely susceptible* population. This can also be thought of as the reproduction number calculated at the beginning of an outbreak (when basically everyone is susceptible). |
-| Effective Reproduction Number | $R_{e}$ | The average number of secondary infections produced by a single infectious individual in a population with a susceptible proportion equal to $\frac{S}{N}$ |
+<br>
 
-::: {.callout-note}
-Some common misconceptions about $R_0$ and $R_e$ are:
+| **Name** | **Symbol** | **Interpretation** | **Formula**
+|-----------------------------|---------------|---------------------------------------------------------|----------------------|
+| Basic Reproduction Number | $R_0$ | The average number of secondary infections produced by a single infectious individual in a **completely susceptible** population. This can also be thought of as the reproduction number at the beginning of an outbreak when almost everyone is susceptible. | $R_0=\frac{\beta}{\gamma}$
+| Effective Reproduction Number | $R_{e}$ | The average number of secondary infections produced by a single infectious individual in a population with a susceptible proportion equal to $\frac{S}{N}$. | $R_e=\frac{\beta}{\gamma} \left( \frac{S}{N} \right) =R_0\tilde{S}$| 
 
--   "Must $R_0$ and $R_e$ be whole numbers because nobody can transmit the disease to, say, half a person?"
+::: {.callout-important title="Important Note"}
+Some common questions / misconceptions about $R_0$ and $R_e$ are:
 
-    -   No, $R_0$ and $R_e$ do not have to be whole numbers because they refer to *averages*, not the exact number of secondary infections produced by one person. An infectious person might infect nobody or tons of people but the reproduction numbers don't capture every detail just the overall picture of how many secondary infectious are produced.
+-   **Do $R_0$ and $R_e$ have to be whole numbers because nobody can transmit the disease to, say, half a person?**
 
-    <br>
+      No, $R_0$ and $R_e$ do not have to be whole numbers because they refer to *averages*, not the exact number of secondary infections produced by one person. An infectious person might infect nobody or tons of people but the reproduction numbers don't capture every detail just the overall picture of how many secondary infectious are produced.
 
--   "Is the reproduction number a rate?"
+-   **Is the reproduction number a rate?**
 
-    -   No, the reproduction number is not a rate. Take the example of HIV and SARS, which both have $R_e\approx4$. However, SARS has an extremely rapid spread while HIV is much slower spreading. One individual infected with SARS might cause 4 secondary infections within the span of a week while an individual with HIV most likely infects 4 other people within the span of a few years. $R_0$ and $R_e$ don't tell us anything about the timeframe of infections, so they are not rates.
+      No, the reproduction number is not a rate. Take the example of HIV and SARS, which both have $R_e\approx4$. Although both have the same $R_e$, SARS spreads extremely rapidly while HIV is much slower spreading. One individual infected with SARS might cause 4 secondary infections within the span of a week while an individual with HIV most likely infects 4 other people within the span of a few years. $R_0$ and $R_e$ don't tell us anything about the timing of infections, so they are not rates.
 :::
 
-The formula for the basic reproduction number is:
+<br>
 
-$$
-R_0=\frac{\beta}{\gamma}
-$$
+The formulas in the table above formulas should make sense, as they are multiplying the transmission rate $\beta$ by the average duration of infection $\frac{1}{\gamma}$ to obtain the average number of secondary infections by one infectious individual throughout their entire duration of infectivity.
 
-And similarly, the formula for the effective reproduction number is:
-
-$$
-R_e=\frac{\beta}{\gamma} \left( \frac{S}{N} \right) =R_0\tilde{S}
-$$ These formulas should make sense, as they are multiplying the transmission rate $\beta$ by the average duration of infection $\frac{1}{\gamma}$ to obtain the average number of secondary infections by one infectious individual throughout their entire duration of infectivity.
-
-The point where these two formulas differ is in their assumption about the proportion of susceptible individuals in the population. $R_0$ assumes a completely susceptible population, so it is multiplying the expression $\frac{\beta}{\gamma}$ by an invisible $1$. Meanwhile, $R_e$ assumes a susceptible proportion equal to $\frac{S}{N}$ hence the final expression $\frac{\beta}{\gamma}(\frac{S}{N})$.
+The point where these two formulas differ is in their assumption about the proportion of susceptible individuals in the population. $R_0$ assumes a completely susceptible population, so it is multiplying the expression $\frac{\beta}{\gamma}$ by an invisible $1$. Meanwhile, $R_e$ assumes a susceptible proportion equal to $\frac{S}{N}$ hence the final expression $\frac{\beta}{\gamma}\left(\frac{S}{N}\right)$.
 
 Make sure you understand the definitions and intuition behind the formulas for $R_0$ and $R_e$. [Section @sec-the-threshold-phenomenon] on the threshold phenomenon applies the reproduction number in learning how to control the spread of infection.
 

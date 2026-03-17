@@ -1,0 +1,216 @@
+---
+title: "Reproduction Numbers and Epidemic Thresholds"
+format: live-html
+bibliography: reference.bib
+nocite: |
+  @keeling_modeling_2008
+webr:
+  engine: knitr
+  packages:
+    - pracma
+---
+
+## Intro to Reproduction Numbers {#sec-reproduction-numbers}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-reproduction-numbers, you should be able to:
+
+-   Explain what the basic and effective reproduction numbers are and how they are different.
+
+-   Interpret the basic and effective reproduction numbers in a disease context.
+
+-   Justify the formula for the basic and effective reproduction numbers based on their biological interpretations.
+:::
+
+The reproduction number is defined as "the average number of secondary infectious cases caused by one infectious individual (before they recover or die or are otherwise not able to further transmit)" [@Handel2021_IDEMA_ch5].
+
+The table below summarizes the two types of reproduction numbers we will focus on:
+
+
+| **Name** | **Symbol** | **Interpretation** | **Formula**
+|-----------------------------|---------------|---------------------------------------------------------|----------------------|
+| Basic Reproduction Number | $R_0$ | The average number of secondary infections produced by a single infectious individual in a **completely susceptible** population. This can also be thought of as the reproduction number at the beginning of an outbreak when almost everyone is susceptible. | $R_0=\frac{\beta}{\gamma}$
+| Effective Reproduction Number | $R_{e}$ | The average number of secondary infections produced by a single infectious individual in a population with a susceptible proportion equal to $\frac{S}{N}$. | $R_e=\frac{\beta}{\gamma} \left( \frac{S}{N} \right) =R_0\tilde{S}$| 
+
+::: {.callout-important title="Important Note"}
+Some common questions / misconceptions about $R_0$ and $R_e$ are:
+
+-   **Do $R_0$ and $R_e$ have to be whole numbers because nobody can transmit the disease to, say, half an individual?**
+
+      No, $R_0$ and $R_e$ do not have to be whole numbers because they refer to *averages*, not the exact number of secondary infections produced by one individual. An infectious individual might infect nobody or tons of other individuals. Reproduction numbers don't capture these details, just the overall picture of how many secondary infectious are produced.
+
+-   **Is the reproduction number a rate?**
+
+      No, the reproduction number is not a rate. Take the example of HIV and SARS, which both have $R_e\approx4$. Although both have the same $R_e$, SARS spreads extremely rapidly while HIV is much slower spreading. One individual infected with SARS might cause 4 secondary infections within the span of a week while an individual with HIV most likely infects 4 other people within the span of a few years. $R_0$ and $R_e$ don't tell us anything about the timing of infections, so they are not rates.
+:::
+
+The formulas in the table above formulas should make sense, as they are multiplying the transmission rate $\beta$ by the average duration of infection $\frac{1}{\gamma}$ to obtain the average number of secondary infections by one infectious individual throughout their entire duration of infectivity.
+
+The point where these two formulas differ is in their assumption about the proportion of susceptible individuals in the population. $R_0$ assumes a completely susceptible population, so it is multiplying the expression $\frac{\beta}{\gamma}$ by an invisible $1$. Meanwhile, $R_e$ assumes a susceptible proportion equal to $\frac{S}{N}$, giving us the expression $\frac{\beta}{\gamma}\left(\frac{S}{N}\right)$.
+
+Make sure you understand the definitions and intuition behind the formulas for $R_0$ and $R_e$. [Section @sec-the-threshold-phenomenon] on the threshold phenomenon applies the these reproduction numbers to gain insight into the epidemic dynamics. 
+
+
+## The Threshold Phenomenon {#sec-the-threshold-phenomenon}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-the-threshold-phenomenon, you should be able to:
+
+-   Justify the threshold value using the SIR model equations. 
+
+-   Explain the threshold phenomenon and connect it conceptually to the basic and effective reproduction numbers.
+
+-   Explain and visualize how the effective reproduction number changes throughout the course of an epidemic. 
+:::
+
+Public health officials benefit greatly from knowing the conditions for a disease to invade the population. Knowing these conditions means having the ability to **prevent** them: we could potentially stop an entire epidemic from occurring! To figure out the conditions for a disease to start spreading, let's look to our model equation for the infectious compartment:
+
+$$
+\frac{d\tilde{I}}{dt} = \beta \tilde{I} \tilde{S} - \gamma \tilde{I}
+$$ 
+
+Before we start manipulating this equation, let's first factor out the $\tilde{I}$ to make things simpler later on:
+
+$$
+\frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma)
+$$ 
+
+To find the point at which the infection either invades the population or fails to, we should solve for when $\frac{d\tilde{I}}{dt}=0$. Why zero? Well, when $\frac{d\tilde{I}}{dt}<0$ it means the proportion of infectious individuals is decreasing (i.e. the disease is "dying off") but when $\frac{d\tilde{I}}{dt}>0$ it means the proportion of infectious individuals is increasing (i.e. the disease is "growing"). So setting the rate of change of the infectious compartment equal to zero and solving gives us a "tipping point": above it the disease spreads, and below it the disease shrinks. Let's do that now:
+
+$$
+\begin{aligned}
+\frac{d\tilde{I}}{dt} &= 0  && \text{Threshold condition} \\[4pt]
+\tilde{I}(\beta \tilde{S} - \gamma) &= 0  && \text{Use definition } \frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma) \\[10pt]
+\beta \tilde{S} - \gamma &= 0  && \text{Divide both sides by } \tilde{I} > 0 \\[10pt]
+\beta\tilde{S} &= \gamma  && \text{Add } \gamma \text{ to both sides} \\[10pt]
+\tilde{S} &= \frac{\gamma}{\beta}  && \text{Divide both sides by } \beta > 0
+\end{aligned}
+$$
+
+This tells us for a disease to even invade the population and start spreading in the first place, the initial proportion of susceptibles must be greater than $\frac{\gamma}{\beta}$. Similarly, we know that if the initial proportion of susceptibles is less than $\frac{\gamma}{\beta}$, the disease never invades the population and an epidemic never happens. This crucial result is known as the *threshold phenomenon*, and $\frac{\gamma}{\beta}$ is known as the *threshold value*. 
+
+Notice that $\frac{\gamma}{\beta}$ is exactly equal to the reciprocal of the basic reproduction number $\left(R_0=\frac{\beta}{\gamma}\right)$, meaning we can rewrite the conditions above in terms of $R_0$. Putting this all together we have:
+
+| **Condition**                    | **Condition in terms of $R_0$** | **What Is This Telling Us?** |
+|-------------------|-----------------------|---------------------------------------------------------------------------------|
+| $\tilde{S}<\frac{\gamma}{\beta}$ | $\tilde{S}<\frac{1}{R_0}$       | If the initial proportion of susceptible individuals is less than $\frac{1}{R_0}$, then the disease never invades the population (i.e. an epidemic doesn't occur). Similarly, if the proportion of susceptible individuals at any given time is less than $\frac{1}{R_0}$, then the infectious population is shrinking (i.e. the disease is "dying off").   |
+| $\tilde{S}>\frac{\gamma}{\beta}$ | $\tilde{S}>\frac{1}{R_0}$       |     If the initial proportion of susceptible individuals is greater than $\frac{1}{R_0}$, then the disease successfully invades the population (i.e. an epidemic occurs). Similarly, if the proportion of susceptible individuals at any given time is greater than $\frac{1}{R_0}$, then the infectious population is growing (i.e. the disease is spreading).  |                                                                                                                                                                                                                     
+
+<iframe src="https://a-tom.shinyapps.io/threshold_phenomenon_simulation/"
+        width="100%"
+        height="700"
+        style="border:none;"></iframe>
+    
+
+::: {.callout-tip title="Try this"}
+1. Try changing the initial proportion of susceptible individuals $S(0)$ to be **above** the threshold value $\left(\frac{\gamma}{\beta}\right)$ shown. What happens to the proportion of infected individuals?
+
+2. Try changing the initial proportion of susceptible individuals $S(0)$ to be **below** the threshold value $\left(\frac{\gamma}{\beta}\right)$ shown. What happens to the proportion of infected individuals? How is this different than when $S(0)>\frac{\gamma}{\beta}$? 
+:::
+
+Connecting this even further to reproduction numbers, we can rewrite the inequalities in the chart above in terms of $R_e$ as well:
+
+$$
+\begin{aligned}
+\qquad
+\tilde{S} &< \frac{\gamma}{\beta}
+\qquad \implies \qquad
+R_e < 1
+\\[10pt]
+\qquad
+\tilde{S} &> \frac{\gamma}{\beta}
+\qquad \implies \qquad
+R_e > 1
+\end{aligned}
+$$
+
+:::{.callout-note collapse="true"}
+## What does $\implies$ mean?
+
+This arrow is mathematical shorthand for the word "implies". It's just telling us that whatever is on the left hand side leads to the statement on the right hand side. 
+:::
+
+:::{.callout-note collapse="true"}
+## What is the full calculation process?
+
+The fully worked out steps to get from $\tilde{S}<\frac{\beta}{\gamma}$ to $R_e<1$ is:
+
+$$
+\begin{aligned}
+\tilde{S}&<\frac{\gamma}{\beta}  && \text{Threshold condition} \\[10pt]
+\frac{S}{N}&<\frac{\gamma}{\beta}  && \text{Use definition } \tilde{S} = \frac{S}{N} \\[10pt]
+\frac{\beta}{\gamma}\left(\frac{S}{N}\right)&<1  && \text{Multiply both sides by } \frac{\beta}{\gamma} \\[10pt]
+R_e &< 1  && \text{Use definition } R_e=\frac{\beta}{\gamma} \left( \frac{S}{N} \right)
+\end{aligned}
+$$
+
+The steps to get from $\tilde{S}>\frac{\beta}{\gamma}$ to $R_e>1$ are exactly the same.
+:::
+
+The result above is really important one: it tells us that $R_e$ is another threshold for determining whether or not a disease will spread. Specifically, if $R_e<1$, the disease is dying off but if $R_e>1$ the disease is spreading.
+
+This shouldn't be that surprising though, as it can be inferred from the definition of $R_e$ itself: if every single infectious person in the population, on average, "replaces" themselves with more than $1$ infection, the disease will spread. Moreover, the point at which $R_e$ reaches exactly $1$ marks the peak of the epidemic (i.e. the point at which the infectious population reaches its maximum) because the disease goes from spreading (number of infectious individuals increasing) to dying off (number of infectious individuals decreasing).
+
+The simulation below demonstrates how the infected population increases, decreases, and reaches its maximum at different values of $R_e$:
+
+<iframe src="https://a-tom.shinyapps.io/effective_reprod_simulation/"
+        width="100%"
+        height="700"
+        style="border:none;"></iframe>
+     
+::: {.callout-tip title="Try this"}
+**TIP:** Double click on the "Infected" curve in the graph legend to isolate its curve.
+
+1. Hover over the infected curve at different times. How does the effective reproduction number change as the epidemic progresses? What is the effective reproduction number when the proportion of infected individuals reaches a maximum? 
+:::
+
+Try using the "Pan" tool in simulation above (it's the icon above the graph that looks like a four-way arrow) and observe what happens to $R_e$ as time goes on. Notice that $R_e$ never reaches $0$! 
+
+This demonstrates another really important result: for an epidemic to end, it is not necessary to completely exhaust the susceptible population and attain $R_e=0$. The epidemic will start to die off as soon as the proportion of susceptibles dips low enough to where $R_e<1$. When this happens, the infectious individuals will, on average, no longer be "replacing" themselves with another infectious person even though there is still a non-zero population of susceptible individuals. If this goes on for a long enough time, the chain of transmission will break because there will be no more infectious individuals to spread the infection. This means that at the end of every epidemic, there will always be some individuals who are susceptible (i.e. individuals who were never infected). We know this to be true in real life as well: think of one person you know who was never infected with COVID-19 by the time the pandemic officially "ended" in 2023.    
+
+One of the main takeaways from this section is that the proportion of susceptible individuals determines whether or not a disease invades the population. If we can reduce the proportion of susceptible individuals to be below the threshold value, we can get an entirely prevent an epidemic from occurring. One of the most effective public health measures to accomplish this is vaccination [@vaccines13050479]. [Section @sec-choosing-how-many-people-to-vaccinate] answers the crucial question: "How many individuals should we vaccinate?".
+
+## How Many Individuals Should We Vaccinate? {#sec-choosing-how-many-people-to-vaccinate}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-choosing-how-many-people-to-vaccinate, you should be able to:
+
+-   Explain how to find the minimum proportion of people that must be vaccinated to prevent a disease from invading the population.
+
+-   Explain the concept of herd immunity and connect it to the formula for the minimum proportion of vaccinated individuals.
+
+-   Justify why herd immunity is not always possible based on the transmissibility of a disease and vaccine efficacy rates. 
+:::
+
+Recalling from [Section @sec-the-threshold-phenomenon], the disease will fail to invade the population if $\tilde{S}(0)<\frac{1}{R_0}$ where $\tilde{S}(0)$ is the initial proportion of susceptible individuals. We can reinterpret the initial proportion of susceptible individuals to be equal to $1-\phi$, where $\phi$ is the proportion of individuals in the population who are infectious or otherwise immune to the disease (either through recovery or other means). We can rearrange the expression $\tilde{S}(0)<\frac{1}{R_0}$ and solve for $\phi$:
+
+$$
+\begin{aligned}
+\tilde{S}(0)&<\frac{1}{R_0} && \text{Condition for disease to not invade} \\[10pt]
+1-\phi&<\frac{1}{R_0} && \text{Use definition } \tilde{S}(0)=1-\phi \\[10pt]
+1-\frac{1}{R_0} &< \phi && \text{Rearranging and solving for } \phi
+\end{aligned}
+$$
+
+
+At the beginning of the outbreak, when nearly everyone is susceptible and there are very few individuals who are infectious or recovered, we can approximate the proportion $\phi$ as being equal to the proportion of individuals **successfully** vaccinated against the disease. This is because, generally speaking, vaccination is the most widespread source of immunity to disease [@who_vaccines].
+
+Notice the emphasis on the word "successfully." This is because most vaccines are not $100%$ effective: there will always be a percentage of individuals, though however small, that are vaccinated but can still contract the disease. Assuming a vaccine efficacy rate of $\epsilon$ the proportion of individuals successfully vaccinated against the disease is $\phi=\epsilon p$ where $p$ is the proportion of the total population that is vaccinated (successfully or not). We can rearrange the expression from before to find the proportion of the total population $p$ that should be vaccinated to prevent an outbreak from developing into an epidemic:
+
+$$
+\begin{aligned}
+\phi &> 1-\frac{1}{R_0} && \text{Condition for disease to not invade} \\[10pt]
+\epsilon p &> 1-\frac{1}{R_0} && \text{Use definition } \phi=\epsilon p\\[10pt]
+p &> \frac{1}{\epsilon}\left(1-\frac{1}{R_0} \right) && \text{Dividing by } \epsilon
+\end{aligned}
+$$
+
+This means that, for a disease who has a vaccine with an efficacy rate $\epsilon$, the proportion of the population that should be vaccinated at the start of an outbreak to prevent it from developing into an epidemic should be at least $\frac{1}{e}(1-\frac{1}{R_0}$. This tells us that not everyone in the population has to be vaccinated to prevent the spread of a disease, a concept you've probably heard before known as *herd immunity*.
+
+Sometimes herd immunity cannot be obtained, however. Take the case when $R_0=3$ and the best available vaccine has an efficacy rate of $\epsilon=0.6$ (meaning that of the individuals who are vaccinated, only about $60\%$ of them will actually be immune to the disease). Using the formula above, we find that the proportion of vaccinated individuals must be at least $\frac{1}{0.6}\left(1-\frac{1}{3}\right)\approx1.1$ to prevent an epidemic from breaking out. This is impossible though: we cannot vaccinate more than $100 \%$of the population! This means that, due to a combination of the high transmissibility of the disease and the relatively low vaccine efficacy rate, even if $100\%$ of the population were to be vaccinated, there would still be enough susceptible individuals (i.e. individuals whose vaccines were not effective) for an epidemic to occur.
+
+::: {.callout-note}
+The above calculations and statements are assuming ideal vaccination practices at the beginning of an outbreak when nearly all individuals are susceptible and almost none are recovered or infectious. If vaccination is implemented mid-outbreak, when the number of recovered individuals with natural immunity and infectious individuals are not negligible, the calculations are different. In general, fewer individuals will have to be vaccinated than at the beginning of an outbreak to start the decline of the epidemic. 
+:::
+
+## Chapter References {.unnumbered .unlisted}

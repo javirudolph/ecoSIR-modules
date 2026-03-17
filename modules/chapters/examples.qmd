@@ -1,0 +1,94 @@
+---
+title: "Applications of SIR Models"
+format: live-html
+bibliography: reference.bib
+nocite: |
+  @drake_mle
+webr:
+  engine: knitr
+  packages:
+    - pracma
+    - bbmle
+---
+
+## Epidemic SIR Model: A Complete Worked Example {#sec-worked-example}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-worked-example, you should be able to:
+
+-   Synthesize the information from Chapters 2 through 7 to construct, solve, and analyze and SIR model using real-world data.
+:::
+
+Let's apply all the information and skills we just learned about to a complete worked example of an epidemic SIR model using real-world data from the 2017-2018 US influenza season.
+
+### Step 1: Introducing and Contextualizing Our Data {#sec-step-1 .unnumbered .unlisted}
+
+We will use a modified version of the data on the CDC's FluView tool, which tracks the weekly number of positive influenza tests reported to the CDC during the 2017–18 flu season in the US. The original data reports the number of tests sent into public labs (which report to the CDC) that came back positive for each strain of influenza. We aren't really interested in what specific strains of influenza are present, so we combined this information to just tell us how many new positive cases of influenza the labs reports each week. We also modified the time reporting of the data set. The original data set reported tests weekly starting from the 40th week of 2017 to the 39th week of 2018 (inclusive). To make the calculations and code easier, we modified the data to only report weeks since the 39th week of 2017. You can view the modified data set below. 
+
+```{r, echo=FALSE}
+library(readxl)
+library(DT)
+
+data <- read_excel("../data/disease_flu_2017_MODIFIED.xlsx")
+DT::datatable(data)
+```
+
+You might have noticed that this is actually incidence data, but so far, we have only gone over how to use prevalence data. We are actually going to use this data as an approximation to the true influenza prevalence. We can do this because prevalence is approximately equal to the incidence times the duration of infection [@tamu_inc]. According to the CDC, people are infectious with the flu for up to one day before symptoms appear and 5-7 days after [@flu_cdc]. Using this information, we can estimate the average duration of infection for influenza to be about 7 days (1 week). Our incidence data is reported weekly, so using our approximation for prevalence, we can say that the prevalence is approximately equal to our incidence data. 
+
+We are going to make another approximation about the size of the population which this data comes from ($N$). It might seem obvious to use the population size of the United States for $N$, but that doesn't account for the fact that this data only represents a very small portion of the total influenza cases seen in the 2017-18 flu season. Very few flu cases are sent to labs for testing, and even fewer of those cases are sent to the public labs which report their data to the CDC. We will assume a population size of $N=150000$ for this example simply because it produces a nice model fit!
+
+:::{.callout-important title="Disclaimer on this data"}
+In a true research context, these approximations for the prevalence and population size would not hold and more exact measures would have to be used. We are just using this data as a learning example to help build experience creating SIR models apply the knowledge gained from this module, so these assumptions are okay to make. 
+
+Because our data is not representative of the entire United States, we cannot apply our findings to make conclusions about the general influenza patterns in the US. Any findings or analysis on it that we do make can only be applied to a hypothetical context!
+:::
+
+### Step 2: Visualizing Our Data and Building Model Equations {.unnumbered .unlisted}
+
+Before we construct our SIR model equations, let's get an idea of what our data even looks like plotted. 
+
+```{webr-r}
+# Importing our data set from GitHub
+data <- read.csv("")
+
+```
+
+model equations should look like. Since we are using count instead of proportions, our model equations will look like so:
+
+<br>
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta \left(\frac{I}{N}\right)  S \\[10pt]
+\frac{dI}{dt} &= \beta \left(\frac{I}{N}\right)  S - \gamma I \\[10pt]
+\frac{dR}{dt} &= \gamma I
+\end{aligned}
+$$
+
+<br>
+
+- $\beta$: Transmission rate
+
+- $\gamma$: Recovery rate
+
+- $N$: Population size
+
+Read through [Sections @sec-the-classic-sir-epidemic-model and @sec-formulating-foi] if you need a refresher on how we derive these model equations. We can also represent our model with the following flowchart:
+
+### Step 3: Estimating Our Model Parameters {.unnumbered .unlisted}
+
+Our model only has two parameters: the recovery rate ($\gamma$) and the transmission rate ($\beta$) . We should estimate the recovery rate first because we will need it later when we estimate the transmission rate using MLE. 
+
+Recalling from [Section @sec-formulating-the-recovery-rate], we can estimate the recovery rate as $\gamma=\frac{1}{D}$ where $D$ is the average duration of infection (i.e. how long individuals are contagious with the disease). Like we mentioned previously in @sec-step-1, influenza is contagious up to 1 day before symptoms appear and up to 5-7 days after. This gives us a total range of 6-8 days that a person with the flu is infectious. For the sake of simplicity, we will use the median value of this range and suppose that $D=7 \text{ days}$. This gives us an estimated recovery rate of $\gamma=\frac{1}{7} \text{ day}^{-1}$. Our data is measured in units of weeks, not days, so using a simple conversion we our final estimated recovery rate is $\gamma=1 \text{ week}^{-1}$.
+
+:::{.callout-note}
+Although people are technically infectious with the flu for 6-8 days, the contagiousness of the flu is at its highest during the first 3-4 days after symptoms start and dramatically reduce thereafter [@cleveland_clinic_flu]. More complex SIR models intended for research purposes would take this into account, but our simple estimation for $\gamma$ is good enough for this application. 
+:::
+
+Now that we have an estimate for our recovery rate, let's shift our focus to estimate our transmission rate $\beta$. 
+
+### Step 4: Visualizing Our Model {.unnumbered .unlisted}
+
+### Step 1: Analyzing and Evaluating Our Model {.unnumbered .unlisted}
+
+## Epidemic SIR Model: Real-World Example

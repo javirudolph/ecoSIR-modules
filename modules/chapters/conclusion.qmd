@@ -1,0 +1,18 @@
+---
+title: "Conclusion and Additional Resources"
+format: html
+editor: visual
+---
+
+## Closing Statement {.unlisted}
+We've come to the end of our introduction and overview of SIR models! Although this marks the end of this module, we hope this is just the beginning of your journey to learning, applying, and appreciating the world of disease modeling. There is still so much to learn that we have not gone over: constructing and analyzing compartmental models with different compartments (like the SEIR model which has the "exposed" compartment), doing MLE with incidence instead of prevalence data, finding the final epidemic size, and so much more. 
+
+We also hope that, in addition to gaining a new appreciation for disease modeling, you have developed a greater sense of computational literacy, or using computers to explore, analyze, and better understand problems in biology, epidemiology, mathematics, and beyond. 
+
+## Closing Survey
+
+Place survey link here
+
+## Further Readings
+
+Put further readings here (andres handel book)
