@@ -43,7 +43,7 @@ Two common methods of solving differential equations that are difficult to solve
 1.  **Euler's method**
 2.  **Fourth-Order Runge-Kutta method** (implemented using the `pracma` package in R)
 
-We will go over each method separately in [Sections @sec-euler-method] and [@sec-pracma] and the differences between the two in [Section @sec-evaluating-and-comparing-both-methods].
+We will go over each method separately in [@sec-euler-method] and [@sec-pracma] and the differences between the two in [Section @sec-evaluating-and-comparing-both-methods].
 
 
 ## Euler's Method {#sec-euler-method}
@@ -98,9 +98,17 @@ These approximations are found using the following recursive formulas:
 
 $$
 \begin{aligned}
-s_{t+1} &= s_t - \Delta t \, \beta \left(\frac{i_t}{N}\right) s_t \\[10pt]
-i_{t+1} &= i_t + \Delta t \, \left[\beta \left(\frac{i_t}{N}\right) s_t - \gamma i_t\right] \\[10pt]
-r_{t+1} &= r_t + \Delta t \, \gamma i_t
+s_{t+1} &= s_t - \Delta t \, \big( \beta \big) 
+\left( \frac{i_t}{N} \right) 
+\big( s_t \big) \\[10pt]
+
+i_{t+1} &= i_t + \Delta t \,
+\left[
+\beta \left( \frac{i_t}{N} \right) (s_t)
+- \gamma (i_t)
+\right] \\[10pt]
+
+r_{t+1} &= r_t + \Delta t \, \big( \gamma \big) (i_t)
 \end{aligned}
 $$
 
@@ -112,15 +120,15 @@ $$
 
 -   $\Delta t$: Step size (how far each node is spaced apart on the $t$-axis)
 
--   $N$, $\beta$, $gamma$: Population size, transmission rate, and recovery rate, respectively 
+-   $N$, $\beta$, $\gamma$: Population size, transmission rate, and recovery rate, respectively 
 
 ::: {.callout-note collapse="true"}
 ## How does this connect back to the "general" way of doing Euler's method?
 
-This formula is just an application of the generalized Euler's method for first-order differential equation $Y'(t)=f(t,Y(t))$, true solution $Y(t)$, and approximate solutions $y_0,\dots,y_t,\dots,y_b$, which are calculated at evenly spaced $t_n$ as:
+This formula is just an application of the generalized Euler's method for first-order differential equation $Y'(t)=f\big(t,Y(t)\big)$, true solution $Y(t)$, and approximate solutions $y_0,\dots,y_t,\dots,y_b$, which are calculated at evenly spaced $t_n$ as:
 
 $$
-y_{t+1}=y_t+ \Delta t f(t_n,Y(t_n)
+y_{t+1}=y_t+ \Delta t \big[f\big(t_n,Y(t_n)\big)\big]
 $$
 
 Where $\Delta t$ still represents how far each $t_n$ are apart.
@@ -187,7 +195,7 @@ beta <- 1.5
 gamma <- 0.5
 
 # With these values, the average infectious period is:
-cat("Average infectious period:", 1/gamma, "time units")
+cat("Average infectious period:", 1 / gamma, "time units")
 ```
 
 ---
@@ -198,12 +206,12 @@ Before the model can run, we need to specify where the system starts. In an epid
 
 ```{webr-r}
 # Starting proportions — must sum to 1
-S0 <- 0.99   # 99% susceptible: nearly everyone is susceptible at the start
-I0 <- 0.01   # 1% infectious: a small "spark" of infection enters the population
-R0_start <- 0.00   # 0% recovered: no prior immunity
+S0 <- 0.99 # 99% susceptible: nearly everyone is susceptible at the start
+I0 <- 0.01 # 1% infectious: small "spark" of infection enters population
+R0_start <- 0.00 # 0% recovered: no prior immunity
 
 # Verify they sum to 1 (a good sanity check to build into your code)
-cat("S0 + I0 + R0 =", S0 + I0 + R0_start, "\n")
+cat("S0 + I0 + R0 =", S0 + I0 + R0_start)
 ```
 
 This sanity check, confirming that proportions sum to 1 — is a simple example of a habit that will save you debugging time later. When you add more compartments (SEIR, endemic model), this check generalizes naturally.
@@ -215,15 +223,15 @@ This sanity check, confirming that proportions sum to 1 — is a simple example 
 Euler's method steps through time discretely. We need to decide how far apart those steps are ($\Delta t$, the step size) and how long to simulate.
 
 ```{webr-r}
-dt    <- 0.1   # step size — try making this larger later to see what breaks
-t_end <- 50    # total simulation time
+dt <- 0.1 # step size — try making this larger later to see what breaks
+t_end <- 50 # total simulation time
 
 # Create a vector of all time points
-times   <- seq(0, t_end, by = dt)
+times <- seq(0, t_end, by = dt)
 n_steps <- length(times)
 
 cat("Number of time steps:", n_steps, "\n")
-cat("Time points run from", times[1], "to", times[n_steps], "\n")
+cat("Time points run from", times[1], "to", times[n_steps])
 ```
 
 The step size is a computational choice, not a biological one, but it affects accuracy. A smaller $\Delta t$ gives a more accurate approximation of the continuous solution, at the cost of more computation. We will explore this tradeoff shortly.
@@ -245,7 +253,7 @@ S[1] <- S0
 I[1] <- I0
 R[1] <- R0_start
 
-cat("Storage ready. First values: S =", S[1], " I =", I[1], " R =", R[1], "\n")
+cat("Storage ready. First values: S =", S[1], " I =", I[1], " R =", R[1])
 ```
 
 Think of these vectors as the model's memory: they store the entire trajectory of the epidemic, one row per time step.
@@ -258,22 +266,23 @@ This is where the model actually runs. At each time step, we calculate the rates
 
 ```{webr-r}
 for (t in 1:(n_steps - 1)) {
-
   # Rate of change: these ARE the SIR equations, written as code
-  dS <- -beta * I[t] * S[t]                    # new infections leaving S
-  dI <-  beta * I[t] * S[t] - gamma * I[t]     # gain infections, lose recoveries
-  dR <-  gamma * I[t]                          # recoveries entering R
+  dS <- -beta * I[t] * S[t] # new infections leaving S
+  dI <- beta * I[t] * S[t] - gamma * I[t] # gain infections, lose recoveries
+  dR <- gamma * I[t] # recoveries entering R
 
   # Step forward: current value + (step size × rate of change)
-  S[t+1] <- S[t] + dt * dS
-  I[t+1] <- I[t] + dt * dI
-  R[t+1] <- R[t] + dt * dR
+  S[t + 1] <- S[t] + dt * dS
+  I[t + 1] <- I[t] + dt * dI
+  R[t + 1] <- R[t] + dt * dR
 }
 
 # Quick check: do the compartments still sum to 1 at the end?
-cat("Final values: S =", round(S[n_steps], 4),
-    " I =", round(I[n_steps], 4),
-    " R =", round(R[n_steps], 4), "\n")
+cat(
+  "Final values: S =", round(S[n_steps], 4),
+  " I =", round(I[n_steps], 4),
+  " R =", round(R[n_steps], 4), "\n"
+)
 cat("Sum:", round(S[n_steps] + I[n_steps] + R[n_steps], 6), "\n")
 ```
 
@@ -286,14 +295,25 @@ The loop is doing exactly what the Euler update formulas say, mechanically, one 
 The vectors `S`, `I`, and `R` now hold the full epidemic trajectory. We can plot them against time.
 
 ```{webr-r}
-plot(times, S, type = "l", col = "steelblue", lwd = 2,
-     ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
-     main = paste0("SIR Epidemic (Euler)  |  β=", beta,
-                   "  γ=", gamma, "  R₀=", round(beta/gamma, 2)))
+# Plotting susceptible curve
+plot(times, S,
+  type = "l", col = "steelblue", lwd = 2,
+  ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
+  main = paste0(
+    "SIR Epidemic (Euler)  |  β=", beta,
+    "  γ=", gamma, "  R₀=", round(beta / gamma, 2)
+  )
+)
+
+# Adding infectious and recovered curves
 lines(times, I, col = "firebrick", lwd = 2)
-lines(times, R, col = "seagreen",  lwd = 2)
-legend("right", legend = c("Susceptible", "Infectious", "Recovered"),
-       col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n")
+lines(times, R, col = "seagreen", lwd = 2)
+
+# Adding a legend
+legend("right",
+  legend = c("Susceptible", "Infectious", "Recovered"),
+  col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n"
+)
 ```
 
 ::: {.callout-tip title="Try this"}
@@ -353,31 +373,31 @@ Before we can call `rk4sys`, let's go over how to code the function to be passed
 **Step 1: Code the model function.**
 
 ```{webr-r}
-# Function Inputs: A time and a vector of the model proportions at that time
+# Function Inputs: A time and vector of the model proportions at that time
 # Function Outputs: The rates of change for S, I, R at the input time
-ModelFunc <- function(time,state){
-  # Extracting the state variables: susceptible, infected, and recovered (S,I,R)
+ModelFunc <- function(time, state) {
+  # Extracting state variables: susceptible, infected, and recovered
   S <- state[1]
   I <- state[2]
   R <- state[3]
-  
+
   # Specifying the model parameters
   # We only have two parameters - the transmission and recovery rate
   # These parameters will change depending on the model
   beta <- 1.5
   gamma <- 0.5
-  
+
   # Constructing our SIR model equations
-  dS <- -(beta*I*S)
-  dI <- (beta*I*S) - (gamma*I)
-  dR <- (gamma*I)
-  
+  dS <- -(beta * I * S)
+  dI <- (beta * I * S) - (gamma * I)
+  dR <- (gamma * I)
+
   # Now we will return those model equations as a vector
-  return(c(dS,dI,dR))
+  return(c(dS, dI, dR))
 }
 
 # Example call
-ModelFunc(1,c(S=0.99,I=0.01,R=0))
+ModelFunc(1, c(S = 0.99, I = 0.01, R = 0))
 ```
 
 ---
@@ -393,13 +413,13 @@ end <- 20
 
 # Initial values to be passed into the parameter y
 # Make sure values line up with the state variables in the model function
-initial_vals <- c(S=0.99,I=0.01,R=0)
+initial_vals <- c(S = 0.99, I = 0.01, R = 0)
 
 # How many steps to take from a to b
 step_size <- 10
 
-# Printing the times at which solutions will be found 
-print(seq(start,end,by=(end-start)/step_size))
+# Printing the times at which solutions will be found
+print(seq(start, end, by = (end - start) / step_size))
 ```
 
 We now have everything we need to call `rk4sys`. 
@@ -411,12 +431,14 @@ We now have everything we need to call `rk4sys`.
 ```{webr-r}
 library(pracma)
 
-# Make sure the values we defined are being passed into the correct arguments
-output <- rk4sys(f=ModelFunc,
-                 a=start,
-                 b=end,
-                 y0=initial_vals,
-                 n=step_size)
+# Make sure the values we defined are passed into the correct arguments
+output <- rk4sys(
+  f = ModelFunc,
+  a = start,
+  b = end,
+  y0 = initial_vals,
+  n = step_size
+)
 
 # Converting the output matrix to a data frame and printing it
 output <- as.data.frame(output)
@@ -437,15 +459,22 @@ R <- output$y.R
 beta <- 1.5
 gamma <- 0.5
 
-plot(times, S, type = "l", col = "steelblue", lwd = 2,
-     ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
-     main = paste0("SIR Epidemic (Runge-Kutta)  |  β=", beta,
-                   "  γ=", gamma, "  R₀=", round(beta/gamma, 2)))
-lines(times, I, col = "firebrick", lwd = 2)
-lines(times, R, col = "seagreen",  lwd = 2)
+plot(times, S,
+  type = "l", col = "steelblue", lwd = 2,
+  ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
+  main = paste0(
+    "SIR Epidemic (Runge-Kutta)  |  β=", beta,
+    "  γ=", gamma, "  R₀=", round(beta / gamma, 2)
+  )
+)
 
-legend("right", legend = c("Susceptible", "Infectious", "Recovered"),
-       col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n")
+lines(times, I, col = "firebrick", lwd = 2)
+lines(times, R, col = "seagreen", lwd = 2)
+
+legend("right",
+  legend = c("Susceptible", "Infectious", "Recovered"),
+  col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n"
+)
 ```
 
 ::: {.callout-tip title="Try this"}

@@ -21,7 +21,7 @@ By the end of @sec-formulating-transmission-rate, you should be able to:
 - Explain how and why logarithms are used in MLE. 
 :::
 
-*Maximum likelihood estimation*, often shorthanded as MLE, is a statistical method used to estimate the value of an unknown parameter by choosing the value that makes some observed (real-world) data most probable. MLE is a common way to estimate the transmission rate $\beta$. MLE falls under the category of **blackbox methods**, which we introduced and defined in [Section @sec-formulating-foi]. 
+*Maximum likelihood estimation*, often shorthanded as MLE, is a statistical method used to estimate the value of an unknown parameter by choosing the value that makes some observed (real-world) data most probable. This value is called the *maximum likelihood estimate* for a parameter. MLE is a common way to estimate the transmission rate $\beta$. MLE falls under the category of **blackbox methods**, which we introduced and defined in [Section @sec-formulating-foi]. 
 
 Recalling from [Section @sec-formulating-the-recovery-rate], we estimate the recovery rate using prior literature on the average duration of infection. Since we estimate the recovery rate using means other than MLE, we hold it constant and only use MLE to estimate the value of the transmission rate $\beta$ [@parameter_estimation]. We are only going to go over MLE as it directly applies to estimating $\beta$ for an epidemic SIR model, but the Wikipedia article on maximum likelihood estimation goes more into its general mathematical framework [@wiki_mle].
 
@@ -75,7 +75,7 @@ Interpreting this in the context of finding the likelihood function for our prev
 
 | **Formula** | **Input(s)** | **Output**|                                                                                                                                                                                                                      
 |--------------------------------------|------------------------------|------------------------------|
-|$\mathcal{L}(\beta;D_i)={N \choose D_i}\left(\frac{I(t,\beta)}{N}\right)^{D_i}\left(1-\frac{I(t,\beta)}{N}\right)^{N-D_i}$ | The SIR model (defined by its transmission rate $\beta$) | The probability of observing a fixed piece of prevalence data $D_i$ (observed at a time $t$) given the transmission rate $\beta$ | 
+|$\mathcal{L}(\beta;D_i)={N \choose D_i}\left(\frac{I(t,\beta)}{N}\right)^{D_i}\left(1-\frac{I(t,\beta)}{N}\right)^{N-D_i}$ | An SIR model (defined by its transmission rate $\beta$) | The probability of observing a fixed piece of prevalence data $D_i$ (observed at a time $t$) given the transmission rate $\beta$ | 
 
 <br>
 
@@ -94,7 +94,7 @@ The three dots notation (also called an ellipses) in math is a placeholder for o
 We will call $\mathcal{L}(\beta;D_i)$ the point likelihood function (because it gives the likelihood of individual data points) and $\mathcal{L}(\beta;S)$ the sample likelihood function (because it gives the likelihood of the entire sample of data). Using our previously found point likelihoods, the sample likelihood for our prevalence data (assuming it comes from a binomial distribution) is:
 
 $$
-\mathcal{L}(\beta;D_i)={N \choose D_i}\left(\frac{I(t,\beta)}{N}\right)^{D_i}\left(1-\frac{I(t,\beta)}{N}\right)^{N-D_i}
+\mathcal{L}(\beta;D_i)={N \choose D_i}\left(\frac{I(t,\beta )}{N}\right)^{D_i}\left(1-\frac{I(t,\beta)}{N}\right)^{N-D_i}
 $$
 
 Now that we have our sample likelihood function, the hard part is over! All we have to do now is iterate through plausible values of $\beta$, calculate the sample likelihood $\mathcal{L}(\beta;S)$ for each, and find the maximum sample likelihood among them. We estimate the $\beta$ in our model to be whatever gives this maximum likelihood, and we are done! 
@@ -206,9 +206,9 @@ library(pracma)
 # Ensures that the random processes run the same every time
 set.seed(123)
 
-# Function Inputs: A time, proportions at that time, and the model parameters
+# Function Inputs: A time, proportions at that time, and model parameters
 # Function Outputs: The rates of change for S, I, R at the input time
-ModelFunc <- function(time,state,parameters){
+ModelFunc <- function(time, state, parameters) {
   S <- state[1]
   I <- state[2]
   R <- state[3]
@@ -217,17 +217,17 @@ ModelFunc <- function(time,state,parameters){
   gamma <- parameters["gamma"]
   N <- parameters["N"]
 
-  dS <- -(beta*I*S/N)
-  dI <- (beta*I*S/N) - (gamma*I)
-  dR <- (gamma*I)
+  dS <- -(beta * I * S / N)
+  dI <- (beta * I * S / N) - (gamma * I)
+  dR <- (gamma * I)
 
-  return(c(dS,dI,dR))
+  return(c(dS, dI, dR))
 }
 
 # Parameters of the SIR model from which our data will be generated
 model_parameters <- c(beta = 1.2, gamma = 0.7, N = 1000)
 
-# Number of S,I,R at the beginning of the epidemic (initial state variables)
+# Number of S,I,R at the beginning of the epidemic (initial variables)
 initial_vals <- c(S = 999, I = 1, R = 0)
 
 # Specifying how many days to generate data for
@@ -236,29 +236,35 @@ t_end <- 35
 step_size <- t_end - t_start
 
 # Solving SIR equation at specified output times
-output <- rk4sys(f = function(t,y) ModelFunc(t,y,model_parameters),
-                 a = t_start,
-                 b = t_end,
-                 y0=initial_vals,
-                 n = step_size)
+output <- rk4sys(
+  f = function(t, y) ModelFunc(t, y, model_parameters),
+  a = t_start,
+  b = t_end,
+  y0 = initial_vals,
+  n = step_size
+)
 
 # Converting the output matrix to a data frame
 output <- as.data.frame(output)
 
-#Extracting only the prevalences (infected counts)
+# Extracting only the prevalences (infected counts)
 I_true <- output$y.I
 
 # Adding noise to the true prevalence (to mimic random sampling)
-# NOTE: "noise" refers to random errors / variation in the data
+# NOTE: "Noise" refers to random errors / variation in the data
 # Following from our assumptions, the noise is binomially distributed
 pop_size <- sum(initial_vals)
-I_observed <- rbinom(length(I_true), 
-                     size = pop_size, 
-                     prob = I_true/pop_size)
+I_observed <- rbinom(length(I_true),
+  size = pop_size,
+  prob = I_true / pop_size
+)
 
 # Saving the predicted prevalences as a data frame
-data <- data.frame(day = t_start:t_end,
-                   prevalence_count = I_observed)
+data <- data.frame(
+  day = t_start:t_end,
+  prevalence_count = I_observed
+)
+
 data
 ```
 
@@ -273,32 +279,34 @@ We now have our data and a function for our SIR model called `ModelFunc` (if you
 ```{webr-r}
 # Function Inputs: Named vector of model parameters and a vector of times
 # Function Outputs: Predicted prevalences at input times
-pred <- function(parameters,t){
-  initial_vals <- c(S=999,I=1,R=0)
+pred <- function(parameters, t) {
+  initial_vals <- c(S = 999, I = 1, R = 0)
   t_start <- 0
   t_end <- max(t)
   step_size <- t_end - t_start
-  
-    # Calling rk4sys to solve our model equations
-  output <- rk4sys(f=function(t,y) ModelFunc(t,y,parameters),
-                   a=t_start,
-                   b=t_end,
-                   y0=initial_vals,
-                   n=step_size)
-  
+
+  # Calling rk4sys to solve our model equations
+  output <- rk4sys(
+    f = function(t, y) ModelFunc(t, y, parameters),
+    a = t_start,
+    b = t_end,
+    y0 = initial_vals,
+    n = step_size
+  )
+
   # Extracting only the predicted prevalences at the input times
   output_df <- as.data.frame(output)
   prevalences <- output_df$y.I[t]
 
   # Ensuring there are no NaNs or out of bounds numbers
   # NaNs are produced when a decimal becomes too small to represent
-  prevalences[is.nan(prevalences) | prevalences < 0 ] <- 0
-  
+  prevalences[is.nan(prevalences) | prevalences < 0] <- 0
+
   return(prevalences)
 }
 
-# Example calls
-pred(c(beta=1.2,gamma=0.7,N=1000),c(13,14,15))
+# Example call
+pred(c(beta = 1.2, gamma = 0.7, N = 1000), c(13, 14, 15))
 ```
 
 Now that we have our function to output the predicted prevalences given by our SIR model, we need to code a function to calculate the log-likelihood of the entire data set given certain model parameters.
@@ -310,64 +318,65 @@ Now that we have our function to output the predicted prevalences given by our S
 ```{webr-r}
 # Function Inputs: Named vector of model parameters and the data set
 # Function Outputs: Log-likelihood of entire data set
-binomial_ll <- function(parameters,data){
+binomial_ll <- function(parameters, data) {
   times <- data$day
-  predicted <- pred(parameters,times)
+  predicted <- pred(parameters, times)
   pop_size <- parameters["N"]
-  
+
   # Note: The function dbinom gives binomial probabilities
-  sum(dbinom(x=data$prevalence_count,
-             size = pop_size, 
-             prob = predicted/pop_size,
-             log=TRUE))
+  sum(dbinom(
+    x = data$prevalence_count,
+    size = pop_size,
+    prob = predicted / pop_size,
+    log = TRUE
+  ))
 }
 
 # Example call
-binomial_ll(c(beta=1.4,gamma=0.7,N=1000),data)
-binomial_ll(c(beta=2.3,gamma=0.7,N=1000),data)
+binomial_ll(c(beta = 1.4, gamma = 0.7, N = 1000), data)
+binomial_ll(c(beta = 2.3, gamma = 0.7, N = 1000), data)
 ```
 
 Our final step is to code a driver function that iterates through plausible values of $\beta$, calculating the log-likelihood of the entire set of data for each, and outputs the maximum likelihood estimator for $\beta$ (i.e. the $\beta$ which produces the greatest log-likelihood).
 
 ---
 
-**Step 4: Code a function to return the maximum likelihood estimator.**
-
 ```{webr-r}
 # Function Inputs: Upper limit on the value of beta and the data set
-# Function Ouputs: A plot of the log-likelihoods and the estimate for beta
-mle <- function(plausible_beta,data){
-  range_beta <- seq(1,plausible_beta,by=0.01)
-  
+# Function Outputs: Plot of the log-likelihoods the estimate for beta
+mle <- function(plausible_beta, data) {
+  range_beta <- seq(1, plausible_beta, by = 0.01)
+
   # Data frame of log-likelihoods for each beta
   all_ll <- data.frame()
-  
-  for (beta in range_beta){
-    params <- c(beta=beta,gamma=0.7,N=1000)
-    new_ll <- data.frame(beta=beta,ll=binomial_ll(params,data))
-    all_ll <- rbind(all_ll,new_ll)
+
+  for (beta in range_beta) {
+    params <- c(beta = beta, gamma = 0.7, N = 1000)
+    new_ll <- data.frame(beta = beta, ll = binomial_ll(params, data))
+    all_ll <- rbind(all_ll, new_ll)
   }
-  
+
   # Finding the beta that results in the greatest log-likelihood
   beta_mle <- all_ll$beta[which.max(all_ll$ll)]
-  
-  
+
+
   # Plotting all the log-likelihoods against the betas
   plot(all_ll$beta,
-       all_ll$ll,
-       type="l",xlab="beta",
-       ylab="log-likelihood",
-       main="Log-likelihood vs Beta")
-  
-  # Plotting a separate line where the maximum likelihood estimate for beta is 
+    all_ll$ll,
+    type = "l", xlab = "beta",
+    ylab = "log-likelihood",
+    main = "Log-likelihood vs Beta"
+  )
+
+  # Plotting a dotted line where the estimate for beta is
   beta_mle <- all_ll$beta[which.max(all_ll$ll)]
-  abline(v=beta_mle,lty=2)
+  abline(v = beta_mle, lty = 2)
 
   # Returning the estimate
   return(beta_mle)
 }
 
-mle(5,data)
+mle(5, data)
 ```
 
 ::: {.callout-tip title="Try this"}
@@ -402,7 +411,7 @@ library(pracma)
 set.seed(123)
 
 # SIR model function
-ModelFunc <- function(time,state,parameters){
+ModelFunc <- function(time, state, parameters) {
   S <- state[1]
   I <- state[2]
   R <- state[3]
@@ -411,17 +420,17 @@ ModelFunc <- function(time,state,parameters){
   gamma <- parameters["gamma"]
   N <- parameters["N"]
 
-  dS <- -(beta*I*S/N)
-  dI <- (beta*I*S/N) - (gamma*I)
-  dR <- (gamma*I)
+  dS <- -(beta * I * S / N)
+  dI <- (beta * I * S / N) - (gamma * I)
+  dR <- (gamma * I)
 
-  return(c(dS,dI,dR))
+  return(c(dS, dI, dR))
 }
 
 # Parameters of the SIR model from which our data will be generated
 model_parameters <- c(beta = 1.2, gamma = 0.7, N = 1000)
 
-# Number of S,I,R at the beginning of the epidemic (initial state variables)
+# Number of S,I,R at the beginning of the epidemic (initial variables)
 initial_vals <- c(S = 999, I = 1, R = 0)
 
 # Specifying how many days to generate data for
@@ -430,11 +439,13 @@ t_end <- 35
 step_size <- t_end - t_start
 
 # Solving SIR equation at specified output times
-output <- rk4sys(f = function(t,y) ModelFunc(t,y,model_parameters),
-                 a = t_start,
-                 b = t_end,
-                 y0=initial_vals,
-                 n = step_size)
+output <- rk4sys(
+  f = function(t, y) ModelFunc(t, y, model_parameters),
+  a = t_start,
+  b = t_end,
+  y0 = initial_vals,
+  n = step_size
+)
 
 # Extracting the true prevalences
 output_df <- as.data.frame(output)
@@ -444,8 +455,10 @@ I_true <- output_df$y.I
 I_observed <- rpois(length(I_true), lambda = I_true)
 
 # Saving the predicted prevalences as a data frame
-data <- data.frame(day = t_start:t_end,
-                   prevalence_count = I_observed)
+data <- data.frame(
+  day = t_start:t_end,
+  prevalence_count = I_observed
+)
 
 data
 ```
@@ -471,7 +484,7 @@ Before we can call `mle2`, let's first code the function we will pass into `minu
 
 **Step 2: Code a function to output negative log-likelihoods.**
 
-This is nearly identical to the code that was used to output predicted prevalences and log-likelihoods in [Section @sec-coding-scratch] (see **Step 2** and **Step 3** there). The main difference is that our function `binomial_ll` takes in slightly different values and outputs negative log-likelihoods instead of positive log-likelihoods. 
+This is nearly identical to the code that was used to output predicted prevalences and log-likelihoods in [Section @sec-coding-scratch] (see **Step 2** and **Step 3** there). The main difference is that our function `binomial_ll` takes in slightly different values and outputs **negative** log-likelihoods instead of positive log-likelihoods. 
 
 The reason `binomial_ll` takes in different values this time is because `mle2` requires that our likelihood function only take in the model equation parameters to be estimated ($\beta$). 
 
@@ -480,41 +493,45 @@ library(bbmle)
 
 # Function Inputs: Named vector of model parameters and a vector of times
 # Function Outputs: Predicted prevalences at input times
-pred <- function(parameters,t){
-  initial_vals <- c(S=999,I=1,R=0)
+pred <- function(parameters, t) {
+  initial_vals <- c(S = 999, I = 1, R = 0)
   t_start <- 0
   t_end <- max(t)
   step_size <- t_end - t_start
-  
+
   # Calling rk4sys to solve our model equations
-  output <- rk4sys(f=function(t,y) ModelFunc(t,y,parameters),
-                   a=t_start,
-                   b=t_end,
-                   y0=initial_vals,
-                   n=step_size)
-  
+  output <- rk4sys(
+    f = function(t, y) ModelFunc(t, y, parameters),
+    a = t_start,
+    b = t_end,
+    y0 = initial_vals,
+    n = step_size
+  )
+
   # Extracting predicted prevalences
   output_df <- as.data.frame(output)
   prevalences <- output_df$y.I[t]
 
   # Ensuring there are no NaNs or out of bounds numbers
-  prevalences[is.nan(prevalences) | prevalences < 0 ] <- 0
-  
+  prevalences[is.nan(prevalences) | prevalences < 0] <- 0
+
   return(prevalences)
 }
-  
+
 # Function Inputs: A named list containing a value for beta
-# Function Outputs: The log-likelihood of the data given the input beta
-binomial_ll <- function(b){
+# Function Outputs: The negative log-likelihood of the entire data set
+binomial_ll <- function(b) {
   times <- data$day
-  parameters <- c(beta=b,gamma=0.7,N=1000)
-  predicted <- pred(parameters,times)
-  
+  parameters <- c(beta = b, gamma = 0.7, N = 1000)
+  predicted <- pred(parameters, times)
+
   # Returns the negative log-likelihood
-  -sum(dbinom(x=data$prevalence_count,
-           size = parameters["N"], 
-           prob = predicted/parameters["N"],
-           log=TRUE))
+  -sum(dbinom(
+    x = data$prevalence_count,
+    size = parameters["N"],
+    prob = predicted / parameters["N"],
+    log = TRUE
+  ))
 }
 
 # Example call
@@ -529,16 +546,18 @@ All we have left to do now is specify the other values to be passed (for `start`
 
 ```{webr-r}
 # Our initial guess for what beta is
-# NOTE: Try making the initial guess one that is plausibly close to the true parameter
+# NOTE: Make tge initial guess plausibly close to the true parameter
 # If our guess is too far off then mle2 might return some errors
-start <- list(b=2)
+start <- list(b = 2)
 
-# Using the L-BFGS-B algorithm / method for MLE 
-# Setting the lower bound to be small but positive since beta is non-negative
-result <- mle2(minuslogl=binomial_ll,
-                         start=start,
-                         method="L-BFGS-B",
-                         lower=c(b=0.01))
+# Using the L-BFGS-B algorithm / method for MLE
+# Setting the lower bound to be small but positive (beta > 0)
+result <- mle2(
+  minuslogl = binomial_ll,
+  start = start,
+  method = "L-BFGS-B",
+  lower = c(b = 0.01)
+)
 
 # Printing our estimate for beta
 coef(result)

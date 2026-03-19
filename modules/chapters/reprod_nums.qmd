@@ -4,10 +4,6 @@ format: live-html
 bibliography: reference.bib
 nocite: |
   @keeling_modeling_2008
-webr:
-  engine: knitr
-  packages:
-    - pracma
 ---
 
 ## Intro to Reproduction Numbers {#sec-reproduction-numbers}
@@ -75,7 +71,7 @@ $$
 \frac{d\tilde{I}}{dt} = \tilde{I}(\beta \tilde{S} - \gamma)
 $$ 
 
-To find the point at which the infection either invades the population or fails to, we should solve for when $\frac{d\tilde{I}}{dt}=0$. Why zero? Well, when $\frac{d\tilde{I}}{dt}<0$ it means the proportion of infectious individuals is decreasing (i.e. the disease is "dying off") but when $\frac{d\tilde{I}}{dt}>0$ it means the proportion of infectious individuals is increasing (i.e. the disease is "growing"). So setting the rate of change of the infectious compartment equal to zero and solving gives us a "tipping point": above it the disease spreads, and below it the disease shrinks. Let's do that now:
+To find the point at which the infection either invades the population or fails to, we should solve for when $\frac{d\tilde{I}}{dt}=0$. Why zero? Well, when $\frac{d\tilde{I}}{dt}<0$ it means the proportion of infectious individuals is decreasing (i.e. the disease is dying off) but when $\frac{d\tilde{I}}{dt}>0$ it means the proportion of infectious individuals is increasing (i.e. the disease is growing). So setting the rate of change of the infectious compartment equal to zero and solving gives us a "tipping point": above it the disease spreads, and below it the disease shrinks. Let's do that now:
 
 $$
 \begin{aligned}
@@ -93,7 +89,7 @@ Notice that $\frac{\gamma}{\beta}$ is exactly equal to the reciprocal of the bas
 
 | **Condition**                    | **Condition in terms of $R_0$** | **What Is This Telling Us?** |
 |-------------------|-----------------------|---------------------------------------------------------------------------------|
-| $\tilde{S}<\frac{\gamma}{\beta}$ | $\tilde{S}<\frac{1}{R_0}$       | If the initial proportion of susceptible individuals is less than $\frac{1}{R_0}$, then the disease never invades the population (i.e. an epidemic doesn't occur). Similarly, if the proportion of susceptible individuals at any given time is less than $\frac{1}{R_0}$, then the infectious population is shrinking (i.e. the disease is "dying off").   |
+| $\tilde{S}<\frac{\gamma}{\beta}$ | $\tilde{S}<\frac{1}{R_0}$       | If the initial proportion of susceptible individuals is less than $\frac{1}{R_0}$, then the disease never invades the population (i.e. an epidemic doesn't occur). Similarly, if the proportion of susceptible individuals at any given time is less than $\frac{1}{R_0}$, then the infectious population is shrinking (i.e. the disease is dying off).   |
 | $\tilde{S}>\frac{\gamma}{\beta}$ | $\tilde{S}>\frac{1}{R_0}$       |     If the initial proportion of susceptible individuals is greater than $\frac{1}{R_0}$, then the disease successfully invades the population (i.e. an epidemic occurs). Similarly, if the proportion of susceptible individuals at any given time is greater than $\frac{1}{R_0}$, then the infectious population is growing (i.e. the disease is spreading).  |                                                                                                                                                                                                                     
 
 <iframe src="https://a-tom.shinyapps.io/threshold_phenomenon_simulation/"
@@ -159,7 +155,7 @@ The simulation below demonstrates how the infected population increases, decreas
         style="border:none;"></iframe>
      
 ::: {.callout-tip title="Try this"}
-**TIP:** Double click on the "Infected" curve in the graph legend to isolate its curve.
+**TIP:** Double click on the red "Infected" curve in the legend to isolate it.
 
 1. Hover over the infected curve at different times. How does the effective reproduction number change as the epidemic progresses? What is the effective reproduction number when the proportion of infected individuals reaches a maximum? 
 :::

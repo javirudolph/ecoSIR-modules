@@ -21,7 +21,7 @@ By the end of this module, you should be able to:
 - Start thinking about real disease ecology problems from a computational perspective
 
 ::: {.callout-important title="How to use this module"}
-- Throughout this module, you will encounter **interactive code blocks**, these are live R sessions running directly in your browser. You do not need R installed. You are encouraged to **change the numbers, re-run the code, and see what happens.** That interaction is the point. Reading the math and reading the code together is how computational literacy develops. The code chunks in each section should be run in the order they appear. This is because each code chunk depends on the others (so code chunks might require the information defined in a previous chunk).
+- Throughout this module, you will encounter **interactive code blocks**, these are live R sessions running directly in your browser. You do not need R installed. You are encouraged to **change the numbers, re-run the code, and see what happens.** That interaction is the point. Reading the math and reading the code together is how computational literacy develops. The code chunks in each section should be run in the order they appear. This is because each code chunk depends on the others (so code chunks might require the information defined in a previous chunk). The every code chunk can be reset to their original state by clicking on the "Start Over" button at the top. 
 
 - This module is divided into chapters and sections within those chapters. Each section has their own learning objectives, which only apply to that specific section. 
 :::

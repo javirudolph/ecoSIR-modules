@@ -1,7 +1,6 @@
 ---
 title: "Conclusion and Additional Resources"
-format: html
-editor: visual
+format: live-html
 ---
 
 ## Closing Statement {.unlisted}
