@@ -28,5 +28,8 @@
   },
   "modules/01-sir-intro/compartments.qmd": {
     "compartments.html": "dfbd74bc"
+  },
+  "modules/01-sir-intro/sir-equations.qmd": {
+    "sir-equations.html": "bc082d7a"
   }
 }

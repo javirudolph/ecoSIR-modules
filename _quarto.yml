@@ -12,6 +12,7 @@ book:
   chapters:
       - index.qmd
       - modules/01-sir-intro/compartments.qmd
+      - modules/01-sir-intro/sir-equations.qmd
 
 
 bibliography: modules/reference.bib
