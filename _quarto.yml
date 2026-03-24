@@ -6,13 +6,13 @@ book:
   title: "Computational Thinking with SIR Models"
   subtitle: "A Disease Ecology Module"
   author:
-    - name: "Francisca Javiera Rudolph"
     - name: "Anjali Tomerlin"
+    - name: "Francisca Javiera Rudolph"
   date: today
   chapters:
       - index.qmd
       - modules/01-sir-intro/compartments.qmd
-      - modules/01-sir-intro/sir-equations.qmd
+      - modules/01-sir-intro/sir_equations.qmd
       - modules/01-sir-intro/solving_sir.qmd
 
 
