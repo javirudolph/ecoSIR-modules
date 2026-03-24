@@ -11,9 +11,10 @@ book:
   date: today
   chapters:
     - index.qmd
+bibliography: modules/reference.bib
 
 format:
-  html:
+  live-html:
     theme: cosmo
     number-sections: true
     toc: true
