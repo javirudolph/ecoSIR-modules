@@ -1,11 +1,10 @@
 ---
 title: "Solving SIR Models"
-format: live-html
+engine: knitr
 bibliography: reference.bib
 nocite: |
   @ode_book
 webr:
-  engine: knitr
   packages:
     - pracma
 ---
