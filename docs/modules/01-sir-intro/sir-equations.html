@@ -85,6 +85,7 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<link href="../../modules/01-sir-intro/solving_sir.html" rel="next">
 <link href="../../modules/01-sir-intro/compartments.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -213,6 +214,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../../modules/01-sir-intro/sir-equations.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The SIR Epidemic Model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/01-sir-intro/solving_sir.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Numerical Methods for Solving SIR Models</span></span></a>
   </div>
 </li>
     </ul>
@@ -704,7 +711,7 @@ Note
 <p>For the purposes and scope of this introductory module, we will only provide examples and insights into the blackbox method for calculating the transmission rate <span class="math inline">\(\beta\)</span>. This is because specifics of how <span class="math inline">\(c\)</span> and <span class="math inline">\(p\)</span> are calculated using the first-principles method depends heavily on model context and complexity, meaning there is no “one size fits all” way of finding <span class="math inline">\(\beta\)</span> using this method.</p>
 <p>Models will often formulate <span class="math inline">\(c\)</span> and <span class="math inline">\(p\)</span> as functions of their own depending on a number of external variables. An example of this can be found in this paper <span class="citation" data-cites="deer_covid">(<a href="#ref-deer_covid" role="doc-biblioref">Rosenblatt et al. 2023</a>)</span>, where the transmission rate <span class="math inline">\(\beta\)</span> is formulated as the product of the proximity rate <span class="math inline">\(\omega_{ij}\)</span>, or “frequency per day that host <span class="math inline">\(i\)</span> and recipient <span class="math inline">\(j\)</span> are within 1.5 meters (m) of each other” and <span class="math inline">\(\sigma^{Aero}\)</span>, or the “probability of infection from aerosols.” The paper further decomposes <span class="math inline">\(\omega_{ij}\)</span> and <span class="math inline">\(\sigma^{Aero}\)</span> into functions of their own depending on a variety of external variables.</p>
 <p>The specific formulations for the contact rate (or proximity rate) and infection probability utilized by this paper are unique to its context (the pathogen it is analyzing, the host population(s), etc.) and will vary widely from paper to paper.</p>
-<p>However, there are standardized procedures to obtain <span class="math inline">\(\beta\)</span> using the blackbox approach, of which one common method known as <em>maximum likelihood estimation</em>, or MLE for short, is covered in <span class="quarto-unresolved-ref">?sec-formulating-transmission-rate</span>. But before we can cover MLE, we must go over how to solve our SIR model equations first, which is the topic of <span class="quarto-unresolved-ref">?sec-solving-sir-equations</span>.</p>
+<p>However, there are standardized procedures to obtain <span class="math inline">\(\beta\)</span> using the blackbox approach, of which one common method known as <em>maximum likelihood estimation</em>, or MLE for short, is covered in <span class="quarto-unresolved-ref">?sec-formulating-transmission-rate</span>. But before we can cover MLE, we must go over how to solve our SIR model equations first, which is the topic of <a href="solving_sir.html#sec-solving-sir-equations" class="quarto-xref">Section&nbsp;<span>3.1</span></a>.</p>
 <p>The equations tell us how the system changes, but they do not tell us the values of S, I, and R at every point in time. For that, we need to solve them. That is the topic of the next chapter.</p>
 </section>
 <section id="chapter-references" class="level2 unnumbered unlisted">
@@ -1216,6 +1223,9 @@ window._ojs.runtime.interpretFromScriptTags();
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../../modules/01-sir-intro/solving_sir.html" class="pagination-link" aria-label="Numerical Methods for Solving SIR Models">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Numerical Methods for Solving SIR Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>

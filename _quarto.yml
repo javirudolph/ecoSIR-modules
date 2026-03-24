@@ -13,6 +13,7 @@ book:
       - index.qmd
       - modules/01-sir-intro/compartments.qmd
       - modules/01-sir-intro/sir-equations.qmd
+      - modules/01-sir-intro/solving_sir.qmd
 
 
 bibliography: modules/reference.bib

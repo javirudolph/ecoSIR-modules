@@ -1,13 +1,12 @@
 ---
-title: "Solving SIR Models"
+title: "Numerical Methods for Solving SIR Models"
 engine: knitr
-bibliography: reference.bib
-nocite: |
-  @ode_book
 webr:
   packages:
     - pracma
 ---
+
+The SIR equations tell us the rate at which each compartment changes. But a rate of change is not the same as a trajectory. To get from "how fast things are moving" to "where things are at every point in time," we need to solve the equations. This chapter introduces two ways to do that in code, starting with the simplest approach and building toward something more powerful.
 
 ## Introduction to Solving SIR Models {#sec-solving-sir-equations}
 
@@ -213,7 +212,7 @@ R0_start <- 0.00 # 0% recovered: no prior immunity
 cat("S0 + I0 + R0 =", S0 + I0 + R0_start)
 ```
 
-This sanity check, confirming that proportions sum to 1 — is a simple example of a habit that will save you debugging time later. When you add more compartments (SEIR, endemic model), this check generalizes naturally.
+This sanity check, confirming that proportions sum to 1, is a simple example of a habit that will save you debugging time later. When you add more compartments (SEIR, endemic model), this check generalizes naturally.
 
 ---
 
@@ -287,6 +286,10 @@ cat("Sum:", round(S[n_steps] + I[n_steps] + R[n_steps], 6), "\n")
 
 The loop is doing exactly what the Euler update formulas say, mechanically, one step at a time. This is the computational equivalent of doing the hand calculations from the table shown earlier, just thousands of times faster.
 
+::: {.callout-note title="The loop is the model"}
+Notice that the three lines computing `dS`, `dI`, and `dR` are not arbitrary calculations. They are the SIR equations, written in R. Every biological assumption we made in the previous chapter is present in those three lines. The loop is not running the model alongside the equations, the loop is the equations.
+:::
+
 ---
 
 **Step 6: Visualize the results.**
@@ -323,7 +326,7 @@ Go back to **Step 3** and try the following changes, re-running each step in ord
 2. Change the step size to `dt <- 0.001`. Did the code output results faster or slower than when using `dt <- 2.0`? (**NOTE:** How fast the code runs depends on the computer you are using right now, but in general note that the smaller our step size gets, the more accurate our results become at the cost of being increasingly computationally demanding.)
 :::
 
-## Solving Models Using the `pracma` package in R {#sec-pracma}
+## Solving Models Using the `pracma` Package in R {#sec-pracma}
 
 ::: {.callout-tip title="Learning Objectives"}
 By the end of @sec-pracma, you should be able to:
@@ -332,6 +335,8 @@ By the end of @sec-pracma, you should be able to:
 
 - Translate an SIR model to a function and solve it using `rk4sys`.
 :::
+
+Euler's method is honest: every step is visible, every assumption is explicit. Its weakness is that those small linear steps accumulate error, especially when the epidemic curve is changing quickly. The next method, RK4, is more sophisticated. It looks further ahead before committing to each step, which makes it more accurate. The tradeoff is that it is less transparent.
 
 The package `pracma` in R, short for "Practical Numerical Math Functions," provides a large repertoire of functions used in numerical analysis, linear algebra, numerical optimization, and differential equations [@pracma_package]. 
 
@@ -448,7 +453,7 @@ Now that we have a data frame of the solved SIR model equations at specified tim
 
 ---
 
-**Step 3: Plot the results.**
+**Step 4: Plot the results.**
 
 ```{webr-r}
 times <- output$x
@@ -507,7 +512,6 @@ Although the accuracy of the solutions output by Euler's method and the Fourth-O
 This means we can "get away" with using a smaller step size when using `rk4sys` over Euler's method (thus saving us some computational cost / time).
 :::
 
-
 The following simulation shows the difference between the solution curves produced by Euler's method and `rk4sys` for different values of the model parameters and step size:
 
 <iframe src="https://a-tom.shinyapps.io/euler_vs_rk_simulation/"
@@ -525,6 +529,6 @@ The following simulation shows the difference between the solution curves produc
 There are many packages in R that can solve SIR equations, and the package `deSolve` is a really common choice among them. `deSolve` uses very advanced and versatile solving methods that work well with large or complex SIR models. See the CRAN documentation for more details [@desolve_package]. 
 :::
 
+We now have two tools for solving SIR models. The next question is: how do we know which values of $\beta$ and $\gamma$ to use? That is the problem of fitting a model to data, and it is the topic of the next chapter.
+
 ## Chapter References {.unnumbered .unlisted}
-
-
