@@ -1,0 +1,126 @@
+---
+title: "Basic Terminology"
+format: live-html
+bibliography: reference.bib
+nocite: |
+  @keeling_modeling_2008
+---
+
+## Epidemiology Terms {#sec-epidemiology-terms}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-epidemiology-terms, you should be able to:
+
+-   Define basic terms in epidemiology and categorize people into compartments based on their infectivity / symptom status.
+
+- Visualize a disease timeline in terms of compartments. 
+:::
+
+From a thousand-foot perspective, epidemiology is the study of diseases. For the purposes of mathematical models in epidemiology, such as the SIR model, individuals are classified in groups, or compartments, based on their ability to transmit a pathogen --- not whether or not they feel sick. This distinction matters: a person can be infectious before they show symptoms, and can still feel sick after they are no longer infectious. 
+
+Models in epidemiology often categorize people into four compartments:
+
+- **Susceptible:** No pathogen is present. The individual can become infected if exposed.
+
+- **Exposed:** The individual has encountered an infected individual and has been infected, but pathogen levels are too low to allow transmission. This individual is infected but not yet infectious.
+
+- **Infectious:** Pathogen levels are high enough that this individual can actively transmit the disease to others.
+
+- **Recovered:** The individual's immune system has cleared enough of the pathogen that transmission is no longer possible. They may still feel ill, but they cannot spread the disease.
+
+::: {.callout-note}
+The "recovered" compartment is sometimes better thought of as "removed from transmission", as individuals are no longer infectious, regardless of whether they feel better.
+:::
+
+Overlapping with these compartments, individuals can also be classified based on whether or not they exhibit symptoms of infection:
+
+- **Incubation period:** Infected but not yet showing symptoms. An individual can be in the infectious compartment while still in the incubation period — this is the basis of asymptomatic transmission.
+
+- **Diseased period:** Showing symptoms. An individual can still be in the recovered compartment (non-infectious) while experiencing lingering symptoms.
+
+
+(PLACE GRAPH HERE OF ALL THESE PERIODS)
+
+## Compartmental Models {#sec-introducing-compartmental-models}
+
+::: {.callout-tip title="Learning Objectives"}
+By the end of @sec-introducing-compartmental-models, you should be able to:
+
+-   Identify which differential equations can be considered compartmental models.
+
+-   Identify situations where a compartmental model would be useful.
+
+-   Visualize various compartmental models (particularly SIR models) using flowcharts. 
+:::
+
+Generally speaking, compartmental models are a way to represent the flow of populations between different states, known as compartments, using *differential equations*.
+
+::: {.callout-note collapse="true"}
+## What are differential equations?
+
+Remembering back to Calculus 1, differential equations, or DEs for short, tell us how a function changes. In our modeling context, DEs tell us how the number or proportion of susceptible, infectious, and recovered people in a population change over time. In mathematical terms, DEs represent the derivative, or rate of change, of these disease dynamics with respect to time. 
+:::
+
+Compartmental models show up in a wide variety of fields, not just epidemiology. Any field that can benefit from knowing how information flows between states can benefit from compartmental models.
+
+In epidemiology, compartmental models analyze how people flow through the four compartments introduced in [Section @sec-epidemiology-terms]: susceptible (S), exposed (E), infectious (I), and recovered (R). The relationships between these compartments are often represented with flowcharts like the one below:
+
+
+```{dot}
+//| fig-width: 7.5
+//| fig-height: 2
+//| fig-align: center
+
+
+digraph SEIR {
+  rankdir=LR;
+  node [shape=box, style=rounded, fontsize=14];
+
+  S [label="S"];
+  E [label="E"];
+  I [label="I"];
+  R [label="R"];
+
+  edge [fontsize=12];
+  S -> E [label="λ", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  E -> I [label="σ", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  I -> R [label="γ",  labelfontsize=12, labeldistance=2.0, labelangle=-90];
+}
+```
+
+The arrows between these compartments represent the direction of flow (susceptible individuals becoming exposed, exposed individuals becoming infectious, etc.) and the symbols above each arrow represent the *flow rates* between each compartment with respect to time.
+
+Let's give an example: say in a very large population with an established pathogen presence, on average, 300 new people become exposed to the pathogen every day. Of those that are exposed to the pathogen, on average, 50 of them reach pathogen levels high enough to become infectious per day. Then, of those that are infectious and able to transmit the pathogen, on average, 40 of them recover from the pathogen (i.e. can no longer transmit it). 
+
+We can model this specific example with the modified flowchart below:
+
+
+```{dot}
+//| fig-width: 7.5
+//| fig-height: 2
+//| fig-align: center
+
+
+digraph SEIRmod {
+  rankdir=LR;
+  node [shape=box, style=rounded, fontsize=14];
+
+  S [label="S"];
+  E [label="E"];
+  I [label="I"];
+  R [label="R"];
+
+  edge [fontsize=12];
+  S -> E [label="λ = 300", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  E -> I [label="σ = 50", labelfontsize=12, labeldistance=2.0, labelangle=-90];
+  I -> R [label="γ = 40",  labelfontsize=12, labeldistance=2.0, labelangle=-90];
+}
+```
+
+Which compartments we choose to include depends on the specific pathogen and disease we are modeling. Models where the exposed period is so small it can be considered negligible, or is omitted for the sake of simplicity, are specifically known as *SIR models* (standing for the three different compartments included in the model: susceptible, infectious, and recovered).
+
+[Section @sec-the-classic-sir-epidemic-model] covers the specific equations and some key assumptions of the SIR model.
+
+## Chapter References {.unnumbered .unlisted}
+
+
