@@ -1,8 +1,10 @@
 ---
 title: "The SIR Epidemic Model"
-format: live-html
-bibliography: reference.bib
+nocite: |
+  @keeling_modeling_2008
 ---
+
+Every model is a set of decisions. The SIR model decides that individuals belong to exactly one of three states at any moment, that they move through those states in one direction, and that the rate at which they move depends on a small number of biological quantities. This chapter unpacks those decisions, not just what the equations say, but why they are written that way, and what gets lost when we simplify.
 
 ## Intro to the Classic Epidemic Model {#sec-the-classic-sir-epidemic-model}
 
@@ -60,6 +62,10 @@ $$
 
 ::: {.callout-tip title="Structure of SIR Equations"}
 The rate of change of the number of people in each compartment can be understood as following the basic pattern of $R_i-R_o$ where $R_i$ is the rate that people are flowing into the compartment per unit time and $R_o$ is the rate that people are flowing out of the compartment per unit time. This pattern can be used to construct any number of novel compartmental models.
+:::
+
+::: {.callout-note title="From equation to code"}
+Each line of the SIR equations is a direct instruction to the computer. When we write code to solve this model, we will translate each $\frac{dS}{dt}$, $\frac{dI}{dt}$, and $\frac{dR}{dt}$ into a line of R, one equation, one line. That correspondence is not a coincidence.
 :::
 
 Notice that these equations mirror exactly the compartmental flowcharts introduced in the [Section @sec-introducing-compartmental-models]. The epidemic SIR model can be representing with the flowchart below:
@@ -267,8 +273,8 @@ Models will often formulate $c$ and $p$ as functions of their own depending on a
 
 The specific formulations for the contact rate (or proximity rate) and infection probability utilized by this paper are unique to its context (the pathogen it is analyzing, the host population(s), etc.) and will vary widely from paper to paper.
 
-However, there are standardized procedures to obtain $\beta$ using the blackbox approach, of which one common method known as *maximum likelihood estimation*, or MLE for short, is covered in [Section @sec-formulating-transmission-rate]. But before we can cover MLE, we must go over how to solve our SIR model equations first, which is the topic of [Section @sec-solving-sir-equations].  
+However, there are standardized procedures to obtain $\beta$ using the blackbox approach, of which one common method known as *maximum likelihood estimation*, or MLE for short, is covered in [Section @sec-formulating-transmission-rate]. But before we can cover MLE, we must go over how to solve our SIR model equations first, which is the topic of [Section @sec-solving-sir-equations].
+
+The equations tell us how the system changes, but they do not tell us the values of S, I, and R at every point in time. For that, we need to solve them. That is the topic of the next chapter.
 
 ## Chapter References {.unnumbered .unlisted}
-
-
