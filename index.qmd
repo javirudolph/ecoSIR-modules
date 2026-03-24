@@ -1,0 +1,25 @@
+
+
+# Introduction and Learning Objectives {.unnumbered .unlisted}
+
+Mathematical models of disease have been around for over a century, and by now there is no shortage of resources explaining the SIR model. So why another one?
+
+This module is different in one specific way: **the goal is not just to understand the SIR model, but to understand how code translates biological ideas into computable form.** This is computational thinking: the practice of structuring a problem so that a computer can help you explore it. It is a skill that belongs to biologists and ecologists just as much as it belongs to computer scientists.
+
+By the end of this module, you should be able to:
+
+- Read an SIR model equation and immediately identify its biological meaning
+
+- Translate that equation into working R code, line by line
+
+- Modify that code to explore how the system changes under different conditions
+
+- Recognize what assumptions are "baked in" to both the math and the code
+
+- Start thinking about real disease ecology problems from a computational perspective
+
+::: {.callout-important title="How to use this module"}
+- Throughout this module, you will encounter **interactive code blocks**, these are live R sessions running directly in your browser. You do not need R installed. You are encouraged to **change the numbers, re-run the code, and see what happens.** That interaction is the point. Reading the math and reading the code together is how computational literacy develops. The code chunks in each section should be run in the order they appear. This is because each code chunk depends on the others (so code chunks might require the information defined in a previous chunk). The every code chunk can be reset to their original state by clicking on the "Start Over" button at the top. 
+
+- This module is divided into chapters and sections within those chapters. Each section has their own learning objectives, which only apply to that specific section. 
+:::

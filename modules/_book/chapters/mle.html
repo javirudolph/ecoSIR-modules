@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -89,14 +89,15 @@ div.csl-indent {
 <link href="../chapters/solving_sir.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
 <link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -143,7 +144,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -183,7 +184,9 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Computational Thinking with SIR Models</a> 
     </div>
@@ -289,7 +292,7 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Learning Objectives
+<span class="screen-reader-only">Tip</span>Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -304,12 +307,12 @@ Learning Objectives
 <p>Recalling from <a href="epidemic_model_intro.html#sec-formulating-the-recovery-rate" class="quarto-xref">Section&nbsp;<span>2.2</span></a>, we estimate the recovery rate using prior literature on the average duration of infection. Since we estimate the recovery rate using means other than MLE, we hold it constant and only use MLE to estimate the value of the transmission rate <span class="math inline">\(\beta\)</span> <span class="citation" data-cites="parameter_estimation">(<a href="#ref-parameter_estimation" role="doc-biblioref">Senel, Ozdinc, and Ozturkcan 2021</a>)</span>. We are only going to go over MLE as it directly applies to estimating <span class="math inline">\(\beta\)</span> for an epidemic SIR model, but the Wikipedia article on maximum likelihood estimation goes more into its general mathematical framework <span class="citation" data-cites="wiki_mle">(<a href="#ref-wiki_mle" role="doc-biblioref">Wikipedia contributors 2026a</a>)</span>.</p>
 <p>MLE works by maximizing the <em>likelihood function</em>. The likelihood function provides the probability of some data point (<span class="math inline">\(D_i\)</span>) occurring under different values of <span class="math inline">\(\beta\)</span>. We will denote the likelihood for a data point as <span class="math inline">\(\mathcal{L}(\beta;D_i)\)</span>. When we have <em>discrete</em> data, the likelihood function takes in a value of <span class="math inline">\(\beta\)</span> and outputs the probability of observing the data point <span class="math inline">\(D_i\)</span>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-What do we mean by “discrete” data?
+<span class="screen-reader-only">Note</span>What do we mean by “discrete” data?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -346,12 +349,12 @@ What do we mean by “discrete” data?
 <p><br></p>
 <p>It is generally more straightforward to estimate <span class="math inline">\(\beta\)</span> when we have prevalence data, so we will stick to that for this introductory module. To figure out our likelihood function, we first need to make an assumption about the <em>distribution</em> our data comes from. We are interested in the <em>probability mass function</em> (PMF) of this distribution, which gives us the probability of observing some piece of data (exactly what we need!). It’s common to assume that prevalence data comes from a binomial distribution, so we will use that going forward.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Not familiar with the binomial?
+<span class="screen-reader-only">Note</span>Not familiar with the binomial?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -415,7 +418,7 @@ P(X=x)={n \choose x}p^x(1-p)^{n-x}
 <tbody>
 <tr class="odd">
 <td><span class="math inline">\(\mathcal{L}(\beta;D_i)={N \choose D_i}\left(\frac{I(t,\beta)}{N}\right)^{D_i}\left(1-\frac{I(t,\beta)}{N}\right)^{N-D_i}\)</span></td>
-<td>The SIR model (defined by its transmission rate <span class="math inline">\(\beta\)</span>)</td>
+<td>An SIR model (defined by its transmission rate <span class="math inline">\(\beta\)</span>)</td>
 <td>The probability of observing a fixed piece of prevalence data <span class="math inline">\(D_i\)</span> (observed at a time <span class="math inline">\(t\)</span>) given the transmission rate <span class="math inline">\(\beta\)</span></td>
 </tr>
 </tbody>
@@ -426,12 +429,12 @@ P(X=x)={n \choose x}p^x(1-p)^{n-x}
 \mathcal{L}(\beta;S)=\mathcal{L}(\beta;D_1) \times \mathcal{L}(\beta;D_2) \times \cdots \times \mathcal{L}(\beta;D_n)
 \]</span></p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-What does <span class="math inline">\(\cdots\)</span> mean?
+<span class="screen-reader-only">Note</span>What does <span class="math inline">\(\cdots\)</span> mean?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -443,7 +446,7 @@ What does <span class="math inline">\(\cdots\)</span> mean?
 </div>
 <p>We will call <span class="math inline">\(\mathcal{L}(\beta;D_i)\)</span> the point likelihood function (because it gives the likelihood of individual data points) and <span class="math inline">\(\mathcal{L}(\beta;S)\)</span> the sample likelihood function (because it gives the likelihood of the entire sample of data). Using our previously found point likelihoods, the sample likelihood for our prevalence data (assuming it comes from a binomial distribution) is:</p>
 <p><span class="math display">\[
-\mathcal{L}(\beta;D_i)={N \choose D_i}\left(\frac{I(t,\beta)}{N}\right)^{D_i}\left(1-\frac{I(t,\beta)}{N}\right)^{N-D_i}
+\mathcal{L}(\beta;D_i)={N \choose D_i}\left(\frac{I(t,\beta )}{N}\right)^{D_i}\left(1-\frac{I(t,\beta)}{N}\right)^{N-D_i}
 \]</span></p>
 <p>Now that we have our sample likelihood function, the hard part is over! All we have to do now is iterate through plausible values of <span class="math inline">\(\beta\)</span>, calculate the sample likelihood <span class="math inline">\(\mathcal{L}(\beta;S)\)</span> for each, and find the maximum sample likelihood among them. We estimate the <span class="math inline">\(\beta\)</span> in our model to be whatever gives this maximum likelihood, and we are done!</p>
 <p>Putting the whole process of MLE on prevalence data into steps, we have:</p>
@@ -452,12 +455,12 @@ What does <span class="math inline">\(\cdots\)</span> mean?
 <li><strong>Step 1:</strong> Make an assumption about the distribution of our prevalence data. Oftentimes, this means assuming that every piece of data was randomly drawn from a binomial distribution with sample size (<span class="math inline">\(n\)</span>) equal to the population size (<span class="math inline">\(N\)</span>) and probability of success (<span class="math inline">\(p\)</span>) equal to <span class="math inline">\(\frac{I(t,\beta)}{N}\)</span> where <span class="math inline">\(I(t,\beta)\)</span> is the predicted number of infectious individuals given by the SIR model (with transmission rate <span class="math inline">\(\beta\)</span>) at a time <span class="math inline">\(t\)</span>.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Do we have to use the binomial distribution?
+<span class="screen-reader-only">Note</span>Do we have to use the binomial distribution?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -484,12 +487,12 @@ Do we have to use the binomial distribution?
 \]</span></p>
 <p>Taking the logarithm of the likelihood function will not change the results of MLE, making our maximum likelihood estimator for <span class="math inline">\(\beta\)</span> the same whether we use log-likelihoods or raw likelihoods.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Why doesn’t taking the logarithm of the likelihood function change the results of MLE?
+<span class="screen-reader-only">Note</span>Why doesn’t taking the logarithm of the likelihood function change the results of MLE?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -519,7 +522,7 @@ Why doesn’t taking the logarithm of the likelihood function change the results
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Learning Objectives
+<span class="screen-reader-only">Tip</span>Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -567,7 +570,7 @@ Note
 
 </div>
 <script type="webr-1-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShwcmFjbWEpXG5cbiMgRW5zdXJlcyB0aGF0IHRoZSByYW5kb20gcHJvY2Vzc2VzIHJ1biB0aGUgc2FtZSBldmVyeSB0aW1lXG5zZXQuc2VlZCgxMjMpXG5cbiMgRnVuY3Rpb24gSW5wdXRzOiBBIHRpbWUsIHByb3BvcnRpb25zIGF0IHRoYXQgdGltZSwgYW5kIHRoZSBtb2RlbCBwYXJhbWV0ZXJzXG4jIEZ1bmN0aW9uIE91dHB1dHM6IFRoZSByYXRlcyBvZiBjaGFuZ2UgZm9yIFMsIEksIFIgYXQgdGhlIGlucHV0IHRpbWVcbk1vZGVsRnVuYyA8LSBmdW5jdGlvbih0aW1lLCBzdGF0ZSwgcGFyYW1ldGVycykge1xuICBTIDwtIHN0YXRlWzFdXG4gIEkgPC0gc3RhdGVbMl1cbiAgUiA8LSBzdGF0ZVszXVxuXG4gIGJldGEgPC0gcGFyYW1ldGVyc1tcImJldGFcIl1cbiAgZ2FtbWEgPC0gcGFyYW1ldGVyc1tcImdhbW1hXCJdXG4gIE4gPC0gcGFyYW1ldGVyc1tcIk5cIl1cblxuICBkUyA8LSAtKGJldGEgKiBJICogUyAvIE4pXG4gIGRJIDwtIChiZXRhICogSSAqIFMgLyBOKSAtIChnYW1tYSAqIEkpXG4gIGRSIDwtIChnYW1tYSAqIEkpXG5cbiAgcmV0dXJuKGMoZFMsIGRJLCBkUikpXG59XG5cbiMgUGFyYW1ldGVycyBvZiB0aGUgU0lSIG1vZGVsIGZyb20gd2hpY2ggb3VyIGRhdGEgd2lsbCBiZSBnZW5lcmF0ZWRcbm1vZGVsX3BhcmFtZXRlcnMgPC0gYyhiZXRhID0gMS4yLCBnYW1tYSA9IDAuNywgTiA9IDEwMDApXG5cbiMgTnVtYmVyIG9mIFMsSSxSIGF0IHRoZSBiZWdpbm5pbmcgb2YgdGhlIGVwaWRlbWljIChpbml0aWFsIHN0YXRlIHZhcmlhYmxlcylcbmluaXRpYWxfdmFscyA8LSBjKFMgPSA5OTksIEkgPSAxLCBSID0gMClcblxuIyBTcGVjaWZ5aW5nIGhvdyBtYW55IGRheXMgdG8gZ2VuZXJhdGUgZGF0YSBmb3JcbnRfc3RhcnQgPC0gMFxudF9lbmQgPC0gMzVcbnN0ZXBfc2l6ZSA8LSB0X2VuZCAtIHRfc3RhcnRcblxuIyBTb2x2aW5nIFNJUiBlcXVhdGlvbiBhdCBzcGVjaWZpZWQgb3V0cHV0IHRpbWVzXG5vdXRwdXQgPC0gcms0c3lzKFxuICBmID0gZnVuY3Rpb24odCwgeSkgTW9kZWxGdW5jKHQsIHksIG1vZGVsX3BhcmFtZXRlcnMpLFxuICBhID0gdF9zdGFydCxcbiAgYiA9IHRfZW5kLFxuICB5MCA9IGluaXRpYWxfdmFscyxcbiAgbiA9IHN0ZXBfc2l6ZVxuKVxuXG4jIENvbnZlcnRpbmcgdGhlIG91dHB1dCBtYXRyaXggdG8gYSBkYXRhIGZyYW1lXG5vdXRwdXQgPC0gYXMuZGF0YS5mcmFtZShvdXRwdXQpXG5cbiMgRXh0cmFjdGluZyBvbmx5IHRoZSBwcmV2YWxlbmNlcyAoaW5mZWN0ZWQgY291bnRzKVxuSV90cnVlIDwtIG91dHB1dCR5LklcblxuIyBBZGRpbmcgbm9pc2UgdG8gdGhlIHRydWUgcHJldmFsZW5jZSAodG8gbWltaWMgcmFuZG9tIHNhbXBsaW5nKVxuIyBOT1RFOiBcIk5vaXNlXCIgcmVmZXJzIHRvIHJhbmRvbSBlcnJvcnMgLyB2YXJpYXRpb24gaW4gdGhlIGRhdGFcbiMgRm9sbG93aW5nIGZyb20gb3VyIGFzc3VtcHRpb25zLCB0aGUgbm9pc2UgaXMgYmlub21pYWxseSBkaXN0cmlidXRlZFxucG9wX3NpemUgPC0gc3VtKGluaXRpYWxfdmFscylcbklfb2JzZXJ2ZWQgPC0gcmJpbm9tKGxlbmd0aChJX3RydWUpLFxuICBzaXplID0gcG9wX3NpemUsXG4gIHByb2IgPSBJX3RydWUgLyBwb3Bfc2l6ZVxuKVxuXG4jIFNhdmluZyB0aGUgcHJlZGljdGVkIHByZXZhbGVuY2VzIGFzIGEgZGF0YSBmcmFtZVxuZGF0YSA8LSBkYXRhLmZyYW1lKFxuICBkYXkgPSB0X3N0YXJ0OnRfZW5kLFxuICBwcmV2YWxlbmNlX2NvdW50ID0gSV9vYnNlcnZlZFxuKVxuXG5kYXRhIn0=
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShwcmFjbWEpXG5cbiMgRW5zdXJlcyB0aGF0IHRoZSByYW5kb20gcHJvY2Vzc2VzIHJ1biB0aGUgc2FtZSBldmVyeSB0aW1lXG5zZXQuc2VlZCgxMjMpXG5cbiMgRnVuY3Rpb24gSW5wdXRzOiBBIHRpbWUsIHByb3BvcnRpb25zIGF0IHRoYXQgdGltZSwgYW5kIG1vZGVsIHBhcmFtZXRlcnNcbiMgRnVuY3Rpb24gT3V0cHV0czogVGhlIHJhdGVzIG9mIGNoYW5nZSBmb3IgUywgSSwgUiBhdCB0aGUgaW5wdXQgdGltZVxuTW9kZWxGdW5jIDwtIGZ1bmN0aW9uKHRpbWUsIHN0YXRlLCBwYXJhbWV0ZXJzKSB7XG4gIFMgPC0gc3RhdGVbMV1cbiAgSSA8LSBzdGF0ZVsyXVxuICBSIDwtIHN0YXRlWzNdXG5cbiAgYmV0YSA8LSBwYXJhbWV0ZXJzW1wiYmV0YVwiXVxuICBnYW1tYSA8LSBwYXJhbWV0ZXJzW1wiZ2FtbWFcIl1cbiAgTiA8LSBwYXJhbWV0ZXJzW1wiTlwiXVxuXG4gIGRTIDwtIC0oYmV0YSAqIEkgKiBTIC8gTilcbiAgZEkgPC0gKGJldGEgKiBJICogUyAvIE4pIC0gKGdhbW1hICogSSlcbiAgZFIgPC0gKGdhbW1hICogSSlcblxuICByZXR1cm4oYyhkUywgZEksIGRSKSlcbn1cblxuIyBQYXJhbWV0ZXJzIG9mIHRoZSBTSVIgbW9kZWwgZnJvbSB3aGljaCBvdXIgZGF0YSB3aWxsIGJlIGdlbmVyYXRlZFxubW9kZWxfcGFyYW1ldGVycyA8LSBjKGJldGEgPSAxLjIsIGdhbW1hID0gMC43LCBOID0gMTAwMClcblxuIyBOdW1iZXIgb2YgUyxJLFIgYXQgdGhlIGJlZ2lubmluZyBvZiB0aGUgZXBpZGVtaWMgKGluaXRpYWwgdmFyaWFibGVzKVxuaW5pdGlhbF92YWxzIDwtIGMoUyA9IDk5OSwgSSA9IDEsIFIgPSAwKVxuXG4jIFNwZWNpZnlpbmcgaG93IG1hbnkgZGF5cyB0byBnZW5lcmF0ZSBkYXRhIGZvclxudF9zdGFydCA8LSAwXG50X2VuZCA8LSAzNVxuc3RlcF9zaXplIDwtIHRfZW5kIC0gdF9zdGFydFxuXG4jIFNvbHZpbmcgU0lSIGVxdWF0aW9uIGF0IHNwZWNpZmllZCBvdXRwdXQgdGltZXNcbm91dHB1dCA8LSByazRzeXMoXG4gIGYgPSBmdW5jdGlvbih0LCB5KSBNb2RlbEZ1bmModCwgeSwgbW9kZWxfcGFyYW1ldGVycyksXG4gIGEgPSB0X3N0YXJ0LFxuICBiID0gdF9lbmQsXG4gIHkwID0gaW5pdGlhbF92YWxzLFxuICBuID0gc3RlcF9zaXplXG4pXG5cbiMgQ29udmVydGluZyB0aGUgb3V0cHV0IG1hdHJpeCB0byBhIGRhdGEgZnJhbWVcbm91dHB1dCA8LSBhcy5kYXRhLmZyYW1lKG91dHB1dClcblxuIyBFeHRyYWN0aW5nIG9ubHkgdGhlIHByZXZhbGVuY2VzIChpbmZlY3RlZCBjb3VudHMpXG5JX3RydWUgPC0gb3V0cHV0JHkuSVxuXG4jIEFkZGluZyBub2lzZSB0byB0aGUgdHJ1ZSBwcmV2YWxlbmNlICh0byBtaW1pYyByYW5kb20gc2FtcGxpbmcpXG4jIE5PVEU6IFwiTm9pc2VcIiByZWZlcnMgdG8gcmFuZG9tIGVycm9ycyAvIHZhcmlhdGlvbiBpbiB0aGUgZGF0YVxuIyBGb2xsb3dpbmcgZnJvbSBvdXIgYXNzdW1wdGlvbnMsIHRoZSBub2lzZSBpcyBiaW5vbWlhbGx5IGRpc3RyaWJ1dGVkXG5wb3Bfc2l6ZSA8LSBzdW0oaW5pdGlhbF92YWxzKVxuSV9vYnNlcnZlZCA8LSByYmlub20obGVuZ3RoKElfdHJ1ZSksXG4gIHNpemUgPSBwb3Bfc2l6ZSxcbiAgcHJvYiA9IElfdHJ1ZSAvIHBvcF9zaXplXG4pXG5cbiMgU2F2aW5nIHRoZSBwcmVkaWN0ZWQgcHJldmFsZW5jZXMgYXMgYSBkYXRhIGZyYW1lXG5kYXRhIDwtIGRhdGEuZnJhbWUoXG4gIGRheSA9IHRfc3RhcnQ6dF9lbmQsXG4gIHByZXZhbGVuY2VfY291bnQgPSBJX29ic2VydmVkXG4pXG5cbmRhdGEifQ==
 </script>
 </div>
 <p>Now that we have our data and a function for our SIR model called <code>ModelFunc</code>, our next step is to is to code a function to solve our SIR model for any value of <span class="math inline">\(\beta\)</span> and output what it predicts the number of infected individuals to be at various times.</p>
@@ -600,7 +603,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBGdW5jdGlvbiBJbnB1dHM6
 
 </div>
 <script type="webr-4-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBGdW5jdGlvbiBJbnB1dHM6IFVwcGVyIGxpbWl0IG9uIHRoZSB2YWx1ZSBvZiBiZXRhIGFuZCB0aGUgZGF0YSBzZXRcbiMgRnVuY3Rpb24gT3V0cHV0czogQSBwbG90IG9mIHRoZSBsb2ctbGlrZWxpaG9vZHMgYW5kIHRoZSBlc3RpbWF0ZSBmb3IgYmV0YVxubWxlIDwtIGZ1bmN0aW9uKHBsYXVzaWJsZV9iZXRhLCBkYXRhKSB7XG4gIHJhbmdlX2JldGEgPC0gc2VxKDEsIHBsYXVzaWJsZV9iZXRhLCBieSA9IDAuMDEpXG5cbiAgIyBEYXRhIGZyYW1lIG9mIGxvZy1saWtlbGlob29kcyBmb3IgZWFjaCBiZXRhXG4gIGFsbF9sbCA8LSBkYXRhLmZyYW1lKClcblxuICBmb3IgKGJldGEgaW4gcmFuZ2VfYmV0YSkge1xuICAgIHBhcmFtcyA8LSBjKGJldGEgPSBiZXRhLCBnYW1tYSA9IDAuNywgTiA9IDEwMDApXG4gICAgbmV3X2xsIDwtIGRhdGEuZnJhbWUoYmV0YSA9IGJldGEsIGxsID0gYmlub21pYWxfbGwocGFyYW1zLCBkYXRhKSlcbiAgICBhbGxfbGwgPC0gcmJpbmQoYWxsX2xsLCBuZXdfbGwpXG4gIH1cblxuICAjIEZpbmRpbmcgdGhlIGJldGEgdGhhdCByZXN1bHRzIGluIHRoZSBncmVhdGVzdCBsb2ctbGlrZWxpaG9vZFxuICBiZXRhX21sZSA8LSBhbGxfbGwkYmV0YVt3aGljaC5tYXgoYWxsX2xsJGxsKV1cblxuXG4gICMgUGxvdHRpbmcgYWxsIHRoZSBsb2ctbGlrZWxpaG9vZHMgYWdhaW5zdCB0aGUgYmV0YXNcbiAgcGxvdChhbGxfbGwkYmV0YSxcbiAgICBhbGxfbGwkbGwsXG4gICAgdHlwZSA9IFwibFwiLCB4bGFiID0gXCJiZXRhXCIsXG4gICAgeWxhYiA9IFwibG9nLWxpa2VsaWhvb2RcIixcbiAgICBtYWluID0gXCJMb2ctbGlrZWxpaG9vZCB2cyBCZXRhXCJcbiAgKVxuXG4gICMgUGxvdHRpbmcgYSBzZXBhcmF0ZSBsaW5lIHdoZXJlIHRoZSBtYXhpbXVtIGxpa2VsaWhvb2QgZXN0aW1hdGUgZm9yIGJldGEgaXNcbiAgYmV0YV9tbGUgPC0gYWxsX2xsJGJldGFbd2hpY2gubWF4KGFsbF9sbCRsbCldXG4gIGFibGluZSh2ID0gYmV0YV9tbGUsIGx0eSA9IDIpXG5cbiAgIyBSZXR1cm5pbmcgdGhlIGVzdGltYXRlXG4gIHJldHVybihiZXRhX21sZSlcbn1cblxubWxlKDUsIGRhdGEpIn0=
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBGdW5jdGlvbiBJbnB1dHM6IFVwcGVyIGxpbWl0IG9uIHRoZSB2YWx1ZSBvZiBiZXRhIGFuZCB0aGUgZGF0YSBzZXRcbiMgRnVuY3Rpb24gT3V0cHV0czogUGxvdCBvZiB0aGUgbG9nLWxpa2VsaWhvb2RzIHRoZSBlc3RpbWF0ZSBmb3IgYmV0YVxubWxlIDwtIGZ1bmN0aW9uKHBsYXVzaWJsZV9iZXRhLCBkYXRhKSB7XG4gIHJhbmdlX2JldGEgPC0gc2VxKDEsIHBsYXVzaWJsZV9iZXRhLCBieSA9IDAuMDEpXG5cbiAgIyBEYXRhIGZyYW1lIG9mIGxvZy1saWtlbGlob29kcyBmb3IgZWFjaCBiZXRhXG4gIGFsbF9sbCA8LSBkYXRhLmZyYW1lKClcblxuICBmb3IgKGJldGEgaW4gcmFuZ2VfYmV0YSkge1xuICAgIHBhcmFtcyA8LSBjKGJldGEgPSBiZXRhLCBnYW1tYSA9IDAuNywgTiA9IDEwMDApXG4gICAgbmV3X2xsIDwtIGRhdGEuZnJhbWUoYmV0YSA9IGJldGEsIGxsID0gYmlub21pYWxfbGwocGFyYW1zLCBkYXRhKSlcbiAgICBhbGxfbGwgPC0gcmJpbmQoYWxsX2xsLCBuZXdfbGwpXG4gIH1cblxuICAjIEZpbmRpbmcgdGhlIGJldGEgdGhhdCByZXN1bHRzIGluIHRoZSBncmVhdGVzdCBsb2ctbGlrZWxpaG9vZFxuICBiZXRhX21sZSA8LSBhbGxfbGwkYmV0YVt3aGljaC5tYXgoYWxsX2xsJGxsKV1cblxuXG4gICMgUGxvdHRpbmcgYWxsIHRoZSBsb2ctbGlrZWxpaG9vZHMgYWdhaW5zdCB0aGUgYmV0YXNcbiAgcGxvdChhbGxfbGwkYmV0YSxcbiAgICBhbGxfbGwkbGwsXG4gICAgdHlwZSA9IFwibFwiLCB4bGFiID0gXCJiZXRhXCIsXG4gICAgeWxhYiA9IFwibG9nLWxpa2VsaWhvb2RcIixcbiAgICBtYWluID0gXCJMb2ctbGlrZWxpaG9vZCB2cyBCZXRhXCJcbiAgKVxuXG4gICMgUGxvdHRpbmcgYSBkb3R0ZWQgbGluZSB3aGVyZSB0aGUgZXN0aW1hdGUgZm9yIGJldGEgaXNcbiAgYmV0YV9tbGUgPC0gYWxsX2xsJGJldGFbd2hpY2gubWF4KGFsbF9sbCRsbCldXG4gIGFibGluZSh2ID0gYmV0YV9tbGUsIGx0eSA9IDIpXG5cbiAgIyBSZXR1cm5pbmcgdGhlIGVzdGltYXRlXG4gIHJldHVybihiZXRhX21sZSlcbn1cblxubWxlKDUsIGRhdGEpIn0=
 </script>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Try this">
@@ -609,7 +612,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBGdW5jdGlvbiBJbnB1dHM6
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Try this
+<span class="screen-reader-only">Tip</span>Try this
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -630,7 +633,7 @@ Try this
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Learning Objectives
+<span class="screen-reader-only">Tip</span>Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -649,7 +652,7 @@ Learning Objectives
 
 </div>
 <script type="webr-5-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShwcmFjbWEpXG5cbiMgRW5zdXJlcyB0aGF0IHRoZSByYW5kb20gcHJvY2Vzc2VzIHJ1biB0aGUgc2FtZSBldmVyeSB0aW1lXG5zZXQuc2VlZCgxMjMpXG5cbiMgU0lSIG1vZGVsIGZ1bmN0aW9uXG5Nb2RlbEZ1bmMgPC0gZnVuY3Rpb24odGltZSwgc3RhdGUsIHBhcmFtZXRlcnMpIHtcbiAgUyA8LSBzdGF0ZVsxXVxuICBJIDwtIHN0YXRlWzJdXG4gIFIgPC0gc3RhdGVbM11cblxuICBiZXRhIDwtIHBhcmFtZXRlcnNbXCJiZXRhXCJdXG4gIGdhbW1hIDwtIHBhcmFtZXRlcnNbXCJnYW1tYVwiXVxuICBOIDwtIHBhcmFtZXRlcnNbXCJOXCJdXG5cbiAgZFMgPC0gLShiZXRhICogSSAqIFMgLyBOKVxuICBkSSA8LSAoYmV0YSAqIEkgKiBTIC8gTikgLSAoZ2FtbWEgKiBJKVxuICBkUiA8LSAoZ2FtbWEgKiBJKVxuXG4gIHJldHVybihjKGRTLCBkSSwgZFIpKVxufVxuXG4jIFBhcmFtZXRlcnMgb2YgdGhlIFNJUiBtb2RlbCBmcm9tIHdoaWNoIG91ciBkYXRhIHdpbGwgYmUgZ2VuZXJhdGVkXG5tb2RlbF9wYXJhbWV0ZXJzIDwtIGMoYmV0YSA9IDEuMiwgZ2FtbWEgPSAwLjcsIE4gPSAxMDAwKVxuXG4jIE51bWJlciBvZiBTLEksUiBhdCB0aGUgYmVnaW5uaW5nIG9mIHRoZSBlcGlkZW1pYyAoaW5pdGlhbCBzdGF0ZSB2YXJpYWJsZXMpXG5pbml0aWFsX3ZhbHMgPC0gYyhTID0gOTk5LCBJID0gMSwgUiA9IDApXG5cbiMgU3BlY2lmeWluZyBob3cgbWFueSBkYXlzIHRvIGdlbmVyYXRlIGRhdGEgZm9yXG50X3N0YXJ0IDwtIDBcbnRfZW5kIDwtIDM1XG5zdGVwX3NpemUgPC0gdF9lbmQgLSB0X3N0YXJ0XG5cbiMgU29sdmluZyBTSVIgZXF1YXRpb24gYXQgc3BlY2lmaWVkIG91dHB1dCB0aW1lc1xub3V0cHV0IDwtIHJrNHN5cyhcbiAgZiA9IGZ1bmN0aW9uKHQsIHkpIE1vZGVsRnVuYyh0LCB5LCBtb2RlbF9wYXJhbWV0ZXJzKSxcbiAgYSA9IHRfc3RhcnQsXG4gIGIgPSB0X2VuZCxcbiAgeTAgPSBpbml0aWFsX3ZhbHMsXG4gIG4gPSBzdGVwX3NpemVcbilcblxuIyBFeHRyYWN0aW5nIHRoZSB0cnVlIHByZXZhbGVuY2VzXG5vdXRwdXRfZGYgPC0gYXMuZGF0YS5mcmFtZShvdXRwdXQpXG5JX3RydWUgPC0gb3V0cHV0X2RmJHkuSVxuXG4jIEFkZGluZyBub2lzZSB0byB0aGUgdHJ1ZSBwcmV2YWxlbmNlc1xuSV9vYnNlcnZlZCA8LSBycG9pcyhsZW5ndGgoSV90cnVlKSwgbGFtYmRhID0gSV90cnVlKVxuXG4jIFNhdmluZyB0aGUgcHJlZGljdGVkIHByZXZhbGVuY2VzIGFzIGEgZGF0YSBmcmFtZVxuZGF0YSA8LSBkYXRhLmZyYW1lKFxuICBkYXkgPSB0X3N0YXJ0OnRfZW5kLFxuICBwcmV2YWxlbmNlX2NvdW50ID0gSV9vYnNlcnZlZFxuKVxuXG5kYXRhIn0=
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShwcmFjbWEpXG5cbiMgRW5zdXJlcyB0aGF0IHRoZSByYW5kb20gcHJvY2Vzc2VzIHJ1biB0aGUgc2FtZSBldmVyeSB0aW1lXG5zZXQuc2VlZCgxMjMpXG5cbiMgU0lSIG1vZGVsIGZ1bmN0aW9uXG5Nb2RlbEZ1bmMgPC0gZnVuY3Rpb24odGltZSwgc3RhdGUsIHBhcmFtZXRlcnMpIHtcbiAgUyA8LSBzdGF0ZVsxXVxuICBJIDwtIHN0YXRlWzJdXG4gIFIgPC0gc3RhdGVbM11cblxuICBiZXRhIDwtIHBhcmFtZXRlcnNbXCJiZXRhXCJdXG4gIGdhbW1hIDwtIHBhcmFtZXRlcnNbXCJnYW1tYVwiXVxuICBOIDwtIHBhcmFtZXRlcnNbXCJOXCJdXG5cbiAgZFMgPC0gLShiZXRhICogSSAqIFMgLyBOKVxuICBkSSA8LSAoYmV0YSAqIEkgKiBTIC8gTikgLSAoZ2FtbWEgKiBJKVxuICBkUiA8LSAoZ2FtbWEgKiBJKVxuXG4gIHJldHVybihjKGRTLCBkSSwgZFIpKVxufVxuXG4jIFBhcmFtZXRlcnMgb2YgdGhlIFNJUiBtb2RlbCBmcm9tIHdoaWNoIG91ciBkYXRhIHdpbGwgYmUgZ2VuZXJhdGVkXG5tb2RlbF9wYXJhbWV0ZXJzIDwtIGMoYmV0YSA9IDEuMiwgZ2FtbWEgPSAwLjcsIE4gPSAxMDAwKVxuXG4jIE51bWJlciBvZiBTLEksUiBhdCB0aGUgYmVnaW5uaW5nIG9mIHRoZSBlcGlkZW1pYyAoaW5pdGlhbCB2YXJpYWJsZXMpXG5pbml0aWFsX3ZhbHMgPC0gYyhTID0gOTk5LCBJID0gMSwgUiA9IDApXG5cbiMgU3BlY2lmeWluZyBob3cgbWFueSBkYXlzIHRvIGdlbmVyYXRlIGRhdGEgZm9yXG50X3N0YXJ0IDwtIDBcbnRfZW5kIDwtIDM1XG5zdGVwX3NpemUgPC0gdF9lbmQgLSB0X3N0YXJ0XG5cbiMgU29sdmluZyBTSVIgZXF1YXRpb24gYXQgc3BlY2lmaWVkIG91dHB1dCB0aW1lc1xub3V0cHV0IDwtIHJrNHN5cyhcbiAgZiA9IGZ1bmN0aW9uKHQsIHkpIE1vZGVsRnVuYyh0LCB5LCBtb2RlbF9wYXJhbWV0ZXJzKSxcbiAgYSA9IHRfc3RhcnQsXG4gIGIgPSB0X2VuZCxcbiAgeTAgPSBpbml0aWFsX3ZhbHMsXG4gIG4gPSBzdGVwX3NpemVcbilcblxuIyBFeHRyYWN0aW5nIHRoZSB0cnVlIHByZXZhbGVuY2VzXG5vdXRwdXRfZGYgPC0gYXMuZGF0YS5mcmFtZShvdXRwdXQpXG5JX3RydWUgPC0gb3V0cHV0X2RmJHkuSVxuXG4jIEFkZGluZyBub2lzZSB0byB0aGUgdHJ1ZSBwcmV2YWxlbmNlc1xuSV9vYnNlcnZlZCA8LSBycG9pcyhsZW5ndGgoSV90cnVlKSwgbGFtYmRhID0gSV90cnVlKVxuXG4jIFNhdmluZyB0aGUgcHJlZGljdGVkIHByZXZhbGVuY2VzIGFzIGEgZGF0YSBmcmFtZVxuZGF0YSA8LSBkYXRhLmZyYW1lKFxuICBkYXkgPSB0X3N0YXJ0OnRfZW5kLFxuICBwcmV2YWxlbmNlX2NvdW50ID0gSV9vYnNlcnZlZFxuKVxuXG5kYXRhIn0=
 </script>
 </div>
 <p>Now that we have our data, let’s go over the basics of <code>mle2</code>.</p>
@@ -696,7 +699,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShwcmFjbWEpXG5c
 
 </div>
 <script type="webr-6-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShiYm1sZSlcblxuIyBGdW5jdGlvbiBJbnB1dHM6IE5hbWVkIHZlY3RvciBvZiBtb2RlbCBwYXJhbWV0ZXJzIGFuZCBhIHZlY3RvciBvZiB0aW1lc1xuIyBGdW5jdGlvbiBPdXRwdXRzOiBQcmVkaWN0ZWQgcHJldmFsZW5jZXMgYXQgaW5wdXQgdGltZXNcbnByZWQgPC0gZnVuY3Rpb24ocGFyYW1ldGVycywgdCkge1xuICBpbml0aWFsX3ZhbHMgPC0gYyhTID0gOTk5LCBJID0gMSwgUiA9IDApXG4gIHRfc3RhcnQgPC0gMFxuICB0X2VuZCA8LSBtYXgodClcbiAgc3RlcF9zaXplIDwtIHRfZW5kIC0gdF9zdGFydFxuXG4gICMgQ2FsbGluZyByazRzeXMgdG8gc29sdmUgb3VyIG1vZGVsIGVxdWF0aW9uc1xuICBvdXRwdXQgPC0gcms0c3lzKFxuICAgIGYgPSBmdW5jdGlvbih0LCB5KSBNb2RlbEZ1bmModCwgeSwgcGFyYW1ldGVycyksXG4gICAgYSA9IHRfc3RhcnQsXG4gICAgYiA9IHRfZW5kLFxuICAgIHkwID0gaW5pdGlhbF92YWxzLFxuICAgIG4gPSBzdGVwX3NpemVcbiAgKVxuXG4gICMgRXh0cmFjdGluZyBwcmVkaWN0ZWQgcHJldmFsZW5jZXNcbiAgb3V0cHV0X2RmIDwtIGFzLmRhdGEuZnJhbWUob3V0cHV0KVxuICBwcmV2YWxlbmNlcyA8LSBvdXRwdXRfZGYkeS5JW3RdXG5cbiAgIyBFbnN1cmluZyB0aGVyZSBhcmUgbm8gTmFOcyBvciBvdXQgb2YgYm91bmRzIG51bWJlcnNcbiAgcHJldmFsZW5jZXNbaXMubmFuKHByZXZhbGVuY2VzKSB8IHByZXZhbGVuY2VzIDwgMF0gPC0gMFxuXG4gIHJldHVybihwcmV2YWxlbmNlcylcbn1cblxuIyBGdW5jdGlvbiBJbnB1dHM6IEEgbmFtZWQgbGlzdCBjb250YWluaW5nIGEgdmFsdWUgZm9yIGJldGFcbiMgRnVuY3Rpb24gT3V0cHV0czogVGhlIG5lZ2F0aXZlIGxvZy1saWtlbGlob29kIG9mIHRoZSBkYXRhIGdpdmVuIHRoZSBpbnB1dCBiZXRhXG5iaW5vbWlhbF9sbCA8LSBmdW5jdGlvbihiKSB7XG4gIHRpbWVzIDwtIGRhdGEkZGF5XG4gIHBhcmFtZXRlcnMgPC0gYyhiZXRhID0gYiwgZ2FtbWEgPSAwLjcsIE4gPSAxMDAwKVxuICBwcmVkaWN0ZWQgPC0gcHJlZChwYXJhbWV0ZXJzLCB0aW1lcylcblxuICAjIFJldHVybnMgdGhlIG5lZ2F0aXZlIGxvZy1saWtlbGlob29kXG4gIC1zdW0oZGJpbm9tKFxuICAgIHggPSBkYXRhJHByZXZhbGVuY2VfY291bnQsXG4gICAgc2l6ZSA9IHBhcmFtZXRlcnNbXCJOXCJdLFxuICAgIHByb2IgPSBwcmVkaWN0ZWQgLyBwYXJhbWV0ZXJzW1wiTlwiXSxcbiAgICBsb2cgPSBUUlVFXG4gICkpXG59XG5cbiMgRXhhbXBsZSBjYWxsXG5iaW5vbWlhbF9sbCgxLjUpIn0=
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShiYm1sZSlcblxuIyBGdW5jdGlvbiBJbnB1dHM6IE5hbWVkIHZlY3RvciBvZiBtb2RlbCBwYXJhbWV0ZXJzIGFuZCBhIHZlY3RvciBvZiB0aW1lc1xuIyBGdW5jdGlvbiBPdXRwdXRzOiBQcmVkaWN0ZWQgcHJldmFsZW5jZXMgYXQgaW5wdXQgdGltZXNcbnByZWQgPC0gZnVuY3Rpb24ocGFyYW1ldGVycywgdCkge1xuICBpbml0aWFsX3ZhbHMgPC0gYyhTID0gOTk5LCBJID0gMSwgUiA9IDApXG4gIHRfc3RhcnQgPC0gMFxuICB0X2VuZCA8LSBtYXgodClcbiAgc3RlcF9zaXplIDwtIHRfZW5kIC0gdF9zdGFydFxuXG4gICMgQ2FsbGluZyByazRzeXMgdG8gc29sdmUgb3VyIG1vZGVsIGVxdWF0aW9uc1xuICBvdXRwdXQgPC0gcms0c3lzKFxuICAgIGYgPSBmdW5jdGlvbih0LCB5KSBNb2RlbEZ1bmModCwgeSwgcGFyYW1ldGVycyksXG4gICAgYSA9IHRfc3RhcnQsXG4gICAgYiA9IHRfZW5kLFxuICAgIHkwID0gaW5pdGlhbF92YWxzLFxuICAgIG4gPSBzdGVwX3NpemVcbiAgKVxuXG4gICMgRXh0cmFjdGluZyBwcmVkaWN0ZWQgcHJldmFsZW5jZXNcbiAgb3V0cHV0X2RmIDwtIGFzLmRhdGEuZnJhbWUob3V0cHV0KVxuICBwcmV2YWxlbmNlcyA8LSBvdXRwdXRfZGYkeS5JW3RdXG5cbiAgIyBFbnN1cmluZyB0aGVyZSBhcmUgbm8gTmFOcyBvciBvdXQgb2YgYm91bmRzIG51bWJlcnNcbiAgcHJldmFsZW5jZXNbaXMubmFuKHByZXZhbGVuY2VzKSB8IHByZXZhbGVuY2VzIDwgMF0gPC0gMFxuXG4gIHJldHVybihwcmV2YWxlbmNlcylcbn1cblxuIyBGdW5jdGlvbiBJbnB1dHM6IEEgbmFtZWQgbGlzdCBjb250YWluaW5nIGEgdmFsdWUgZm9yIGJldGFcbiMgRnVuY3Rpb24gT3V0cHV0czogVGhlIG5lZ2F0aXZlIGxvZy1saWtlbGlob29kIG9mIHRoZSBlbnRpcmUgZGF0YSBzZXRcbmJpbm9taWFsX2xsIDwtIGZ1bmN0aW9uKGIpIHtcbiAgdGltZXMgPC0gZGF0YSRkYXlcbiAgcGFyYW1ldGVycyA8LSBjKGJldGEgPSBiLCBnYW1tYSA9IDAuNywgTiA9IDEwMDApXG4gIHByZWRpY3RlZCA8LSBwcmVkKHBhcmFtZXRlcnMsIHRpbWVzKVxuXG4gICMgUmV0dXJucyB0aGUgbmVnYXRpdmUgbG9nLWxpa2VsaWhvb2RcbiAgLXN1bShkYmlub20oXG4gICAgeCA9IGRhdGEkcHJldmFsZW5jZV9jb3VudCxcbiAgICBzaXplID0gcGFyYW1ldGVyc1tcIk5cIl0sXG4gICAgcHJvYiA9IHByZWRpY3RlZCAvIHBhcmFtZXRlcnNbXCJOXCJdLFxuICAgIGxvZyA9IFRSVUVcbiAgKSlcbn1cblxuIyBFeGFtcGxlIGNhbGxcbmJpbm9taWFsX2xsKDEuNSkifQ==
 </script>
 </div>
 <p>All we have left to do now is specify the other values to be passed (for <code>start</code>, <code>method</code>, and <code>lower</code>) and call <code>mle2</code>.</p>
@@ -707,7 +710,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShiYm1sZSlcblxu
 
 </div>
 <script type="webr-7-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBPdXIgaW5pdGlhbCBndWVzcyBmb3Igd2hhdCBiZXRhIGlzXG4jIE5PVEU6IFRyeSBtYWtpbmcgdGhlIGluaXRpYWwgZ3Vlc3Mgb25lIHRoYXQgaXMgcGxhdXNpYmx5IGNsb3NlIHRvIHRoZSB0cnVlIHBhcmFtZXRlclxuIyBJZiBvdXIgZ3Vlc3MgaXMgdG9vIGZhciBvZmYgdGhlbiBtbGUyIG1pZ2h0IHJldHVybiBzb21lIGVycm9yc1xuc3RhcnQgPC0gbGlzdChiID0gMilcblxuIyBVc2luZyB0aGUgTC1CRkdTLUIgYWxnb3JpdGhtIC8gbWV0aG9kIGZvciBNTEVcbiMgU2V0dGluZyB0aGUgbG93ZXIgYm91bmQgdG8gYmUgc21hbGwgYnV0IHBvc2l0aXZlIHNpbmNlIGJldGEgaXMgbm9uLW5lZ2F0aXZlXG5yZXN1bHQgPC0gbWxlMihcbiAgbWludXNsb2dsID0gYmlub21pYWxfbGwsXG4gIHN0YXJ0ID0gc3RhcnQsXG4gIG1ldGhvZCA9IFwiTC1CRkdTLUJcIixcbiAgbG93ZXIgPSBjKGIgPSAwLjAxKVxuKVxuXG4jIFByaW50aW5nIG91ciBlc3RpbWF0ZSBmb3IgYmV0YVxuY29lZihyZXN1bHQpIn0=
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBPdXIgaW5pdGlhbCBndWVzcyBmb3Igd2hhdCBiZXRhIGlzXG4jIE5PVEU6IE1ha2UgdGdlIGluaXRpYWwgZ3Vlc3MgcGxhdXNpYmx5IGNsb3NlIHRvIHRoZSB0cnVlIHBhcmFtZXRlclxuIyBJZiBvdXIgZ3Vlc3MgaXMgdG9vIGZhciBvZmYgdGhlbiBtbGUyIG1pZ2h0IHJldHVybiBzb21lIGVycm9yc1xuc3RhcnQgPC0gbGlzdChiID0gMilcblxuIyBVc2luZyB0aGUgTC1CRkdTLUIgYWxnb3JpdGhtIC8gbWV0aG9kIGZvciBNTEVcbiMgU2V0dGluZyB0aGUgbG93ZXIgYm91bmQgdG8gYmUgc21hbGwgYnV0IHBvc2l0aXZlIChiZXRhID4gMClcbnJlc3VsdCA8LSBtbGUyKFxuICBtaW51c2xvZ2wgPSBiaW5vbWlhbF9sbCxcbiAgc3RhcnQgPSBzdGFydCxcbiAgbWV0aG9kID0gXCJMLUJGR1MtQlwiLFxuICBsb3dlciA9IGMoYiA9IDAuMDEpXG4pXG5cbiMgUHJpbnRpbmcgb3VyIGVzdGltYXRlIGZvciBiZXRhXG5jb2VmKHJlc3VsdCkifQ==
 </script>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -729,7 +732,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Try this
+<span class="screen-reader-only">Tip</span>Try this
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -851,13 +854,14 @@ window._ojs.runtime.interpretFromScriptTags();
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -1262,7 +1266,7 @@ window._ojs.runtime.interpretFromScriptTags();
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Estimating the Transmission Rate"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> live-html</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">bibliography:</span><span class="co"> reference.bib</span></span>
@@ -1837,7 +1841,7 @@ window._ojs.runtime.interpretFromScriptTags();
 <span id="cb1-573"><a href="#cb1-573" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Like we did when we coded MLE from scratch, try changing the value of <span class="in">`beta`</span> in <span class="in">`model_parameters`</span> in **Step 1** (line 24) and see if the the maximum likelihood estimate for $\beta$ returned by `mle2` in **Step 3** reflects these changes.</span>
 <span id="cb1-574"><a href="#cb1-574" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-575"><a href="#cb1-575" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-576"><a href="#cb1-576" aria-hidden="true" tabindex="-1"></a><span class="fu">## Chapter References {.unnumbered .unlisted}</span></span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-576"><a href="#cb1-576" aria-hidden="true" tabindex="-1"></a><span class="fu">## Chapter References {.unnumbered .unlisted}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

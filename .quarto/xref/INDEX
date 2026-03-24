@@ -1,5 +1,29 @@
 {
   "sir_basic_test.qmd": {
     "sir_basic_test.html": "ada01b56"
+  },
+  "index.qmd": {
+    "index.html": "8d3912dc"
+  },
+  "modules/chapters/terms_intro.qmd": {
+    "terms_intro.html": "dfcf857a"
+  },
+  "modules/chapters/epidemic_model_intro.qmd": {
+    "epidemic_model_intro.html": "374997e1"
+  },
+  "modules/chapters/solving_sir.qmd": {
+    "solving_sir.html": "9a935c3f"
+  },
+  "modules/chapters/mle.qmd": {
+    "mle.html": "d04373f9"
+  },
+  "modules/chapters/recap_parameters.qmd": {
+    "recap_parameters.html": "af7362d0"
+  },
+  "modules/chapters/reprod_nums.qmd": {
+    "reprod_nums.html": "afd9ffa5"
+  },
+  "modules/chapters/examples.qmd": {
+    "examples.html": "281e0270"
   }
 }

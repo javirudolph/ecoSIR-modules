@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -89,14 +89,15 @@ div.csl-indent {
 <link href="../chapters/epidemic_model_intro.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
 <link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -143,7 +144,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -183,7 +184,9 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Computational Thinking with SIR Models</a> 
     </div>
@@ -293,7 +296,7 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Learning Objectives
+<span class="screen-reader-only">Tip</span>Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -309,12 +312,12 @@ Learning Objectives
 </blockquote>
 <p>In Calculus 1, we learned that to find the rate of change of a function we take its <em>derivative</em>. Solving a differential equation means undoing this process (i.e.&nbsp;finding the function whose derivative is equal to our differential equation). To fully solve a differential equation we also need some <em>initial values</em>, or values of the function at some specific times.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Why do we need initial values to solve a differential equation?
+<span class="screen-reader-only">Note</span>Why do we need initial values to solve a differential equation?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -345,7 +348,7 @@ Why do we need initial values to solve a differential equation?
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Learning Objectives
+<span class="screen-reader-only">Tip</span>Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -386,12 +389,12 @@ Note
 </div>
 <p>Euler’s method involves repeatedly finding <em>tangent line approximations</em> to <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> at a discrete set of times (often called nodes). We will use <span class="math inline">\(s_t\)</span>, <span class="math inline">\(i_t\)</span>, and <span class="math inline">\(r_t\)</span> to denote these approximations at a time <span class="math inline">\(t\)</span>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-What is a tangent line approximation?
+<span class="screen-reader-only">Note</span>What is a tangent line approximation?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -413,35 +416,43 @@ y=f(a)+f'(a)(\Delta t)
 </div>
 <p>These approximations are found using the following recursive formulas:</p>
 <p><br></p>
-<p><span class="math display">\[
-\begin{aligned}
-s_{t+1} &amp;= s_t - \Delta t \, \beta \left(\frac{i_t}{N}\right) s_t \\[10pt]
-i_{t+1} &amp;= i_t + \Delta t \, \left[\beta \left(\frac{i_t}{N}\right) s_t - \gamma i_t\right] \\[10pt]
-r_{t+1} &amp;= r_t + \Delta t \, \gamma i_t
-\end{aligned}
-\]</span></p>
+$$
+<span class="math display">\[\begin{aligned}
+s_{t+1} &amp;= s_t - \Delta t \, \big( \beta \big)
+\left( \frac{i_t}{N} \right)
+\big( s_t \big) \\[10pt]
+
+i_{t+1} &amp;= i_t + \Delta t \,
+\left[
+\beta \left( \frac{i_t}{N} \right) (s_t)
+- \gamma (i_t)
+\right] \\[10pt]
+
+r_{t+1} &amp;= r_t + \Delta t \, \big( \gamma \big) (i_t)
+\end{aligned}\]</span>
+<p>$$</p>
 <p><br></p>
 <ul>
 <li><p><span class="math inline">\(s_{t+1}\)</span>, <span class="math inline">\(i_{t+1}\)</span>, <span class="math inline">\(r_{t+1}\)</span>: Approximations for <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> at the next node</p></li>
 <li><p><span class="math inline">\(s_{t}\)</span>, <span class="math inline">\(i_{t}\)</span>, <span class="math inline">\(r_{t}\)</span>: Approximations for <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> at the previous node</p></li>
 <li><p><span class="math inline">\(\Delta t\)</span>: Step size (how far each node is spaced apart on the <span class="math inline">\(t\)</span>-axis)</p></li>
-<li><p><span class="math inline">\(N\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(gamma\)</span>: Population size, transmission rate, and recovery rate, respectively</p></li>
+<li><p><span class="math inline">\(N\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span>: Population size, transmission rate, and recovery rate, respectively</p></li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-How does this connect back to the “general” way of doing Euler’s method?
+<span class="screen-reader-only">Note</span>How does this connect back to the “general” way of doing Euler’s method?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>This formula is just an application of the generalized Euler’s method for first-order differential equation <span class="math inline">\(Y'(t)=f(t,Y(t))\)</span>, true solution <span class="math inline">\(Y(t)\)</span>, and approximate solutions <span class="math inline">\(y_0,\dots,y_t,\dots,y_b\)</span>, which are calculated at evenly spaced <span class="math inline">\(t_n\)</span> as:</p>
+<p>This formula is just an application of the generalized Euler’s method for first-order differential equation <span class="math inline">\(Y'(t)=f\big(t,Y(t)\big)\)</span>, true solution <span class="math inline">\(Y(t)\)</span>, and approximate solutions <span class="math inline">\(y_0,\dots,y_t,\dots,y_b\)</span>, which are calculated at evenly spaced <span class="math inline">\(t_n\)</span> as:</p>
 <p><span class="math display">\[
-y_{t+1}=y_t+ \Delta t f(t_n,Y(t_n)
+y_{t+1}=y_t+ \Delta t \big[f\big(t_n,Y(t_n)\big)\big]
 \]</span></p>
 <p>Where <span class="math inline">\(\Delta t\)</span> still represents how far each <span class="math inline">\(t_n\)</span> are apart.</p>
 </div>
@@ -461,7 +472,7 @@ y_{t+1}=y_t+ \Delta t f(t_n,Y(t_n)
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Reminder
+<span class="screen-reader-only">Tip</span>Reminder
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -516,12 +527,12 @@ Reminder
 </tbody>
 </table>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-What does <span class="math inline">\(\approx\)</span> mean?
+<span class="screen-reader-only">Note</span>What does <span class="math inline">\(\approx\)</span> mean?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -537,7 +548,7 @@ What does <span class="math inline">\(\approx\)</span> mean?
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important Note
+<span class="screen-reader-only">Important</span>Important Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -554,7 +565,7 @@ Important Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Learning Objectives
+<span class="screen-reader-only">Tip</span>Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -583,7 +594,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBUcmFuc21pc3Npb24gcmF0
 
 </div>
 <script type="webr-2-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBTdGFydGluZyBwcm9wb3J0aW9ucyDigJQgbXVzdCBzdW0gdG8gMVxuUzAgPC0gMC45OSAjIDk5JSBzdXNjZXB0aWJsZTogbmVhcmx5IGV2ZXJ5b25lIGlzIHN1c2NlcHRpYmxlIGF0IHRoZSBzdGFydFxuSTAgPC0gMC4wMSAjIDElIGluZmVjdGlvdXM6IGEgc21hbGwgXCJzcGFya1wiIG9mIGluZmVjdGlvbiBlbnRlcnMgdGhlIHBvcHVsYXRpb25cblIwX3N0YXJ0IDwtIDAuMDAgIyAwJSByZWNvdmVyZWQ6IG5vIHByaW9yIGltbXVuaXR5XG5cbiMgVmVyaWZ5IHRoZXkgc3VtIHRvIDEgKGEgZ29vZCBzYW5pdHkgY2hlY2sgdG8gYnVpbGQgaW50byB5b3VyIGNvZGUpXG5jYXQoXCJTMCArIEkwICsgUjAgPVwiLCBTMCArIEkwICsgUjBfc3RhcnQpIn0=
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBTdGFydGluZyBwcm9wb3J0aW9ucyDigJQgbXVzdCBzdW0gdG8gMVxuUzAgPC0gMC45OSAjIDk5JSBzdXNjZXB0aWJsZTogbmVhcmx5IGV2ZXJ5b25lIGlzIHN1c2NlcHRpYmxlIGF0IHRoZSBzdGFydFxuSTAgPC0gMC4wMSAjIDElIGluZmVjdGlvdXM6IHNtYWxsIFwic3BhcmtcIiBvZiBpbmZlY3Rpb24gZW50ZXJzIHBvcHVsYXRpb25cblIwX3N0YXJ0IDwtIDAuMDAgIyAwJSByZWNvdmVyZWQ6IG5vIHByaW9yIGltbXVuaXR5XG5cbiMgVmVyaWZ5IHRoZXkgc3VtIHRvIDEgKGEgZ29vZCBzYW5pdHkgY2hlY2sgdG8gYnVpbGQgaW50byB5b3VyIGNvZGUpXG5jYXQoXCJTMCArIEkwICsgUjAgPVwiLCBTMCArIEkwICsgUjBfc3RhcnQpIn0=
 </script>
 </div>
 <p>This sanity check, confirming that proportions sum to 1 — is a simple example of a habit that will save you debugging time later. When you add more compartments (SEIR, endemic model), this check generalizes naturally.</p>
@@ -640,7 +651,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQbG90dGluZyBzdXNjZXB0
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Try this
+<span class="screen-reader-only">Tip</span>Try this
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -661,7 +672,7 @@ Try this
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Learning Objectives
+<span class="screen-reader-only">Tip</span>Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -679,7 +690,7 @@ Learning Objectives
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Is there a specific name for the type of differential equations we are solving?
+<span class="screen-reader-only">Note</span>Is there a specific name for the type of differential equations we are solving?
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -693,12 +704,12 @@ Is there a specific name for the type of differential equations we are solving?
 </div>
 <p>Although <code>pracma</code> contains many mathematical functions, we are primarily interested in <code>rk4sys</code>, a function to solve systems of differential equations using an advanced method known as the <em>Classic Fourth-Order Runge-Kutta Method</em> (or RK4 for short). This method for solving differential equations is much more complex than Euler’s method but outputs solutions to a much greater accuracy. Like Euler’s method, RK4’s accuracy depends on the step size. However, in general, a solution to a model found using RK4 will be more accurate than one found using Euler’s method, even when the same step size is used.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-How exactly does RK4 work?
+<span class="screen-reader-only">Note</span>How exactly does RK4 work?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -751,7 +762,7 @@ How exactly does RK4 work?
 
 </div>
 <script type="webr-7-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBGdW5jdGlvbiBJbnB1dHM6IEEgdGltZSBhbmQgYSB2ZWN0b3Igb2YgdGhlIG1vZGVsIHByb3BvcnRpb25zIGF0IHRoYXQgdGltZVxuIyBGdW5jdGlvbiBPdXRwdXRzOiBUaGUgcmF0ZXMgb2YgY2hhbmdlIGZvciBTLCBJLCBSIGF0IHRoZSBpbnB1dCB0aW1lXG5Nb2RlbEZ1bmMgPC0gZnVuY3Rpb24odGltZSwgc3RhdGUpIHtcbiAgIyBFeHRyYWN0aW5nIHRoZSBzdGF0ZSB2YXJpYWJsZXM6IHN1c2NlcHRpYmxlLCBpbmZlY3RlZCwgYW5kIHJlY292ZXJlZCAoUyxJLFIpXG4gIFMgPC0gc3RhdGVbMV1cbiAgSSA8LSBzdGF0ZVsyXVxuICBSIDwtIHN0YXRlWzNdXG5cbiAgIyBTcGVjaWZ5aW5nIHRoZSBtb2RlbCBwYXJhbWV0ZXJzXG4gICMgV2Ugb25seSBoYXZlIHR3byBwYXJhbWV0ZXJzIC0gdGhlIHRyYW5zbWlzc2lvbiBhbmQgcmVjb3ZlcnkgcmF0ZVxuICAjIFRoZXNlIHBhcmFtZXRlcnMgd2lsbCBjaGFuZ2UgZGVwZW5kaW5nIG9uIHRoZSBtb2RlbFxuICBiZXRhIDwtIDEuNVxuICBnYW1tYSA8LSAwLjVcblxuICAjIENvbnN0cnVjdGluZyBvdXIgU0lSIG1vZGVsIGVxdWF0aW9uc1xuICBkUyA8LSAtKGJldGEgKiBJICogUylcbiAgZEkgPC0gKGJldGEgKiBJICogUykgLSAoZ2FtbWEgKiBJKVxuICBkUiA8LSAoZ2FtbWEgKiBJKVxuXG4gICMgTm93IHdlIHdpbGwgcmV0dXJuIHRob3NlIG1vZGVsIGVxdWF0aW9ucyBhcyBhIHZlY3RvclxuICByZXR1cm4oYyhkUywgZEksIGRSKSlcbn1cblxuIyBFeGFtcGxlIGNhbGxcbk1vZGVsRnVuYygxLCBjKFMgPSAwLjk5LCBJID0gMC4wMSwgUiA9IDApKSJ9
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBGdW5jdGlvbiBJbnB1dHM6IEEgdGltZSBhbmQgdmVjdG9yIG9mIHRoZSBtb2RlbCBwcm9wb3J0aW9ucyBhdCB0aGF0IHRpbWVcbiMgRnVuY3Rpb24gT3V0cHV0czogVGhlIHJhdGVzIG9mIGNoYW5nZSBmb3IgUywgSSwgUiBhdCB0aGUgaW5wdXQgdGltZVxuTW9kZWxGdW5jIDwtIGZ1bmN0aW9uKHRpbWUsIHN0YXRlKSB7XG4gICMgRXh0cmFjdGluZyBzdGF0ZSB2YXJpYWJsZXM6IHN1c2NlcHRpYmxlLCBpbmZlY3RlZCwgYW5kIHJlY292ZXJlZFxuICBTIDwtIHN0YXRlWzFdXG4gIEkgPC0gc3RhdGVbMl1cbiAgUiA8LSBzdGF0ZVszXVxuXG4gICMgU3BlY2lmeWluZyB0aGUgbW9kZWwgcGFyYW1ldGVyc1xuICAjIFdlIG9ubHkgaGF2ZSB0d28gcGFyYW1ldGVycyAtIHRoZSB0cmFuc21pc3Npb24gYW5kIHJlY292ZXJ5IHJhdGVcbiAgIyBUaGVzZSBwYXJhbWV0ZXJzIHdpbGwgY2hhbmdlIGRlcGVuZGluZyBvbiB0aGUgbW9kZWxcbiAgYmV0YSA8LSAxLjVcbiAgZ2FtbWEgPC0gMC41XG5cbiAgIyBDb25zdHJ1Y3Rpbmcgb3VyIFNJUiBtb2RlbCBlcXVhdGlvbnNcbiAgZFMgPC0gLShiZXRhICogSSAqIFMpXG4gIGRJIDwtIChiZXRhICogSSAqIFMpIC0gKGdhbW1hICogSSlcbiAgZFIgPC0gKGdhbW1hICogSSlcblxuICAjIE5vdyB3ZSB3aWxsIHJldHVybiB0aG9zZSBtb2RlbCBlcXVhdGlvbnMgYXMgYSB2ZWN0b3JcbiAgcmV0dXJuKGMoZFMsIGRJLCBkUikpXG59XG5cbiMgRXhhbXBsZSBjYWxsXG5Nb2RlbEZ1bmMoMSwgYyhTID0gMC45OSwgSSA9IDAuMDEsIFIgPSAwKSkifQ==
 </script>
 </div>
 <hr>
@@ -772,7 +783,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShwcmFjbWEpXG5c
 
 </div>
 <script type="webr-9-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShwcmFjbWEpXG5cbiMgTWFrZSBzdXJlIHRoZSB2YWx1ZXMgd2UgZGVmaW5lZCBhcmUgYmVpbmcgcGFzc2VkIGludG8gdGhlIGNvcnJlY3QgYXJndW1lbnRzXG5vdXRwdXQgPC0gcms0c3lzKFxuICBmID0gTW9kZWxGdW5jLFxuICBhID0gc3RhcnQsXG4gIGIgPSBlbmQsXG4gIHkwID0gaW5pdGlhbF92YWxzLFxuICBuID0gc3RlcF9zaXplXG4pXG5cbiMgQ29udmVydGluZyB0aGUgb3V0cHV0IG1hdHJpeCB0byBhIGRhdGEgZnJhbWUgYW5kIHByaW50aW5nIGl0XG5vdXRwdXQgPC0gYXMuZGF0YS5mcmFtZShvdXRwdXQpXG5vdXRwdXQifQ==
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibGlicmFyeShwcmFjbWEpXG5cbiMgTWFrZSBzdXJlIHRoZSB2YWx1ZXMgd2UgZGVmaW5lZCBhcmUgcGFzc2VkIGludG8gdGhlIGNvcnJlY3QgYXJndW1lbnRzXG5vdXRwdXQgPC0gcms0c3lzKFxuICBmID0gTW9kZWxGdW5jLFxuICBhID0gc3RhcnQsXG4gIGIgPSBlbmQsXG4gIHkwID0gaW5pdGlhbF92YWxzLFxuICBuID0gc3RlcF9zaXplXG4pXG5cbiMgQ29udmVydGluZyB0aGUgb3V0cHV0IG1hdHJpeCB0byBhIGRhdGEgZnJhbWUgYW5kIHByaW50aW5nIGl0XG5vdXRwdXQgPC0gYXMuZGF0YS5mcmFtZShvdXRwdXQpXG5vdXRwdXQifQ==
 </script>
 </div>
 <p>Now that we have a data frame of the solved SIR model equations at specified times, let’s plot it.</p>
@@ -792,7 +803,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoidGltZXMgPC0gb3V0cHV0JHhc
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Try this
+<span class="screen-reader-only">Tip</span>Try this
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -811,7 +822,7 @@ Try this
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Learning Objectives
+<span class="screen-reader-only">Tip</span>Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -856,7 +867,7 @@ Learning Objectives
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Tip
+<span class="screen-reader-only">Tip</span>Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -873,7 +884,7 @@ Tip
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Try this
+<span class="screen-reader-only">Tip</span>Try this
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -889,7 +900,7 @@ Try this
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-This isn’t the only way!
+<span class="screen-reader-only">Important</span>This isn’t the only way!
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -999,13 +1010,14 @@ window._ojs.runtime.interpretFromScriptTags();
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -1410,7 +1422,7 @@ window._ojs.runtime.interpretFromScriptTags();
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Solving SIR Models"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> live-html</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">bibliography:</span><span class="co"> reference.bib</span></span>
@@ -1939,7 +1951,7 @@ window._ojs.runtime.interpretFromScriptTags();
 <span id="cb1-527"><a href="#cb1-527" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-528"><a href="#cb1-528" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-529"><a href="#cb1-529" aria-hidden="true" tabindex="-1"></a><span class="fu">## Chapter References {.unnumbered .unlisted}</span></span>
-<span id="cb1-530"><a href="#cb1-530" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-530"><a href="#cb1-530" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
