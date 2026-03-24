@@ -11,13 +11,6 @@ book:
   date: today
   chapters:
     - index.qmd
-    - modules/chapters/terms_intro.qmd
-    - modules/chapters/epidemic_model_intro.qmd
-    - modules/chapters/solving_sir.qmd
-    - modules/chapters/mle.qmd
-    - modules/chapters/recap_parameters.qmd
-    - modules/chapters/reprod_nums.qmd
-    - modules/chapters/examples.qmd
 
 format:
   html:
