@@ -8,5 +8,45 @@
     "crumbs": [
       "Introduction and Learning Objectives"
     ]
+  },
+  {
+    "objectID": "modules/01-sir-intro/compartments.html",
+    "href": "modules/01-sir-intro/compartments.html",
+    "title": "1  Compartments and Disease States",
+    "section": "",
+    "text": "1.1 Epidemiology Terms\nDisease ecologists don’t just observe outbreaks, we build simplified representations of them. Before we write a single line of code or equation, we need a shared vocabulary for how we think about individuals moving through a disease. This chapter introduces that vocabulary: not as definitions to memorize, but as biological decisions that shape every model we will build.\nFrom a thousand-foot perspective, epidemiology is the study of diseases. For the purposes of mathematical models in epidemiology, such as the SIR model, individuals are classified in groups, or compartments, based on their ability to transmit a pathogen — not whether or not they feel sick. This distinction matters: a person can be infectious before they show symptoms, and can still feel sick after they are no longer infectious.\nModels in epidemiology often categorize people into four compartments:\nOverlapping with these compartments, individuals can also be classified based on whether or not they exhibit symptoms of infection:",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Compartments and Disease States</span>"
+    ]
+  },
+  {
+    "objectID": "modules/01-sir-intro/compartments.html#sec-epidemiology-terms",
+    "href": "modules/01-sir-intro/compartments.html#sec-epidemiology-terms",
+    "title": "1  Compartments and Disease States",
+    "section": "",
+    "text": "TipLearning Objectives\n\n\n\nBy the end of Section 1.1, you should be able to:\n\nDefine basic terms in epidemiology and categorize people into compartments based on their infectivity / symptom status.\nVisualize a disease timeline in terms of compartments.\n\n\n\n\n\n\nSusceptible: No pathogen is present. The individual can become infected if exposed.\nExposed: The individual has encountered an infected individual and has been infected, but pathogen levels are too low to allow transmission. This individual is infected but not yet infectious.\nInfectious: Pathogen levels are high enough that this individual can actively transmit the disease to others.\nRecovered: The individual’s immune system has cleared enough of the pathogen that transmission is no longer possible. They may still feel ill, but they cannot spread the disease.\n\n\n\n\n\n\n\nNote\n\n\n\nThe “recovered” compartment is sometimes better thought of as “removed from transmission”, as individuals are no longer infectious, regardless of whether they feel better.\n\n\n\n\nIncubation period: Infected but not yet showing symptoms. An individual can be in the infectious compartment while still in the incubation period — this is the basis of asymptomatic transmission.\nDiseased period: Showing symptoms. An individual can still be in the recovered compartment (non-infectious) while experiencing lingering symptoms.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Compartments and Disease States</span>"
+    ]
+  },
+  {
+    "objectID": "modules/01-sir-intro/compartments.html#sec-introducing-compartmental-models",
+    "href": "modules/01-sir-intro/compartments.html#sec-introducing-compartmental-models",
+    "title": "1  Compartments and Disease States",
+    "section": "1.2 Compartmental Models",
+    "text": "1.2 Compartmental Models\n\n\n\n\n\n\nTipLearning Objectives\n\n\n\nBy the end of Section 1.2, you should be able to:\n\nIdentify which differential equations can be considered compartmental models.\nIdentify situations where a compartmental model would be useful.\nVisualize various compartmental models (particularly SIR models) using flowcharts.\n\n\n\nGenerally speaking, compartmental models are a way to represent the flow of populations between different states, known as compartments, using differential equations.\n\n\n\n\n\n\nNoteWhat are differential equations?\n\n\n\n\n\nRemembering back to Calculus 1, differential equations, or DEs for short, tell us how a function changes. In our modeling context, DEs tell us how the number or proportion of susceptible, infectious, and recovered people in a population change over time. In mathematical terms, DEs represent the derivative, or rate of change, of these disease dynamics with respect to time.\n\n\n\nCompartmental models show up in a wide variety of fields, not just epidemiology. Any field that can benefit from knowing how information flows between states can benefit from compartmental models.\nIn epidemiology, compartmental models analyze how people flow through the four compartments introduced in Section 1.1: susceptible (S), exposed (E), infectious (I), and recovered (R). The relationships between these compartments are often represented with flowcharts like the one below:\n\n\n\n\n\n\n\nSEIR\n\n\n\nS\n\nS\n\n\n\nE\n\nE\n\n\n\nS-&gt;E\n\n\nλ\n\n\n\nI\n\nI\n\n\n\nE-&gt;I\n\n\nσ\n\n\n\nR\n\nR\n\n\n\nI-&gt;R\n\n\nγ\n\n\n\n\n\n\n\n\nThe arrows between these compartments represent the direction of flow (susceptible individuals becoming exposed, exposed individuals becoming infectious, etc.) and the symbols above each arrow represent the flow rates between each compartment with respect to time.\nLet’s give an example: say in a very large population with an established pathogen presence, on average, 300 new people become exposed to the pathogen every day. Of those that are exposed to the pathogen, on average, 50 of them reach pathogen levels high enough to become infectious per day. Then, of those that are infectious and able to transmit the pathogen, on average, 40 of them recover from the pathogen (i.e. can no longer transmit it).\nWe can model this specific example with the modified flowchart below:\n\n\n\n\n\n\n\nSEIRmod\n\n\n\nS\n\nS\n\n\n\nE\n\nE\n\n\n\nS-&gt;E\n\n\nλ = 300\n\n\n\nI\n\nI\n\n\n\nE-&gt;I\n\n\nσ = 50\n\n\n\nR\n\nR\n\n\n\nI-&gt;R\n\n\nγ = 40\n\n\n\n\n\n\n\n\nWhich compartments we choose to include depends on the specific pathogen and disease we are modeling. Models where the exposed period is so small it can be considered negligible, or is omitted for the sake of simplicity, are specifically known as SIR models (standing for the three different compartments included in the model: susceptible, infectious, and recovered).\n?sec-the-classic-sir-epidemic-model covers the specific equations and some key assumptions of the SIR model.\nNow that we have a vocabulary for how individuals move through disease states, we can ask the next question: how fast do they move? That is the language of the SIR equations.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Compartments and Disease States</span>"
+    ]
+  },
+  {
+    "objectID": "modules/01-sir-intro/compartments.html#chapter-references",
+    "href": "modules/01-sir-intro/compartments.html#chapter-references",
+    "title": "1  Compartments and Disease States",
+    "section": "Chapter References",
+    "text": "Chapter References\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nKeeling, Matt J., and Pejman Rohani. 2008. Modeling Infectious Diseases in Humans and Animals. Princeton University Press. https://doi.org/10.2307/j.ctvcm4gk0.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Compartments and Disease States</span>"
+    ]
   }
 ]

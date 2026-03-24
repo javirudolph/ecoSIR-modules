@@ -25,5 +25,8 @@
   },
   "modules/chapters/examples.qmd": {
     "examples.html": "281e0270"
+  },
+  "modules/01-sir-intro/compartments.qmd": {
+    "compartments.html": "dfbd74bc"
   }
 }

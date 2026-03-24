@@ -10,7 +10,10 @@ book:
     - name: "Anjali Tomerlin"
   date: today
   chapters:
-    - index.qmd
+      - index.qmd
+      - modules/01-sir-intro/compartments.qmd
+
+
 bibliography: modules/reference.bib
 
 format:
