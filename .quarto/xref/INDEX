@@ -40,5 +40,8 @@
   },
   "modules/01-sir-intro/fitting_mle.qmd": {
     "fitting_mle.html": "85ef4530"
+  },
+  "modules/01-sir-intro/reproduction_number.qmd": {
+    "reproduction_number.html": "4cd1242f"
   }
 }
