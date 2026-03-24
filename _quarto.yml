@@ -15,6 +15,7 @@ book:
       - modules/01-sir-intro/sir_equations.qmd
       - modules/01-sir-intro/solving_sir.qmd
       - modules/01-sir-intro/fitting_mle.qmd
+      - modules/01-sir-intro/reproductive_numbers.qmd
 
 
 bibliography: modules/reference.bib
