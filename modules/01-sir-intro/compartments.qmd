@@ -1,10 +1,10 @@
 ---
-title: "Basic Terminology"
-format: live-html
-bibliography: reference.bib
+title: "Compartments and Disease States"
 nocite: |
   @keeling_modeling_2008
 ---
+
+Disease ecologists don't just observe outbreaks, we build simplified representations of them. Before we write a single line of code or equation, we need a shared vocabulary for how we think about individuals moving through a disease. This chapter introduces that vocabulary: not as definitions to memorize, but as biological decisions that shape every model we will build.
 
 ## Epidemiology Terms {#sec-epidemiology-terms}
 
@@ -37,9 +37,6 @@ Overlapping with these compartments, individuals can also be classified based on
 - **Incubation period:** Infected but not yet showing symptoms. An individual can be in the infectious compartment while still in the incubation period — this is the basis of asymptomatic transmission.
 
 - **Diseased period:** Showing symptoms. An individual can still be in the recovered compartment (non-infectious) while experiencing lingering symptoms.
-
-
-(PLACE GRAPH HERE OF ALL THESE PERIODS)
 
 ## Compartmental Models {#sec-introducing-compartmental-models}
 
@@ -121,6 +118,6 @@ Which compartments we choose to include depends on the specific pathogen and dis
 
 [Section @sec-the-classic-sir-epidemic-model] covers the specific equations and some key assumptions of the SIR model.
 
+Now that we have a vocabulary for how individuals move through disease states, we can ask the next question: how fast do they move? That is the language of the SIR equations.
+
 ## Chapter References {.unnumbered .unlisted}
-
-
