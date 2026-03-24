@@ -37,5 +37,8 @@
   },
   "modules/01-sir-intro/sir_equations.qmd": {
     "sir_equations.html": "9ec7da4c"
+  },
+  "modules/01-sir-intro/fitting_mle.qmd": {
+    "fitting_mle.html": "85ef4530"
   }
 }
