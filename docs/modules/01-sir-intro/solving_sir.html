@@ -85,7 +85,7 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../modules/01-sir-intro/sir-equations.html" rel="prev">
+<link href="../../modules/01-sir-intro/sir_equations.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -211,7 +211,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../modules/01-sir-intro/sir-equations.html" class="sidebar-item-text sidebar-link">
+  <a href="../../modules/01-sir-intro/sir_equations.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The SIR Epidemic Model</span></span></a>
   </div>
 </li>
@@ -349,7 +349,7 @@ Note
 <p>To keep it simple, we will only discuss the process of Euler’s method as it is applied to the number of individuals in each compartment, but keep in mind this process can be applied in exactly the same way to proportions as well.</p>
 </div>
 </div>
-<p>Our goal is to find approximate solutions to <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span>—the exact number of individuals in each compartment at time <span class="math inline">\(t\)</span>—using our initial values (<span class="math inline">\(S(0)\)</span>, <span class="math inline">\(I(0)\)</span>, and <span class="math inline">\(R(0)\)</span>) and system of differential equations that is our SIR model (which we found in <a href="sir-equations.html#sec-the-classic-sir-epidemic-model" class="quarto-xref">Section&nbsp;<span>2.1</span></a>). For clarity, we will be using <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> to denote the <strong>exact</strong> solutions to the SIR equations and <span class="math inline">\(s(t)\)</span>, <span class="math inline">\(i(t)\)</span>, and <span class="math inline">\(r(t)\)</span> to denote the <em>approximate</em> solutions given by Euler’s method.</p>
+<p>Our goal is to find approximate solutions to <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span>—the exact number of individuals in each compartment at time <span class="math inline">\(t\)</span>—using our initial values (<span class="math inline">\(S(0)\)</span>, <span class="math inline">\(I(0)\)</span>, and <span class="math inline">\(R(0)\)</span>) and system of differential equations that is our SIR model (which we found in <a href="sir_equations.html#sec-the-classic-sir-epidemic-model" class="quarto-xref">Section&nbsp;<span>2.1</span></a>). For clarity, we will be using <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> to denote the <strong>exact</strong> solutions to the SIR equations and <span class="math inline">\(s(t)\)</span>, <span class="math inline">\(i(t)\)</span>, and <span class="math inline">\(r(t)\)</span> to denote the <em>approximate</em> solutions given by Euler’s method.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -745,7 +745,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQbG90dGluZyBzdXNjZXB0
 </tbody>
 </table>
 <p>The function <code>rk4sys</code> returns a matrix. When that matrix is converted to a data frame using the function <code>as.data.frame</code>, its first column provides the time points at which the SIR model was solved and subsequent columns are the solutions to the model’s state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infectious, and recovered at a given time.</p>
-<p>Before we can call <code>rk4sys</code>, let’s go over how to code the function to be passed into the parameter <code>f</code>. The function below is specifying a classic SIR model on the proportion of individuals in each compartment (see <a href="sir-equations.html#sec-the-classic-sir-epidemic-model" class="quarto-xref">Section&nbsp;<span>2.1</span></a>).</p>
+<p>Before we can call <code>rk4sys</code>, let’s go over how to code the function to be passed into the parameter <code>f</code>. The function below is specifying a classic SIR model on the proportion of individuals in each compartment (see <a href="sir_equations.html#sec-the-classic-sir-epidemic-model" class="quarto-xref">Section&nbsp;<span>2.1</span></a>).</p>
 <p><strong>Step 1: Code the model function.</strong></p>
 <div>
 <div id="webr-7" class="exercise-cell">
@@ -1400,7 +1400,7 @@ window._ojs.runtime.interpretFromScriptTags();
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../modules/01-sir-intro/sir-equations.html" class="pagination-link" aria-label="The SIR Epidemic Model">
+      <a href="../../modules/01-sir-intro/sir_equations.html" class="pagination-link" aria-label="The SIR Epidemic Model">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The SIR Epidemic Model</span></span>
       </a>          
   </div>

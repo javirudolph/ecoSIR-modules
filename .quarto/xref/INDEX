@@ -34,5 +34,8 @@
   },
   "modules/01-sir-intro/solving_sir.qmd": {
     "solving_sir.html": "1c679c7e"
+  },
+  "modules/01-sir-intro/sir_equations.qmd": {
+    "sir_equations.html": "9ec7da4c"
   }
 }
