@@ -1,15 +1,13 @@
 ---
-title: "Estimating the Transmission Rate"
-format: live-html
-bibliography: reference.bib
-nocite: |
-  @drake_mle
+title: "Fitting the Model to Data"
+engine: knitr
 webr:
-  engine: knitr
   packages:
     - pracma
     - bbmle
 ---
+
+MLE is how we make the model answer to reality: given what we actually observed, which value of $\beta$ makes the data most probable? This chapter works through that question step by step, first by hand in code, then using a package that does the heavy lifting.
 
 ## Intro to Maximum Likelihood Estimation {#sec-formulating-transmission-rate}
 
@@ -33,14 +31,13 @@ MLE works by maximizing the *likelihood function*. The likelihood function provi
 Discrete data means data that takes on values we can count (like $1,2,3,4,5,$ and so on). This is different than *continuous* data, which can take on any value within a range (like probabilities, which can be any value from $0$ to $1$)
 :::
 
-
 In this module, we will only focus on MLE for discrete data since the two most common types of disease data (incidence and prevalence data) are discrete. We defined incidence and prevalence data in @sec-formulating-foi, but you can review the chart below if you need a quick refresh: 
 
 <br>
 
-| **Name**   | **Explanation**                                                                                                                                                                                                                                                                                                            |
-|------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Prevalence | Data that reports the total number of infected individuals at a time $t$.                                                                                                                                                                                                                                                  |
+| **Name**   | **Explanation**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Prevalence | Data that reports the total number of infected individuals at a time $t$.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | Incidence  | Data that reports the number new infected individuals over a period of time from $t$ to $t+\Delta t$ (an interval that begins at time $t$ and ends some time later at $t+\Delta t$). $\Delta t$ is some increment of time, like one day, one week, two months, etc. |
 
 <br>
@@ -58,6 +55,7 @@ The PMF of the binomial fixes the sample size ($n$) and the probability of succe
 $$
 P(X=x)={n \choose x}p^x(1-p)^{n-x} 
 $$
+
 The likelihood function is just a reinterpretation of the PMF: instead of fixing $n$ and $p$ then taking in values for $x$, the likelihood function fixes the value of $x$ and takes in values for $n$ and $p$. The output is still the same: the probability of observing $x$.
 
 <br>
@@ -98,7 +96,6 @@ $$
 $$
 
 Now that we have our sample likelihood function, the hard part is over! All we have to do now is iterate through plausible values of $\beta$, calculate the sample likelihood $\mathcal{L}(\beta;S)$ for each, and find the maximum sample likelihood among them. We estimate the $\beta$ in our model to be whatever gives this maximum likelihood, and we are done! 
-
 
 Putting the whole process of MLE on prevalence data into steps, we have:
 
@@ -268,7 +265,11 @@ data <- data.frame(
 data
 ```
 
-Now that we have our data and a function for our SIR model called `ModelFunc`, our next step is to is to code a function to solve our SIR model for any value of $\beta$ and output what it predicts the number of infected individuals to be at various times.
+::: {.callout-note title="We know the answer here"}
+Notice that we generated this data ourselves using $\beta = 1.2$. That means we already know the true answer. This is intentional: when learning a new method, always test it on data where you know the truth. If MLE recovers something close to $1.2$, we can trust it. If it doesn't, something is wrong with the code, not the data.
+:::
+
+Now that we have our data and a function for our SIR model called `ModelFunc`, our next step is to code a function to solve our SIR model for any value of $\beta$ and output what it predicts the number of infected individuals to be at various times.
 
 ---
 
@@ -277,6 +278,8 @@ Now that we have our data and a function for our SIR model called `ModelFunc`, o
 We now have our data and a function for our SIR model called `ModelFunc` (if you are doing this for a real application where you don't have to pre-generate data, you would start this process at **Step 2** and code the model function here). Our next step is to is to code a function to solve our SIR model for any value of $\beta$ and output what it predicts the number of infected individuals to be at various times.
 
 ```{webr-r}
+library(pracma)
+
 # Function Inputs: Named vector of model parameters and a vector of times
 # Function Outputs: Predicted prevalences at input times
 pred <- function(parameters, t) {
@@ -316,6 +319,8 @@ Now that we have our function to output the predicted prevalences given by our S
 **Step 3: Code a function to calculate log-likelihoods given different parameter values.**
 
 ```{webr-r}
+library(pracma)
+
 # Function Inputs: Named vector of model parameters and the data set
 # Function Outputs: Log-likelihood of entire data set
 binomial_ll <- function(parameters, data) {
@@ -341,9 +346,13 @@ Our final step is to code a driver function that iterates through plausible valu
 
 ---
 
+**Step 4: Run the MLE algorithm and find the best fitting $\beta$.**
+
 ```{webr-r}
+library(pracma)
+
 # Function Inputs: Upper limit on the value of beta and the data set
-# Function Outputs: Plot of the log-likelihoods the estimate for beta
+# Function Outputs: Plot of the log-likelihoods and the estimate for beta
 mle <- function(plausible_beta, data) {
   range_beta <- seq(1, plausible_beta, by = 0.01)
 
@@ -359,7 +368,6 @@ mle <- function(plausible_beta, data) {
   # Finding the beta that results in the greatest log-likelihood
   beta_mle <- all_ll$beta[which.max(all_ll$ll)]
 
-
   # Plotting all the log-likelihoods against the betas
   plot(all_ll$beta,
     all_ll$ll,
@@ -369,7 +377,6 @@ mle <- function(plausible_beta, data) {
   )
 
   # Plotting a dotted line where the estimate for beta is
-  beta_mle <- all_ll$beta[which.max(all_ll$ll)]
   abline(v = beta_mle, lty = 2)
 
   # Returning the estimate
@@ -388,7 +395,7 @@ Go back to **Step 1** and try the following changes, re-running each step in ord
 This code might seem like a lot, but not to worry: there is a much easier way of doing MLE in R using the `bbmle` package! Read on to [Section @sec-bbmle] to learn how we can utilize the function `mle2` in the `bbmle` package to simplify conducting MLE in R.
 
 
-## MLE Using the `bbmle` package in R {#sec-bbmle}
+## MLE Using the `bbmle` Package in R {#sec-bbmle}
 
 ::: {.callout-tip title="Learning Objectives"}
 By the end of @sec-bbmle, you should be able to:
@@ -465,7 +472,7 @@ data
 
 Now that we have our data, let's go over the basics of `mle2`. 
 
-`mle2` has many arguments, which can be read up on in the R documentation for  the `mle2` function [@docs_bbmle_mle2], but the table below summarizes the ones useful to us:
+`mle2` has many arguments, which can be read up on in the R documentation for the `mle2` function [@docs_bbmle_mle2], but the table below summarizes the ones useful to us:
 
 <br>
 
@@ -490,6 +497,7 @@ The reason `binomial_ll` takes in different values this time is because `mle2` r
 
 ```{webr-r}
 library(bbmle)
+library(pracma)
 
 # Function Inputs: Named vector of model parameters and a vector of times
 # Function Outputs: Predicted prevalences at input times
@@ -542,11 +550,13 @@ All we have left to do now is specify the other values to be passed (for `start`
 
 ---
 
-**Step 3: Specifying our other values and calling `mle2`.**
+**Step 3: Specify our other values and call `mle2`.**
 
 ```{webr-r}
+library(bbmle)
+
 # Our initial guess for what beta is
-# NOTE: Make tge initial guess plausibly close to the true parameter
+# NOTE: Make the initial guess plausibly close to the true parameter
 # If our guess is too far off then mle2 might return some errors
 start <- list(b = 2)
 
@@ -570,7 +580,9 @@ Notice that the estimate we get for $\beta$ using `mle2` is approximately equal 
 ::: {.callout-tip title="Try this"}
 Go back to **Step 1** and try the following changes, re-running each step in order:
 
-1. Like we did when we coded MLE from scratch, try changing the value of `beta` in `model_parameters` in **Step 1** (line 24) and see if the the maximum likelihood estimate for $\beta$ returned by `mle2` in **Step 3** reflects these changes.
+1. Like we did when we coded MLE from scratch, try changing the value of `beta` in `model_parameters` in **Step 1** (line 24) and see if the maximum likelihood estimate for $\beta$ returned by `mle2` in **Step 3** reflects these changes.
 :::
+
+We can now solve an SIR model and fit it to data. What we have not yet asked is what the model tells us about the structure of an epidemic, specifically, the conditions under which a disease can invade a population at all. That is the question of the reproduction number, and it is the topic of the next chapter.
 
 ## Chapter References {.unnumbered .unlisted}
