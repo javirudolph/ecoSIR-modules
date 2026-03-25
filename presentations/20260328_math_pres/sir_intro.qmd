@@ -1,14 +1,13 @@
 ---
 title: "Computational Literacy in Disease Ecology"
 author: "Anjali Tomerlin"
-institute: "Academic Research Consulting & Services (ARCS)"
 date: "March 28, 2026"
 format:
   revealjs:
     slide-number: true
     progress: true
     transition: fade
-    footer: "github.com/javirudolph/ecoSIR-modules"
+    footer: "javirudolph.github.io/ecoSIR-modules/"
     css: uf-libraries.css
     scrollable: true
 execute:
@@ -290,13 +289,12 @@ While building this module, I had to "step out" of the math world. I learned val
 ::: {style="display: flex; align-items: flex-start; gap: 2.5em; margin-top: 0.5em;"}
 
 ::: {style="flex: 0 0 auto; text-align: center; min-width: 160px;"}
-<!-- Replace javi_photo.jpg with your actual photo filename -->
 <img src="javi_photo.jpg" class="mentor-photo" alt="Francisca Javiera Rudolph">
 <p class="mentor-name">Francisca Javiera Rudolph, PhD</p>
 <p class="mentor-title">
   Assistant University Librarian in Computational Literacy<br>
-  & Computational Ecologist<br>
-  ARCS, George A. Smathers Libraries
+  Computational Ecologist<br>
+  Academic Research Consulting & Services ([ARCS](https://arcs.uflib.ufl.edu))
 </p>
 :::
 

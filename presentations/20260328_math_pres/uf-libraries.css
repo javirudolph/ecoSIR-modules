@@ -104,59 +104,50 @@
 }
 
 /* --- Acknowledgments slide --------------------------------- */
-.acknowledgments-slide {
-  background-color: var(--uf-blue-dark) !important;
-  color: var(--uf-white) !important;
-}
-
-.acknowledgments-slide h2 {
-  color: var(--uf-white) !important;
-  border-bottom-color: var(--uf-orange) !important;
-}
-
-.acknowledgments-slide .mentor-name {
+.mentor-name {
   font-family: 'Anybody', sans-serif;
   font-weight: 700;
-  font-size: 1.1em;
-  color: var(--uf-white);
-  margin: 0.2em 0 0 0;
+  font-size: 1.2em;
+  color: var(--uf-blue-dark);
+  margin: 0.3em 0 0 0;
 }
 
-.acknowledgments-slide .mentor-title {
-  font-size: 0.75em;
-  color: var(--uf-gray);
-  line-height: 1.4;
-  margin: 0.1em 0;
+.mentor-title {
+  font-size: 0.9em;
+  color: #444;
+  line-height: 1.6;
+  margin: 0.2em 0;
 }
 
-.acknowledgments-slide .funding-label {
-  font-size: 0.7em;
+.funding-label {
+  font-size: 0.85em;
   color: var(--uf-orange);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 0.8em;
+  letter-spacing: 0.06em;
+  margin-top: 1em;
+  margin-bottom: 0.2em;
 }
 
-.acknowledgments-slide .funding-source {
-  font-size: 0.75em;
-  color: var(--uf-gray);
-  margin: 0.1em 0;
+.funding-source {
+  font-size: 0.95em;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .mentor-photo {
-  width: 130px;
-  height: 130px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--uf-orange);
   display: block;
-  margin: 0 auto 0.5em auto;
+  margin: 0 auto 0.6em auto;
 }
 
 .libraries-logo {
-  width: 240px;
+  width: 560px;
   display: block;
-  margin: 1em auto 0 auto;
-  opacity: 0.9;
+  margin: 0.8em 0 0 0;
 }
