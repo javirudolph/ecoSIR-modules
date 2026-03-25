@@ -9,7 +9,7 @@ webr:
     - bbmle
 ---
 
-## Epidemic SIR Model: A Complete Worked Example {#sec-worked-example}
+## Epidemic SIR Model: A Complete Worked Example {#sec-worked-example .unnumbered .unlisted}
 
 ::: {.callout-tip title="Learning Objectives"}
 By the end of @sec-worked-example, you should be able to:
