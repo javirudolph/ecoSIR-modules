@@ -1,7 +1,7 @@
 ---
 title: "Computational Literacy in Disease Ecology"
-author: "Anjali Tomerlin & Francisca Javiera Rudolph, PhD"
-institute: "UF Health Science Center Libraries"
+author: "Anjali Tomerlin"
+institute: "Academic Research Consulting & Services (ARCS)"
 date: "March 28, 2026"
 format:
   revealjs:
@@ -9,7 +9,8 @@ format:
     progress: true
     transition: fade
     footer: "github.com/javirudolph/ecoSIR-modules"
-    css: style.css
+    css: uf-libraries.css
+    scrollable: true
 execute:
   echo: false
   eval: false
@@ -281,3 +282,38 @@ While building this module, I had to "step out" of the math world. I learned val
 - Hackl, V., Müller, A. E., & Sailer, M. (2026). The AI literacy heptagon. *Computers and Education: Artificial Intelligence*
 
 </div>
+
+---
+
+## Acknowledgments {.acknowledgments-slide}
+
+::: {style="display: flex; align-items: flex-start; gap: 2.5em; margin-top: 0.5em;"}
+
+::: {style="flex: 0 0 auto; text-align: center; min-width: 160px;"}
+<!-- Replace javi_photo.jpg with your actual photo filename -->
+<img src="javi_photo.jpg" class="mentor-photo" alt="Francisca Javiera Rudolph">
+<p class="mentor-name">Francisca Javiera Rudolph, PhD</p>
+<p class="mentor-title">
+  Assistant University Librarian in Computational Literacy<br>
+  & Computational Ecologist<br>
+  ARCS, George A. Smathers Libraries
+</p>
+:::
+
+::: {style="flex: 1; padding-top: 0.3em;"}
+This work was made possible through mentorship and institutional support from the **George A. Smathers Libraries**.
+
+<p class="funding-label">Funding & Support</p>
+<p class="funding-source">
+  Research Division, George A. Smathers Libraries<br>
+  University of Florida<br>
+  <em>Sponsored by the Office of the Associate Dean of Research</em>
+</p>
+
+<img 
+  src="SmathersLibraries-RASTER-RGB.png"
+  class="libraries-logo"
+  alt="George A. Smathers Libraries">
+:::
+
+:::

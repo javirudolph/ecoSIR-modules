@@ -1,0 +1,162 @@
+/* ============================================================
+   UF Libraries – revealjs theme
+   Fonts: Anybody Bold (headings), IBM Plex Sans (body)
+   Colors extracted from 2026-Libraries-PPT.pptx
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,700;1,700&family=IBM+Plex+Sans:wght@400;600;700&display=swap');
+
+/* --- Color palette ----------------------------------------- */
+:root {
+  --uf-blue-dark:  #002657;   /* title slide background        */
+  --uf-blue:       #0021A5;   /* headings, accents             */
+  --uf-orange:     #FA4616;   /* highlights, emphasis          */
+  --uf-gray:       #C7C9C8;   /* dividers, muted text          */
+  --uf-white:      #FFFFFF;
+  --uf-black:      #000000;
+}
+
+/* --- Base typography --------------------------------------- */
+.reveal {
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+  font-size: 1.6rem;
+  color: var(--uf-black);
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+  font-family: 'Anybody', sans-serif;
+  font-weight: 700;
+  color: var(--uf-blue-dark);
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* --- Title slide ------------------------------------------- */
+.reveal .slides section.title-slide,
+.reveal .slides > section:first-child {
+  background-color: var(--uf-blue-dark);
+  color: var(--uf-white);
+}
+
+.reveal .slides section.title-slide h1,
+.reveal .slides > section:first-child h1 {
+  color: var(--uf-white);
+  font-size: 2.2em;
+}
+
+.reveal .slides section.title-slide p,
+.reveal .slides > section:first-child p,
+.reveal .slides section.title-slide .author,
+.reveal .slides section.title-slide .institute,
+.reveal .slides section.title-slide .date {
+  color: var(--uf-gray);
+}
+
+/* --- Slide headings ---------------------------------------- */
+.reveal h2 {
+  font-size: 1.4em;
+  border-bottom: 3px solid var(--uf-orange);
+  padding-bottom: 0.15em;
+  margin-bottom: 0.5em;
+}
+
+/* --- Links ------------------------------------------------- */
+.reveal a {
+  color: var(--uf-blue);
+}
+
+.reveal a:hover {
+  color: var(--uf-orange);
+}
+
+/* --- Blockquotes ------------------------------------------- */
+.reveal blockquote {
+  border-left: 4px solid var(--uf-orange);
+  background: none;
+  box-shadow: none;
+  padding-left: 1em;
+  color: var(--uf-blue-dark);
+  font-style: italic;
+}
+
+/* --- Code -------------------------------------------------- */
+.reveal code {
+  background-color: #f0f3f8;
+  color: var(--uf-blue-dark);
+  border-radius: 3px;
+  padding: 0.1em 0.3em;
+  font-size: 0.85em;
+}
+
+/* --- Progress bar & slide number --------------------------- */
+.reveal .progress {
+  color: var(--uf-orange);
+}
+
+/* --- Footer ------------------------------------------------ */
+.reveal .footer {
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+  font-size: 0.55em;
+  color: var(--uf-gray);
+}
+
+/* --- Acknowledgments slide --------------------------------- */
+.acknowledgments-slide {
+  background-color: var(--uf-blue-dark) !important;
+  color: var(--uf-white) !important;
+}
+
+.acknowledgments-slide h2 {
+  color: var(--uf-white) !important;
+  border-bottom-color: var(--uf-orange) !important;
+}
+
+.acknowledgments-slide .mentor-name {
+  font-family: 'Anybody', sans-serif;
+  font-weight: 700;
+  font-size: 1.1em;
+  color: var(--uf-white);
+  margin: 0.2em 0 0 0;
+}
+
+.acknowledgments-slide .mentor-title {
+  font-size: 0.75em;
+  color: var(--uf-gray);
+  line-height: 1.4;
+  margin: 0.1em 0;
+}
+
+.acknowledgments-slide .funding-label {
+  font-size: 0.7em;
+  color: var(--uf-orange);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.8em;
+}
+
+.acknowledgments-slide .funding-source {
+  font-size: 0.75em;
+  color: var(--uf-gray);
+  margin: 0.1em 0;
+}
+
+.mentor-photo {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--uf-orange);
+  display: block;
+  margin: 0 auto 0.5em auto;
+}
+
+.libraries-logo {
+  width: 240px;
+  display: block;
+  margin: 1em auto 0 auto;
+  opacity: 0.9;
+}
