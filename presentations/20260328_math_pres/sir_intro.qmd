@@ -7,9 +7,8 @@ format:
     slide-number: true
     progress: true
     transition: fade
-    footer: "javirudolph.github.io/ecoSIR-modules/"
+    footer: '<a href="https://javirudolph.github.io/ecoSIR-modules/">javirudolph.github.io/ecoSIR-modules/</a>' 
     css: uf-libraries.css
-    scrollable: true
 execute:
   echo: false
   eval: false
@@ -34,7 +33,7 @@ execute:
 
 . . .
 
-Currently in beta. Available at `github.com/javirudolph/ecoSIR-modules`. Coming to QUBES Hub.
+Currently in beta. Available at [`github.com/javirudolph/ecoSIR-modules`](https://github.com/javirudolph/ecoSIR-modules/). Coming to QUBES Hub.
 
 ---
 
@@ -43,6 +42,8 @@ Currently in beta. Available at `github.com/javirudolph/ecoSIR-modules`. Coming 
 The SIR model is one of the most studied objects in all of applied mathematics. **The gap is not content. The gap is the on-ramp.**
 
 . . .
+
+\
 
 Most existing resources assume the reader already thinks like a modeler:
 
@@ -61,7 +62,6 @@ This module starts from the other direction:
 
 ## Who is this module for?
 
-. . .
 
 **Everyone!** 
 
@@ -85,6 +85,7 @@ Like written language or mathematics, computational literacy is a **representati
 
 . . .
 
+\
 
 In disease ecology: you cannot fully understand an SIR model by reading its equations.  
 
@@ -106,7 +107,6 @@ In the last 30 years, nearly every scientific field has developed a computationa
 
 ## What computational literacy is NOT
 
-. . .
 
 **Not software training**  
 
@@ -122,7 +122,6 @@ In the last 30 years, nearly every scientific field has developed a computationa
 
 ## What computational literacy is NOT
 
-. . .
 
 **Not AI literacy**  
 
@@ -160,7 +159,6 @@ Key ideas from **computational literacy** and **pedagogy** helped us accomplish 
 
 ## Instructional Scaffolding
 
-. . . 
 
 **What is it?** 
 
@@ -190,7 +188,6 @@ Collapsible explanations
 
 ## Bidirectional Translation
 
-. . . 
 
 **What is it?** 
 
@@ -219,7 +216,6 @@ Sections first introduce a concept in words, then explain the mathematics behind
 
 ## Immersive Learning
 
-. . . 
 
 **What is it?** 
 
@@ -266,21 +262,19 @@ While building this module, I had to "step out" of the math world. I learned val
 
 \ 
 
-**Research is done in isolation, but change happens collectively.**
+**Research is often done in isolation, but change happens collectively.**
 
 ---
 
 ## References
 
-<div style="font-size: 0.9em;">
 
 - Ackermann, Edith. (2001). *Piaget's Constructivism, Papert's Constructionism: What's the difference?*. 5.   
 - diSessa, A. A. (2000). *Changing Minds: Computers, Learning, and Literacy*. MIT Press.
-- Center for Engaged Learning. (n.d.). Immersive Learning. Elon University. www.centerforengagedlearning.org/resources/immersive-learning/.
-- Northern Illinois University Center for Innovative Teaching and Learning. (2012). Instructional Scaffolding to Improve Learning. www.niu.edu/citl/resources/guides/instructional-guide/instructional-scaffolding-to-improve-learning.shtml
+- Center for Engaged Learning. (n.d.). Immersive Learning. Elon University. [https://www.centerforengagedlearning.org/resources/immersive-learning/.](https://www.centerforengagedlearning.org/resources/immersive-learning/)
+- Northern Illinois University Center for Innovative Teaching and Learning. (2012). Instructional Scaffolding to Improve Learning. [https://www.niu.edu/citl/resources/guides/instructional-guide/instructional-scaffolding-to-improve-learning.shtml.](https://www.niu.edu/citl/resources/guides/instructional-guide/instructional-scaffolding-to-improve-learning.shtml)
 - Hackl, V., Müller, A. E., & Sailer, M. (2026). The AI literacy heptagon. *Computers and Education: Artificial Intelligence*
 
-</div>
 
 ---
 
@@ -288,8 +282,8 @@ While building this module, I had to "step out" of the math world. I learned val
 
 ::: {style="display: flex; align-items: flex-start; gap: 2.5em; margin-top: 0.5em;"}
 
-::: {style="flex: 0 0 auto; text-align: center; min-width: 160px;"}
-<img src="javi_photo.jpg" class="mentor-photo" alt="Francisca Javiera Rudolph">
+::: {style="flex: 0 0 450px; text-align: center; min-width: 160px;"}
+<img src="javi_photo.jpg" class="mentor-photo" alt="Francisca Javiera Rudolph" style="display: block; margin: 0 auto;">
 <p class="mentor-name">Francisca Javiera Rudolph, PhD</p>
 <p class="mentor-title">
   Assistant University Librarian in Computational Literacy<br>

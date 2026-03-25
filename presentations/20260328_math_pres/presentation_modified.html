@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="sir_intro_files/libs/clipboard/clipboard.min.js"></script>
-<script src="sir_intro_files/libs/quarto-html/tabby.min.js"></script>
-<script src="sir_intro_files/libs/quarto-html/popper.min.js"></script>
-<script src="sir_intro_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="sir_intro_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="sir_intro_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="sir_intro_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="presentation_modified_files/libs/clipboard/clipboard.min.js"></script>
+<script src="presentation_modified_files/libs/quarto-html/tabby.min.js"></script>
+<script src="presentation_modified_files/libs/quarto-html/popper.min.js"></script>
+<script src="presentation_modified_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="presentation_modified_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="presentation_modified_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="presentation_modified_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.32">
 
-  <meta name="author" content="Anjali Tomerlin">
+  <meta name="author" content="Anjali Tomerlin &amp; Francisca Javiera Rudolph, PhD">
   <meta name="dcterms.date" content="2026-03-28">
   <title>Computational Literacy in Disease Ecology</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="sir_intro_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="sir_intro_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="presentation_modified_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="presentation_modified_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -30,12 +30,12 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="sir_intro_files/libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="presentation_modified_files/libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
   <link rel="stylesheet" href="uf-libraries.css">
-  <link href="sir_intro_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="sir_intro_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="sir_intro_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="sir_intro_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link href="presentation_modified_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="presentation_modified_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="presentation_modified_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="presentation_modified_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -134,9 +134,12 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Anjali Tomerlin 
+Anjali Tomerlin &amp; Francisca Javiera Rudolph, PhD 
 </div>
-</div>
+        <p class="quarto-title-affiliation">
+            UF Health Science Center Libraries
+          </p>
+    </div>
 </div>
 
   <p class="date">2026-03-28</p>
@@ -158,15 +161,13 @@ Anjali Tomerlin
 </ul>
 </div>
 <div class="fragment">
-<p>Currently in beta. Available at <a href="https://github.com/javirudolph/ecoSIR-modules/"><code>github.com/javirudolph/ecoSIR-modules</code></a>. Coming to QUBES Hub.</p>
+<p>Currently in beta. Available at <code>github.com/javirudolph/ecoSIR-modules</code>. Coming to QUBES Hub.</p>
 </div>
 </section>
 <section id="why-we-built-this-module" class="slide level2">
 <h2>Why we built this module</h2>
 <p>The SIR model is one of the most studied objects in all of applied mathematics. <strong>The gap is not content. The gap is the on-ramp.</strong></p>
 <div class="fragment">
-<p><br>
-</p>
 <p>Most existing resources assume the reader already thinks like a modeler:</p>
 <ul>
 <li>They begin with equations and ask students to follow.</li>
@@ -184,10 +185,12 @@ Anjali Tomerlin
 </section>
 <section id="who-is-this-module-for" class="slide level2">
 <h2>Who is this module for?</h2>
+<div class="fragment">
 <p><strong>Everyone!</strong></p>
 <ul>
 <li>Even students with no prior coding or disease ecology background (most students in most classrooms) can pick up this module and learn about SIR models in a way that is <strong>accessible and interactive</strong>.</li>
 </ul>
+</div>
 <div class="fragment">
 <ul>
 <li>This module is intended to be both a <strong>self-learning resource</strong> as well as a resource <strong>educators can use in their lessons</strong>.</li>
@@ -205,8 +208,6 @@ Anjali Tomerlin
 <p>Like written language or mathematics, computational literacy is a <strong>representational medium</strong> — a way of constructing, expressing, and communicating ideas.</p>
 </div>
 <div class="fragment">
-<p><br>
-</p>
 <p>In disease ecology: you cannot fully understand an SIR model by reading its equations.</p>
 <ul>
 <li>You have to <strong>build it, run it, break it, and interpret it</strong> to understand what it means.</li>
@@ -224,10 +225,12 @@ Anjali Tomerlin
 </section>
 <section id="what-computational-literacy-is-not" class="slide level2">
 <h2>What computational literacy is NOT</h2>
+<div class="fragment">
 <p><strong>Not software training</strong></p>
 <ul>
 <li>Knowing how to use R, Python, or Excel is a starting point, not an endpoint. Tool fluency without conceptual grounding produces students who can execute code they do not understand.</li>
 </ul>
+</div>
 <div class="fragment">
 <p><strong>Not generic computational thinking</strong></p>
 <ul>
@@ -237,10 +240,12 @@ Anjali Tomerlin
 </section>
 <section id="what-computational-literacy-is-not-1" class="slide level2">
 <h2>What computational literacy is NOT</h2>
+<div class="fragment">
 <p><strong>Not AI literacy</strong></p>
 <ul>
 <li>AI literacy concerns evaluating, using, and understanding AI systems. It overlaps with computational literacy but is distinct. <em>(Hackl, Müller &amp; Sailer, 2026)</em></li>
 </ul>
+</div>
 <div class="fragment">
 <p><strong>Not mathematical fluency</strong></p>
 <ul>
@@ -269,8 +274,10 @@ Anjali Tomerlin
 </section>
 <section id="instructional-scaffolding" class="slide level2">
 <h2>Instructional Scaffolding</h2>
+<div class="fragment">
 <p><strong>What is it?</strong></p>
 <p>Not overwhelming the learner with everything at once but giving them the opportunity to access more information at their own pace. <em>(Northern Illinois University Center for Innovative Teaching and Learning, 2012)</em></p>
+</div>
 <div class="fragment">
 <p><br>
 </p>
@@ -288,8 +295,10 @@ Anjali Tomerlin
 </section>
 <section id="bidirectional-translation" class="slide level2">
 <h2>Bidirectional Translation</h2>
+<div class="fragment">
 <p><strong>What is it?</strong></p>
 <p>Although it usually applies to language learning, in our module it refers to the <strong>translation of equations and ideas into code</strong>.</p>
+</div>
 <div class="fragment">
 <p>&nbsp;</p>
 <p><strong>How did we implement this in our module?</strong></p>
@@ -306,8 +315,10 @@ Anjali Tomerlin
 </section>
 <section id="immersive-learning" class="slide level2">
 <h2>Immersive Learning</h2>
+<div class="fragment">
 <p><strong>What is it?</strong></p>
 <p>Presentation of information in a way that is <strong>interactive and engaging</strong>. <em>(Center for Engaged Learning, n.d.)</em></p>
+</div>
 <div class="fragment">
 <p>&nbsp;</p>
 <p><strong>How did we implement this in our module?</strong></p>
@@ -337,66 +348,44 @@ Anjali Tomerlin
 </div>
 <div class="fragment">
 <p>&nbsp;</p>
-<p><strong>Research is often done in isolation, but change happens collectively.</strong></p>
+<p><strong>Research is done in isolation, but change happens collectively.</strong></p>
 </div>
 </section>
 <section id="references" class="slide level2">
 <h2>References</h2>
+<div style="font-size: 0.9em;">
 <ul>
 <li>Ackermann, Edith. (2001). <em>Piaget’s Constructivism, Papert’s Constructionism: What’s the difference?</em>. 5.<br>
 </li>
 <li>diSessa, A. A. (2000). <em>Changing Minds: Computers, Learning, and Literacy</em>. MIT Press.</li>
-<li>Center for Engaged Learning. (n.d.). Immersive Learning. Elon University. <a href="https://www.centerforengagedlearning.org/resources/immersive-learning/">https://www.centerforengagedlearning.org/resources/immersive-learning/.</a></li>
-<li>Northern Illinois University Center for Innovative Teaching and Learning. (2012). Instructional Scaffolding to Improve Learning. <a href="https://www.niu.edu/citl/resources/guides/instructional-guide/instructional-scaffolding-to-improve-learning.shtml">https://www.niu.edu/citl/resources/guides/instructional-guide/instructional-scaffolding-to-improve-learning.shtml.</a></li>
+<li>Center for Engaged Learning. (n.d.). Immersive Learning. Elon University. www.centerforengagedlearning.org/resources/immersive-learning/.</li>
+<li>Northern Illinois University Center for Innovative Teaching and Learning. (2012). Instructional Scaffolding to Improve Learning. www.niu.edu/citl/resources/guides/instructional-guide/instructional-scaffolding-to-improve-learning.shtml</li>
 <li>Hackl, V., Müller, A. E., &amp; Sailer, M. (2026). The AI literacy heptagon. <em>Computers and Education: Artificial Intelligence</em></li>
 </ul>
-</section>
-<section id="acknowledgments" class="slide level2 acknowledgments-slide">
-<h2>Acknowledgments</h2>
-<div style="display: flex; align-items: flex-start; gap: 2.5em; margin-top: 0.5em;">
-<div style="flex: 0 0 450px; text-align: center; min-width: 160px;">
-<img src="javi_photo.jpg" class="mentor-photo" alt="Francisca Javiera Rudolph" style="display: block; margin: 0 auto;">
-<p class="mentor-name">
-Francisca Javiera Rudolph, PhD
-</p>
-<p class="mentor-title">
-Assistant University Librarian in Computational Literacy<br> Computational Ecologist<br> Academic Research Consulting &amp; Services (<a href="https://arcs.uflib.ufl.edu">ARCS</a>)
-</p>
-</div>
-<div style="flex: 1; padding-top: 0.3em;">
-<p>This work was made possible through mentorship and institutional support from the <strong>George A. Smathers Libraries</strong>.</p>
-<p class="funding-label">
-Funding &amp; Support
-</p>
-<p class="funding-source">
-Research Division, George A. Smathers Libraries<br> University of Florida<br> <em>Sponsored by the Office of the Associate Dean of Research</em>
-</p>
-<p><img src="SmathersLibraries-RASTER-RGB.png" class="libraries-logo" alt="George A. Smathers Libraries"></p>
-</div>
 </div>
 
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p><a href="https://javirudolph.github.io/ecoSIR-modules/">javirudolph.github.io/ecoSIR-modules/</a></p>
+<p>github.com/javirudolph/ecoSIR-modules</p>
 </div>
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="sir_intro_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="sir_intro_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="sir_intro_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="sir_intro_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="sir_intro_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="sir_intro_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="sir_intro_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="sir_intro_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="sir_intro_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="sir_intro_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="presentation_modified_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>

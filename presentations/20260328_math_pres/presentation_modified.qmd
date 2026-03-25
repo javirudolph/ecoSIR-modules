@@ -9,7 +9,7 @@ format:
     progress: true
     transition: fade
     footer: "github.com/javirudolph/ecoSIR-modules"
-    css: style.css
+    css: uf-libraries.css
 execute:
   echo: false
   eval: false

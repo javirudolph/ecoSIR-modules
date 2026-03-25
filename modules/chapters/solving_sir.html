@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Solving SIR Models</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="solving_sir_files/libs/clipboard/clipboard.min.js"></script>
+<script src="solving_sir_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="solving_sir_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="solving_sir_files/libs/quarto-html/popper.min.js"></script>
+<script src="solving_sir_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="solving_sir_files/libs/quarto-html/anchor.min.js"></script>
+<link href="solving_sir_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="solving_sir_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="solving_sir_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="solving_sir_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="solving_sir_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Solving SIR Models</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="sec-solving-sir-equations" class="level2">
+<h2 class="anchored" data-anchor-id="sec-solving-sir-equations">Introduction to Solving SIR Models</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of <a href="#sec-solving-sir-equations" class="quarto-xref">Section&nbsp;1</a>, you should be able to:</p>
+<ul>
+<li>Explain what “solving” a differential equation (or a system of differential equations) means and interpret it in the context of solving an SIR model.</li>
+</ul>
+</div>
+</div>
+<p>When we talk about “solving” a differential equation (or system of differential equations like our SIR model), we are essentially answering the question:</p>
+<blockquote class="blockquote">
+<p>What function changes at this rate?</p>
+</blockquote>
+<p>In Calculus 1, we learned that to find the rate of change of a function we take its <em>derivative</em>. Solving a differential equation means undoing this process (i.e.&nbsp;finding the function whose derivative is equal to our differential equation). To fully solve a differential equation we also need some <em>initial values</em>, or values of the function at some specific times.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why do we need initial values to solve a differential equation?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Remembering back to our derivative rules, we know that the derivative of any constant is always <span class="math inline">\(0\)</span>. So when we are given a differential equation (which is just a derivative of some function) and are looking to “go back” to the function that produced it, we can only obtain a solution down to the precision of some unknown constant. Our initial values help us solve for that unknown constant and “narrow down” the potential solutions down to one specific one.</p>
+<p>To illustrate this, let’s say you are given the differential equation <span class="math inline">\(\frac{dy}{dx}=3x^2\)</span>. We know that the function <span class="math inline">\(f(x)=y=x^3\)</span> has a derivative equal to our differential equation (and thus is a solution to it). But the functions <span class="math inline">\(f(x)=x^3+1\)</span>, <span class="math inline">\(f(x)=x^3+2\)</span>,<span class="math inline">\(f(x)=x^3+1003\)</span>, and so on also have derivatives equation to our differential equation and thus are solutions as well. Hence, given no other information we can only say the solution to the differential equation <span class="math inline">\(\frac{dy}{dx}=3x^2\)</span> is <span class="math inline">\(f(x)=x^3+C\)</span> where <span class="math inline">\(C\)</span> is an unknown constant. If we were given an initial value, however, we could solve for this unknown constant and know our solution exactly. Say we have the initial value <span class="math inline">\(f(1)=2\)</span>, then by solving for <span class="math inline">\(C\)</span> in <span class="math inline">\(f(x)=x^3+C\)</span> we know that <span class="math inline">\(C=1\)</span> and our exact solution must be <span class="math inline">\(f(x)=x^3+1\)</span>.</p>
+</div>
+</div>
+</div>
+<p>When we say we are “solving an SIR model” (or “solving SIR equations”), we are answering the question:</p>
+<blockquote class="blockquote">
+<p>Given that we know how fast the susceptible, infected, and recovered populations are changing and we know the initial number / proportion of people in each compartment at the beginning of the epidemic, what function gives us the number / proportion of people in each compartment at various times?</p>
+</blockquote>
+<p>As you can imagine, solving our SIR model is extremely useful since we are most interested in knowing the number / proportion of susceptible, infectious, and recovered people at various times (not their rates of change).</p>
+<p>Two common methods of solving differential equations that are difficult to solve by hand is:</p>
+<ol type="1">
+<li><strong>Euler’s method</strong></li>
+<li><strong>Fourth-Order Runge-Kutta method</strong> (implemented using the <code>pracma</code> package in R)</li>
+</ol>
+<p>We will go over each method separately in <a href="#sec-euler-method" class="quarto-xref">Section&nbsp;2</a> and <a href="#sec-pracma" class="quarto-xref">Section&nbsp;3</a> and the differences between the two in <a href="#sec-evaluating-and-comparing-both-methods" class="quarto-xref">Section&nbsp;4</a>.</p>
+</section>
+<section id="sec-euler-method" class="level2">
+<h2 class="anchored" data-anchor-id="sec-euler-method">Euler’s Method</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of <a href="#sec-euler-method" class="quarto-xref">Section&nbsp;2</a>, you should be able to:</p>
+<ul>
+<li>Explain the step-by-step mathematical process for solving differential equation (or a system of differential equations) using Euler’s method.</li>
+</ul>
+</div>
+</div>
+<p>Euler’s method estimates the solution to a differential equation using a series of short, connected linear approximations at a discrete set of times. Although Euler’s method is widely regarded to be a relatively inefficient method for solving otherwise “unsolvable” differential equations, it is still valued for its simplicity and accessibility.</p>
+<p>Suppose we have approximate initial values for the number of susceptible, infectious, and recovered individuals at the beginning of our study period. We will denote these values as <span class="math inline">\(S(0)\)</span>, <span class="math inline">\(I(0)\)</span>, and <span class="math inline">\(R(0)\)</span>, respectively.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To keep it simple, we will only discuss the process of Euler’s method as it is applied to the number of individuals in each compartment, but keep in mind this process can be applied in exactly the same way to proportions as well.</p>
+</div>
+</div>
+<p>Our goal is to find approximate solutions to <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span>—the exact number of individuals in each compartment at time <span class="math inline">\(t\)</span>—using our initial values (<span class="math inline">\(S(0)\)</span>, <span class="math inline">\(I(0)\)</span>, and <span class="math inline">\(R(0)\)</span>) and system of differential equations that is our SIR model (which we found in <strong>?@sec-the-classic-sir-epidemic-model</strong>). For clarity, we will be using <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> to denote the <strong>exact</strong> solutions to the SIR equations and <span class="math inline">\(s(t)\)</span>, <span class="math inline">\(i(t)\)</span>, and <span class="math inline">\(r(t)\)</span> to denote the <em>approximate</em> solutions given by Euler’s method.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These types of problems, one where we are given a set of intial values and corresponding differential equations, are known as initial-value problems (or IVPs).</p>
+</div>
+</div>
+<p>Euler’s method involves repeatedly finding <em>tangent line approximations</em> to <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> at a discrete set of times (often called nodes). We will use <span class="math inline">\(s_t\)</span>, <span class="math inline">\(i_t\)</span>, and <span class="math inline">\(r_t\)</span> to denote these approximations at a time <span class="math inline">\(t\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is a tangent line approximation?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>A tangent line approximation uses the equation of the tangent line at a point on a function to estimate function values at nearby points.</p>
+<p>Given a function <span class="math inline">\(f(x)\)</span> who has a derivative <span class="math inline">\(f'(x)\)</span>, we can find the equation of a tangent line (denoted with <span class="math inline">\(y\)</span>) at the point <span class="math inline">\((a,f(a))\)</span> using the formula:</p>
+<p><span class="math display">\[
+y=f(a)+f'(a)(x-a)
+\]</span></p>
+<p>This formula might look familiar because it is just the <em>point slope formula</em> from Algebra 1 but with the inclusion of the derivative <span class="math inline">\(f'(a)\)</span> as the slope.</p>
+<p>Now that we have this equation for the tangent line, we can use it to approximate function values at nearby points. Say we want to estimate the value of <span class="math inline">\(a+\Delta t\)</span> where <span class="math inline">\(\Delta t\)</span> is just some change on the x-axis to the right or left of <span class="math inline">\(a\)</span>. We can do so by plugging in <span class="math inline">\(a+\Delta t\)</span> for <span class="math inline">\(x\)</span> into our tangent line equation:</p>
+<p><span class="math display">\[
+y=f(a)+f'(a)(\Delta t)
+\]</span></p>
+<p>Whatever we get out for <span class="math inline">\(y\)</span> is our tangent line approximation for <span class="math inline">\(a+\Delta t\)</span> using the tangent line at <span class="math inline">\(x=a\)</span>.</p>
+</div>
+</div>
+</div>
+<p>These approximations are found using the following recursive formulas:</p>
+<p><br></p>
+$$
+<span class="math display">\[\begin{aligned}
+s_{t+1} &amp;= s_t - \Delta t \ \big( \beta \big) \left( \frac{i_t}{N} \right) \big( s_t \big) \\[10pt]
+
+i_{t+1} &amp;= i_t + \Delta t \ \left[\beta \left( \frac{i_t}{N} \right) (s_t) - \gamma (i_t) \right] \\[10pt]
+
+r_{t+1} &amp;= r_t + \Delta t \ \big( \gamma \big) (i_t)
+\end{aligned}\]</span>
+<p>$$</p>
+<p><br></p>
+<ul>
+<li><p><span class="math inline">\(s_{t+1}\)</span>, <span class="math inline">\(i_{t+1}\)</span>, <span class="math inline">\(r_{t+1}\)</span>: Approximations for <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> at the next node</p></li>
+<li><p><span class="math inline">\(s_{t}\)</span>, <span class="math inline">\(i_{t}\)</span>, <span class="math inline">\(r_{t}\)</span>: Approximations for <span class="math inline">\(S(t)\)</span>, <span class="math inline">\(I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> at the previous node</p></li>
+<li><p><span class="math inline">\(\Delta t\)</span>: Step size (how far each node is spaced apart on the <span class="math inline">\(t\)</span>-axis)</p></li>
+<li><p><span class="math inline">\(N\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span>: Population size, transmission rate, and recovery rate, respectively</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How does this connect back to the “general” way of doing Euler’s method?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This formula is just an application of the generalized Euler’s method for first-order differential equation <span class="math inline">\(Y'(t)=f\big(t,Y(t)\big)\)</span>, true solution <span class="math inline">\(Y(t)\)</span>, and approximate solutions <span class="math inline">\(y_0,\dots,y_t,\dots,y_b\)</span>, which are calculated at evenly spaced <span class="math inline">\(t_n\)</span> as:</p>
+<p><span class="math display">\[
+y_{t+1}=y_t+ \Delta t \big[f\big(t_n,Y(t_n)\big)\big]
+\]</span></p>
+<p>Where <span class="math inline">\(\Delta t\)</span> still represents how far each <span class="math inline">\(t_n\)</span> are apart.</p>
+</div>
+</div>
+</div>
+<p>This process can be a little confusing to grasp at first, so let’s do an example. Suppose the following SIR model equations with initial values <span class="math inline">\(S(0)=99\)</span>, <span class="math inline">\(I(0)=1\)</span>, <span class="math inline">\(E(0)=0\)</span>, population size <span class="math inline">\(N=100\)</span>, transmission rate <span class="math inline">\(\beta=1.5\)</span>, and recovery rate <span class="math inline">\(\gamma=0.5\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{dS}{dt} &amp;= -1.5 \tilde{I} S \\[10pt]
+\frac{dI}{dt} &amp;= 1.5 \tilde{I} S - 0.5 I \\[10pt]
+\frac{dR}{dt} &amp;= 0.5 I
+\end{aligned}
+\]</span></p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Reminder">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Reminder
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Remember that <span class="math inline">\(\tilde{I}=\frac{I}{N}\)</span>.</p>
+</div>
+</div>
+<p>The following table illustrates the first few steps of the calculation process to solve this SIR model using Euler’s method with a step size of <span class="math inline">\(\Delta t=1\)</span>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 29%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Time</strong></th>
+<th><strong>Approximations</strong></th>
+<th><strong>Calculation Process</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(t=0\)</span></td>
+<td><span class="math inline">\(\textcolor{blue}{s(0)=99.0}\)</span> <br> <span class="math inline">\(\textcolor{red}{i(0)=1.0}\)</span> <br> <span class="math inline">\(\textcolor{green}{r(0)=0.0}\)</span></td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(t=1\)</span></td>
+<td><span class="math inline">\(\textcolor{blue}{s(1)=97.5}\)</span> <br> <span class="math inline">\(\textcolor{red}{i(1)=2.0}\)</span> <br> <span class="math inline">\(\textcolor{green}{r(1)=0.5}\)</span></td>
+<td><span class="math inline">\(s(1)=\textcolor{blue}{99.0}-(1.0)(1.5)\left(\frac{\textcolor{red}{1.0}}{100.0}\right)(\textcolor{blue}{99.0})\)</span> <br> <span class="math inline">\(i(1)=\textcolor{red}{1.0}+(1.0)\left[(1.5)\left(\frac{\textcolor{red}{1.0}}{100.0}\right)(\textcolor{blue}{99.0})-0.5(\textcolor{red}{1.0})\right]\)</span> <br> <span class="math inline">\(r(1)=\textcolor{green}{0.0}+(1.0)(0.5)(\textcolor{red}{1.0})\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(t=2\)</span></td>
+<td><span class="math inline">\(\textcolor{blue}{s(2)=94.6}\)</span> <br> <span class="math inline">\(\textcolor{red}{i(2)=3.9}\)</span> <br> <span class="math inline">\(\textcolor{green}{r(2)=2.0}\)</span></td>
+<td><span class="math inline">\(s(2)=\textcolor{blue}{97.5}-(1.0)(1.5)\left(\frac{\textcolor{red}{2.0}}{100.0}\right)(\textcolor{blue}{97.5})\)</span> <br> <span class="math inline">\(i(2)=\textcolor{red}{2.0}+(1.0)\left[(1.5)\left(\frac{\textcolor{red}{2.0}}{100.0}\right)(\textcolor{blue}{97.5})-0.5(\textcolor{red}{2.0})\right]\)</span> <br> <span class="math inline">\(r(2)=\textcolor{green}{0.5}+(1.0)(0.5)(\textcolor{red}{2.0})\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(t=3\)</span></td>
+<td><span class="math inline">\(\textcolor{blue}{s(3)=89.1}\)</span> <br> <span class="math inline">\(\textcolor{red}{i(3)=7.5}\)</span> <br> <span class="math inline">\(\textcolor{green}{r(3)=3.4}\)</span></td>
+<td><span class="math inline">\(s(3)=\textcolor{blue}{94.6}-(1.0)(1.5)\left(\frac{\textcolor{red}{3.9}}{100.0}\right)(\textcolor{blue}{94.6})\)</span> <br> <span class="math inline">\(i(3)=\textcolor{red}{3.9}+(1.0)\left[(1.5)\left(\frac{\textcolor{red}{3.9}}{100.0}\right)(\textcolor{blue}{94.6})-0.5(\textcolor{red}{3.9})\right]\)</span> <br> <span class="math inline">\(r(3)=\textcolor{green}{2.0}+(1.0)(0.5)(\textcolor{red}{3.9})\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(t=4\)</span></td>
+<td><span class="math inline">\(\textcolor{blue}{s(4)=79.1}\)</span> <br> <span class="math inline">\(\textcolor{red}{i(4)=13.7}\)</span> <br> <span class="math inline">\(\textcolor{green}{r(4)=7.2}\)</span></td>
+<td><span class="math inline">\(s(4)=\textcolor{blue}{89.1}-(1.0)(1.5)\left(\frac{\textcolor{red}{7.5}}{100.0}\right)(\textcolor{blue}{89.1})\)</span> <br> <span class="math inline">\(i(4)=\textcolor{red}{7.5}+(1.0)\left[(1.5)\left(\frac{\textcolor{red}{7.5}}{100.0}\right)(\textcolor{blue}{89.1})-0.5(\textcolor{red}{7.5})\right]\)</span> <br> <span class="math inline">\(r(4)=\textcolor{green}{3.4}+(1.0)(0.5)(\textcolor{red}{7.5})\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(t=5\)</span></td>
+<td><span class="math inline">\(\textcolor{blue}{s(5)=62.8}\)</span> <br> <span class="math inline">\(\textcolor{red}{i(5)=23.1}\)</span> <br> <span class="math inline">\(\textcolor{green}{r(5)=14.0}\)</span></td>
+<td><span class="math inline">\(s(5)=\textcolor{blue}{79.1}-(1.0)(1.5)\left(\frac{\textcolor{red}{13.7}}{100.0}\right)(\textcolor{blue}{79.1})\)</span> <br> <span class="math inline">\(i(5)=\textcolor{red}{13.7}+(1.0)\left[(1.5)\left(\frac{\textcolor{red}{13.7}}{100.0}\right)(\textcolor{blue}{79.1})-0.5(\textcolor{red}{13.7})\right]\)</span> <br> <span class="math inline">\(r(5)=\textcolor{green}{7.2}+(1.0)(0.5)(\textcolor{red}{13.7})\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What does <span class="math inline">\(\approx\)</span> mean?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The symbol <span class="math inline">\(\approx\)</span> means “approximately equal to” and indicates that the number has been rounded.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Important Note">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The accuracy of the solution produced by Euler’s method is a direct result of what we choose the step size to be. If the step size is larger, then the curvature of the true solution will be lost since we are repeatedly taking linear approximations, resulting in an approximate solution that deviates a lot from the true solution curve. On the other hand, as the step size gets smaller, the approximate solution provided by Euler’s method converges to the true solution curve.</p>
+<p>Read on to <a href="#sec-euler-code" class="quarto-xref">Section&nbsp;2.1</a> to experiment with what happens when you change the step size.</p>
+</div>
+</div>
+<p>You’re probably noticing by now that the calculation process above is very tedious, which is why Euler’s method is most often calculated using code rather than by hand. Read on to <a href="#sec-euler-code" class="quarto-xref">Section&nbsp;2.1</a> for a demonstration on how to code Euler’s method.</p>
+<section id="sec-euler-code" class="level3">
+<h3 class="anchored" data-anchor-id="sec-euler-code">Euler’s Method Code Demonstration</h3>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of <a href="#sec-euler-code" class="quarto-xref">Section&nbsp;2.1</a>, you should be able to:</p>
+<ul>
+<li>Translate the mathematical process of Euler’s method into code.</li>
+</ul>
+</div>
+</div>
+<p>This section contains a step by step walkthrough of how to code an Euler’s method algorithm in R.</p>
+<p><strong>Step 1: Define the biological parameters.</strong></p>
+<p>Every model starts with its parameters: the biological quantities that characterize the disease and host system. Here, we have two: how fast the disease spreads (<span class="math inline">\(\beta\)</span>) and how fast individuals recover (<span class="math inline">\(\gamma\)</span>).</p>
+<pre class="{webr-r}"><code># Transmission rate: contacts × probability of transmission per unit time
+beta &lt;- 1.5
+
+# Recovery rate: 1/gamma gives the average duration of infection
+gamma &lt;- 0.5
+
+# With these values, the average infectious period is:
+cat("Average infectious period:", 1 / gamma, "time units")</code></pre>
+<hr>
+<p><strong>Step 2: Set the initial conditions.</strong></p>
+<p>Before the model can run, we need to specify where the system starts. In an epidemic model, this means the proportion of the population in each compartment at time zero.</p>
+<pre class="{webr-r}"><code># Starting proportions — must sum to 1
+S0 &lt;- 0.99 # 99% susceptible: nearly everyone is susceptible at the start
+I0 &lt;- 0.01 # 1% infectious: small "spark" of infection enters population
+R0_start &lt;- 0.00 # 0% recovered: no prior immunity
+
+# Verify they sum to 1 (a good sanity check to build into your code)
+cat("S0 + I0 + R0 =", S0 + I0 + R0_start)</code></pre>
+<p>This sanity check, confirming that proportions sum to 1 — is a simple example of a habit that will save you debugging time later. When you add more compartments (SEIR, endemic model), this check generalizes naturally.</p>
+<hr>
+<p><strong>Step 3: Set up the time grid.</strong></p>
+<p>Euler’s method steps through time discretely. We need to decide how far apart those steps are (<span class="math inline">\(\Delta t\)</span>, the step size) and how long to simulate.</p>
+<pre class="{webr-r}"><code>dt &lt;- 0.1 # step size — try making this larger later to see what breaks
+t_end &lt;- 50 # total simulation time
+
+# Create a vector of all time points
+times &lt;- seq(0, t_end, by = dt)
+n_steps &lt;- length(times)
+
+cat("Number of time steps:", n_steps, "\n")
+cat("Time points run from", times[1], "to", times[n_steps])</code></pre>
+<p>The step size is a computational choice, not a biological one, but it affects accuracy. A smaller <span class="math inline">\(\Delta t\)</span> gives a more accurate approximation of the continuous solution, at the cost of more computation. We will explore this tradeoff shortly.</p>
+<hr>
+<p><strong>Step 4: Pre-allocate storage.</strong></p>
+<p>Before running the loop, we create empty vectors to hold the results at each time step. This is more efficient than growing a vector inside the loop.</p>
+<pre class="{webr-r}"><code># Empty vectors: one slot per time step, filled with zeros for now
+S &lt;- numeric(n_steps)
+I &lt;- numeric(n_steps)
+R &lt;- numeric(n_steps)
+
+# Fill in the starting values
+S[1] &lt;- S0
+I[1] &lt;- I0
+R[1] &lt;- R0_start
+
+cat("Storage ready. First values: S =", S[1], " I =", I[1], " R =", R[1])</code></pre>
+<p>Think of these vectors as the model’s memory: they store the entire trajectory of the epidemic, one row per time step.</p>
+<hr>
+<p><strong>Step 5: Run the Euler loop.</strong></p>
+<p>This is where the model actually runs. At each time step, we calculate the rates of change using the SIR equations and use them to update the compartment values. Each line in the loop maps directly to an equation.</p>
+<pre class="{webr-r}"><code>for (t in 1:(n_steps - 1)) {
+  # Rate of change: these ARE the SIR equations, written as code
+  dS &lt;- -beta * I[t] * S[t] # new infections leaving S
+  dI &lt;- beta * I[t] * S[t] - gamma * I[t] # gain infections, lose recoveries
+  dR &lt;- gamma * I[t] # recoveries entering R
+
+  # Step forward: current value + (step size × rate of change)
+  S[t + 1] &lt;- S[t] + dt * dS
+  I[t + 1] &lt;- I[t] + dt * dI
+  R[t + 1] &lt;- R[t] + dt * dR
+}
+
+# Quick check: do the compartments still sum to 1 at the end?
+cat(
+  "Final values: S =", round(S[n_steps], 4),
+  " I =", round(I[n_steps], 4),
+  " R =", round(R[n_steps], 4), "\n"
+)
+cat("Sum:", round(S[n_steps] + I[n_steps] + R[n_steps], 6), "\n")</code></pre>
+<p>The loop is doing exactly what the Euler update formulas say, mechanically, one step at a time. This is the computational equivalent of doing the hand calculations from the table shown earlier, just thousands of times faster.</p>
+<hr>
+<p><strong>Step 6: Visualize the results.</strong></p>
+<p>The vectors <code>S</code>, <code>I</code>, and <code>R</code> now hold the full epidemic trajectory. We can plot them against time.</p>
+<pre class="{webr-r}"><code># Plotting susceptible curve
+plot(times, S,
+  type = "l", col = "steelblue", lwd = 2,
+  ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
+  main = paste0(
+    "SIR Epidemic (Euler)  |  β=", beta,
+    "  γ=", gamma, "  R₀=", round(beta / gamma, 2)
+  )
+)
+
+# Adding infectious and recovered curves
+lines(times, I, col = "firebrick", lwd = 2)
+lines(times, R, col = "seagreen", lwd = 2)
+
+# Adding a legend
+legend("right",
+  legend = c("Susceptible", "Infectious", "Recovered"),
+  col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n"
+)</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled" title="Try this">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Try this
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Go back to <strong>Step 3</strong> and try the following changes, re-running each step in order after each change:</p>
+<ol type="1">
+<li><p>Change <code>dt &lt;- 0.1</code> to <code>dt &lt;- 2.0</code>. What happens to the curves? This is the cost of a large step size.</p></li>
+<li><p>Change the step size to <code>dt &lt;- 0.001</code>. Did the code output results faster or slower than when using <code>dt &lt;- 2.0</code>? (<strong>NOTE:</strong> How fast the code runs depends on the computer you are using right now, but in general note that the smaller our step size gets, the more accurate our results become at the cost of being increasingly computationally demanding.)</p></li>
+</ol>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-pracma" class="level2">
+<h2 class="anchored" data-anchor-id="sec-pracma">Solving Models Using the <code>pracma</code> package in R</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of <a href="#sec-pracma" class="quarto-xref">Section&nbsp;3</a>, you should be able to:</p>
+<ul>
+<li><p>Explain what values the function <code>rk4sys</code> in <code>pracma</code> takes in.</p></li>
+<li><p>Translate an SIR model to a function and solve it using <code>rk4sys</code>.</p></li>
+</ul>
+</div>
+</div>
+<p>The package <code>pracma</code> in R, short for “Practical Numerical Math Functions,” provides a large repertoire of functions used in numerical analysis, linear algebra, numerical optimization, and differential equations <span class="citation" data-cites="pracma_package">(<a href="#ref-pracma_package" role="doc-biblioref">Borchers 2025</a>)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Is there a specific name for the type of differential equations we are solving?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The SIR models this module covers deal with systems of <em>first-order ordinary differential equations</em>.</p>
+<p>Breaking up each word in this description, we have:</p>
+<ul>
+<li><p><strong>First-order:</strong> This just means we are only dealing with equations involving the first derivative and not subsequent derivatives (the second, third, fourth, etc. derivative)</p></li>
+<li><p><strong>Ordinary:</strong> The unknown function which we are trying to solve for depends only one independent variable.</p></li>
+</ul>
+</div>
+</div>
+<p>Although <code>pracma</code> contains many mathematical functions, we are primarily interested in <code>rk4sys</code>, a function to solve systems of differential equations using an advanced method known as the <em>Classic Fourth-Order Runge-Kutta Method</em> (or RK4 for short). This method for solving differential equations is much more complex than Euler’s method but outputs solutions to a much greater accuracy. Like Euler’s method, RK4’s accuracy depends on the step size. However, in general, a solution to a model found using RK4 will be more accurate than one found using Euler’s method, even when the same step size is used.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How exactly does RK4 work?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In simple terms, RK4 estimates the value of a solution at the next point by taking a weighted average of four slope calculations, each computed at different points within the step interval. The Wikipedia article on Runge-Kutta methods goes more into the specific mathematical formulation of RK4 <span class="citation" data-cites="wiki_rk4">(<a href="#ref-wiki_rk4" role="doc-biblioref">Wikipedia contributors 2026</a>)</span>.</p>
+</div>
+</div>
+</div>
+<p>The following table summarizes the values <code>rk4sys</code> takes in:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 81%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Variable Name</strong></th>
+<th><strong>What Does It Take In?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>f</code></td>
+<td>A user-defined function that defines the system of differential equations to be solved.</td>
+</tr>
+<tr class="even">
+<td><code>a</code></td>
+<td>A number specifying the starting point of the interval we want solutions for.</td>
+</tr>
+<tr class="odd">
+<td><code>b</code></td>
+<td>A number specifying the endpoint of the interval we want solutions for.</td>
+</tr>
+<tr class="even">
+<td><code>y0</code></td>
+<td>A vector specifying the initial values of the system. A system of <span class="math inline">\(m\)</span> differential equations must have a <code>y0</code> of length <span class="math inline">\(m\)</span>.</td>
+</tr>
+<tr class="odd">
+<td><code>n</code></td>
+<td>A number specifying the step size (i.e.&nbsp;the number of steps that should be taken from <code>a</code> to <code>b</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The function <code>rk4sys</code> returns a matrix. When that matrix is converted to a data frame using the function <code>as.data.frame</code>, its first column provides the time points at which the SIR model was solved and subsequent columns are the solutions to the model’s state variables at those times. The state variables for an SIR model are the number or proportion of individuals susceptible, infectious, and recovered at a given time.</p>
+<p>Before we can call <code>rk4sys</code>, let’s go over how to code the function to be passed into the parameter <code>f</code>. The function below is specifying a classic SIR model on the proportion of individuals in each compartment (see <strong>?@sec-the-classic-sir-epidemic-model</strong>).</p>
+<p><strong>Step 1: Code the model function.</strong></p>
+<pre class="{webr-r}"><code># Function Inputs: A time and vector of the model proportions at that time
+# Function Outputs: The rates of change for S, I, R at the input time
+ModelFunc &lt;- function(time, state) {
+  # Extracting state variables: susceptible, infected, and recovered
+  S &lt;- state[1]
+  I &lt;- state[2]
+  R &lt;- state[3]
+
+  # Specifying the model parameters
+  # We only have two parameters - the transmission and recovery rate
+  # These parameters will change depending on the model
+  beta &lt;- 1.5
+  gamma &lt;- 0.5
+
+  # Constructing our SIR model equations
+  dS &lt;- -(beta * I * S)
+  dI &lt;- (beta * I * S) - (gamma * I)
+  dR &lt;- (gamma * I)
+
+  # Now we will return those model equations as a vector
+  return(c(dS, dI, dR))
+}
+
+# Example call
+ModelFunc(1, c(S = 0.99, I = 0.01, R = 0))</code></pre>
+<hr>
+<p><strong>Step 2: Specify the parameters needed to call <code>rk4sys</code>.</strong></p>
+<pre class="{webr-r}"><code>library(pracma)
+
+# The start and ending points of the solution interval
+start &lt;- 0
+end &lt;- 20
+
+# Initial values to be passed into the parameter y
+# Make sure values line up with the state variables in the model function
+initial_vals &lt;- c(S = 0.99, I = 0.01, R = 0)
+
+# How many steps to take from a to b
+step_size &lt;- 10
+
+# Printing the times at which solutions will be found
+print(seq(start, end, by = (end - start) / step_size))</code></pre>
+<p>We now have everything we need to call <code>rk4sys</code>.</p>
+<hr>
+<p><strong>Step 3: Call <code>rk4sys</code> using our defined values.</strong></p>
+<pre class="{webr-r}"><code>library(pracma)
+
+# Make sure the values we defined are passed into the correct arguments
+output &lt;- rk4sys(
+  f = ModelFunc,
+  a = start,
+  b = end,
+  y0 = initial_vals,
+  n = step_size
+)
+
+# Converting the output matrix to a data frame and printing it
+output &lt;- as.data.frame(output)
+output</code></pre>
+<p>Now that we have a data frame of the solved SIR model equations at specified times, let’s plot it.</p>
+<hr>
+<p><strong>Step 3: Plot the results.</strong></p>
+<pre class="{webr-r}"><code>times &lt;- output$x
+S &lt;- output$y.S
+I &lt;- output$y.I
+R &lt;- output$y.R
+beta &lt;- 1.5
+gamma &lt;- 0.5
+
+plot(times, S,
+  type = "l", col = "steelblue", lwd = 2,
+  ylim = c(0, 1), xlab = "Time", ylab = "Proportion",
+  main = paste0(
+    "SIR Epidemic (Runge-Kutta)  |  β=", beta,
+    "  γ=", gamma, "  R₀=", round(beta / gamma, 2)
+  )
+)
+
+lines(times, I, col = "firebrick", lwd = 2)
+lines(times, R, col = "seagreen", lwd = 2)
+
+legend("right",
+  legend = c("Susceptible", "Infectious", "Recovered"),
+  col = c("steelblue", "firebrick", "seagreen"), lwd = 2, bty = "n"
+)</code></pre>
+<div class="callout callout-style-default callout-tip callout-titled" title="Try this">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Try this
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Go back to <strong>Step 2</strong> and try the following changes, re-running each step in order after each change:</p>
+<ol type="1">
+<li>Change <code>step_size &lt;- 10</code> to <code>step_size &lt;- 50</code>. What changes about the final plot? Is this similar to what happened when we changed the step size in our code for Euler’s method (see <a href="#sec-euler-code" class="quarto-xref">Section&nbsp;2.1</a>)?</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="sec-evaluating-and-comparing-both-methods" class="level2">
+<h2 class="anchored" data-anchor-id="sec-evaluating-and-comparing-both-methods">Evaluating and Comparing Solving Methods</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of <a href="#sec-evaluating-and-comparing-both-methods" class="quarto-xref">Section&nbsp;4</a>, you should be able to:</p>
+<ul>
+<li><p>Explain the benefits and drawbacks of Euler’s method and <code>rk4sys</code> in relation to solving SIR models.</p></li>
+<li><p>Identify which solving method is more suitable for a particular SIR model or application.</p></li>
+<li><p>Visualize the difference between solutions produced using Euler’s method and <code>rk4sys</code> as step size changes.</p></li>
+</ul>
+</div>
+</div>
+<p>The following table summarizes some potential benefits and drawbacks to using Euler’s method or <code>rk4sys</code> in <code>pracma</code>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 36%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Solving Method</strong></th>
+<th><strong>Potential Benefits</strong></th>
+<th><strong>Potential Drawbacks</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Euler’s Method</td>
+<td>• Simple and intuitive code implementation <br> • Easy to understand and visualize step-by-step <br> • No external packages required <br> • Can be implemented in Excel or by hand</td>
+<td>• Low accuracy unless a very small step size is used <br> • Computationally inefficient for small step sizes or complex models <br> • Can be tedious or error-prone to calculate by hand for many steps <br> • Can accumulate large numerical errors quickly over long periods</td>
+</tr>
+<tr class="even">
+<td><code>rk4sys</code></td>
+<td>• Uses a sophisticated solving method (Fourth-Order Runge-Kutta) that has a high accuracy <br> • Handles large models with many system equations well <br> • Preferred for complex models / advanced applications <br> • Accuracy scales better with step size compared to Euler’s method</td>
+<td>• Less transparent: not much understanding of what is going on “under the hood” <br> • Requires the external package <code>pracma</code> <br> • Output accuracy depends on step size <br> • Each step is more computationally expensive than Euler’s method since four derivative approximations are required</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled" title="Tip">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Although the accuracy of the solutions output by Euler’s method and the Fourth-Order Runge-Kutta method rely on step size, Runge-Kutta typically outputs more accurate results than Euler’s method even with the same step size.</p>
+<p>This means we can “get away” with using a smaller step size when using <code>rk4sys</code> over Euler’s method (thus saving us some computational cost / time).</p>
+</div>
+</div>
+<p>The following simulation shows the difference between the solution curves produced by Euler’s method and <code>rk4sys</code> for different values of the model parameters and step size:</p>
+<iframe src="https://a-tom.shinyapps.io/euler_vs_rk_simulation/" width="100%" height="700" style="border:none;">
+</iframe>
+<div class="callout callout-style-default callout-tip callout-titled" title="Try this">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Try this
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Try changing the step size from <span class="math inline">\(0.25\)</span> to <span class="math inline">\(0.1\)</span>. Do the curves solved using Euler’s method and Runge-Kutta method become closer or further apart? Can you explain why mathematically?</p></li>
+<li><p>Try changing the step size from <span class="math inline">\(0.5\)</span> to <span class="math inline">\(0.1\)</span>. Which set of curves (the ones solved using Euler’s method or Runge-Kutta method) change more? Can you explain why mathematically (think about which solving method scales better with step size in terms of accuracy)?</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="This isn't the only way!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+This isn’t the only way!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are many packages in R that can solve SIR equations, and the package <code>deSolve</code> is a really common choice among them. <code>deSolve</code> uses very advanced and versatile solving methods that work well with large or complex SIR models. See the CRAN documentation for more details <span class="citation" data-cites="desolve_package">(<a href="#ref-desolve_package" role="doc-biblioref">Soetaert and Petzoldt 2026</a>)</span>.</p>
+</div>
+</div>
+</section>
+<section id="chapter-references" class="level2 unnumbered unlisted">
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Chapter References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-ode_book" class="csl-entry" role="listitem">
+Atkinson, Kendall, Weimin Han, and David Stewart. 2009. <span>“Euler’s Method.”</span> In <em>Numerical Solution of Ordinary Differential Equations</em>, 15–36. John Wiley &amp; Sons, Ltd. <a href="https://doi.org/10.1002/9781118164495.ch2">https://doi.org/10.1002/9781118164495.ch2</a>.
+</div>
+<div id="ref-pracma_package" class="csl-entry" role="listitem">
+Borchers, Hans W. 2025. <em>Pracma: Practical Numerical Math Functions</em>. <a href="https://doi.org/10.32614/CRAN.package.pracma">https://doi.org/10.32614/CRAN.package.pracma</a>.
+</div>
+<div id="ref-desolve_package" class="csl-entry" role="listitem">
+Soetaert, Karline, and Thomas Petzoldt. 2026. <em>deSolve: Solvers for Initial Value Problems of Differential Equations</em>. https://doi.org/<a href="https://doi.org/10.32614/CRAN.package.deSolve">https://doi.org/10.32614/CRAN.package.deSolve</a>.
+</div>
+<div id="ref-wiki_rk4" class="csl-entry" role="listitem">
+Wikipedia contributors. 2026. <span>“Runge–Kutta Methods — <span>Wikipedia</span><span>,</span> the Free Encyclopedia.”</span> <a href="https://en.wikipedia.org/w/index.php?title=Runge%E2%80%93Kutta_methods&amp;oldid=1339475672">https://en.wikipedia.org/w/index.php?title=Runge%E2%80%93Kutta_methods&amp;oldid=1339475672</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
