@@ -46,5 +46,8 @@
   },
   "modules/01-sir-intro/case_studies.qmd": {
     "case_studies.html": "a52ef431"
+  },
+  "modules/01-sir-intro/conclusion.qmd": {
+    "conclusion.html": "84e81b36"
   }
 }

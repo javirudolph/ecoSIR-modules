@@ -288,5 +288,35 @@
     "crumbs": [
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Applications of SIR Models</span>"
     ]
+  },
+  {
+    "objectID": "modules/01-sir-intro/conclusion.html",
+    "href": "modules/01-sir-intro/conclusion.html",
+    "title": "7  Conclusion and Additional Resources",
+    "section": "",
+    "text": "7.1 Closing Statement\nWe’ve come to the end of our introduction and overview of SIR models! Although this marks the end of this module, we hope this is just the beginning of your journey to learning, applying, and appreciating the world of disease modeling. There is still so much to learn that we have not gone over: constructing and analyzing compartmental models with different compartments (like the SEIR model which has the “exposed” compartment), doing MLE with incidence instead of prevalence data, finding the final epidemic size, and so much more.\nWe also hope that, in addition to gaining a new appreciation for disease modeling, you have developed a greater sense of computational literacy, or using computers to explore, analyze, and better understand problems in biology, epidemiology, mathematics, and beyond.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Conclusion and Additional Resources</span>"
+    ]
+  },
+  {
+    "objectID": "modules/01-sir-intro/conclusion.html#conclusion-what-computational-thinking-gets-you",
+    "href": "modules/01-sir-intro/conclusion.html#conclusion-what-computational-thinking-gets-you",
+    "title": "7  Conclusion and Additional Resources",
+    "section": "7.2 Conclusion: What Computational Thinking Gets You",
+    "text": "7.2 Conclusion: What Computational Thinking Gets You\nThe SIR model is simple. Three compartments, two parameters, three equations. And yet, working through this module computationally, not just mathematically, you have done something more than learned a model. You have learned to:\n\nDecompose a biological process (disease spread) into computable pieces (state variables, rates, parameters)\nTranslate between mathematical notation and code, and recognize they are the same statement in different languages\nInterrogate a model by changing its parameters and watching what changes and what doesn’t\nVerify analytical results numerically, and notice when they agree or diverge\nExtend the framework: the endemic model uses the same structure as the epidemic model, just with added terms. From here, SEIR, SIRS, and host-pathogen models with predators follow the same logic.\n\nThis is the computational literacy that makes quantitative ecology accessible. The math does not have to be a black box. The code does not have to be a black box either. When both are visible and connected, the biology becomes clearest.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Conclusion and Additional Resources</span>"
+    ]
+  },
+  {
+    "objectID": "modules/01-sir-intro/conclusion.html#feedback-survey",
+    "href": "modules/01-sir-intro/conclusion.html#feedback-survey",
+    "title": "7  Conclusion and Additional Resources",
+    "section": "7.3 Feedback Survey",
+    "text": "7.3 Feedback Survey\nA feedback survey will be linked here — TBD.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Conclusion and Additional Resources</span>"
+    ]
   }
 ]
