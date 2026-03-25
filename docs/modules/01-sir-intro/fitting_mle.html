@@ -746,6 +746,45 @@ Note
 </ol>
 </div>
 </div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Parameter Estimation Summary">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Parameter Estimation Summary
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Just as a quick recap:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Parameter</strong></th>
+<th><strong>Common Symbol</strong></th>
+<th><strong>How Can We Estimate It?</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Transmission Rate</td>
+<td><span class="math inline">\(\beta\)</span></td>
+<td>Use an MLE algorithm coded from scratch or the function <code>mle2</code> in <code>bbmle</code> (recommended) to estimate <span class="math inline">\(\beta\)</span> to be the value that makes our observed data most probable.</td>
+</tr>
+<tr class="even">
+<td>Recovery Rate</td>
+<td><span class="math inline">\(\gamma\)</span></td>
+<td>Read through past literature to find the average duration of infection (<span class="math inline">\(D\)</span>) for the disease. Estimate the recovery rate to be <span class="math inline">\(\gamma=\frac{1}{D}\)</span>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>We can now solve an SIR model and fit it to data. What we have not yet asked is what the model tells us about the structure of an epidemic, specifically, the conditions under which a disease can invade a population at all. That is the question of the reproduction number, and it is the topic of the next chapter.</p>
 </section>
 <section id="chapter-references" class="level2 unnumbered unlisted">
@@ -1853,9 +1892,20 @@ window._ojs.runtime.interpretFromScriptTags();
 <span id="cb1-583"><a href="#cb1-583" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Like we did when we coded MLE from scratch, try changing the value of <span class="in">`beta`</span> in <span class="in">`model_parameters`</span> in **Step 1** (line 24) and see if the maximum likelihood estimate for $\beta$ returned by `mle2` in **Step 3** reflects these changes.</span>
 <span id="cb1-584"><a href="#cb1-584" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-585"><a href="#cb1-585" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-586"><a href="#cb1-586" aria-hidden="true" tabindex="-1"></a>We can now solve an SIR model and fit it to data. What we have not yet asked is what the model tells us about the structure of an epidemic, specifically, the conditions under which a disease can invade a population at all. That is the question of the reproduction number, and it is the topic of the next chapter.</span>
-<span id="cb1-587"><a href="#cb1-587" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-588"><a href="#cb1-588" aria-hidden="true" tabindex="-1"></a><span class="fu">## Chapter References {.unnumbered .unlisted}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-586"><a href="#cb1-586" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-587"><a href="#cb1-587" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="Parameter Estimation Summary"}</span>
+<span id="cb1-588"><a href="#cb1-588" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-589"><a href="#cb1-589" aria-hidden="true" tabindex="-1"></a>Just as a quick recap: </span>
+<span id="cb1-590"><a href="#cb1-590" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-591"><a href="#cb1-591" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Parameter** | **Common Symbol** | **How Can We Estimate It?** <span class="pp">|</span></span>
+<span id="cb1-592"><a href="#cb1-592" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb1-593"><a href="#cb1-593" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Transmission Rate <span class="pp">|</span> $\beta$ <span class="pp">|</span> Use an MLE algorithm coded from scratch or the function <span class="in">`mle2`</span> in <span class="in">`bbmle`</span> (recommended) to estimate $\beta$ to be the value that makes our observed data most probable. <span class="pp">|</span></span>
+<span id="cb1-594"><a href="#cb1-594" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Recovery Rate <span class="pp">|</span> $\gamma$ <span class="pp">|</span> Read through past literature to find the average duration of infection ($D$) for the disease. Estimate the recovery rate to be $\gamma=\frac{1}{D}$. <span class="pp">|</span></span>
+<span id="cb1-595"><a href="#cb1-595" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-596"><a href="#cb1-596" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-597"><a href="#cb1-597" aria-hidden="true" tabindex="-1"></a>We can now solve an SIR model and fit it to data. What we have not yet asked is what the model tells us about the structure of an epidemic, specifically, the conditions under which a disease can invade a population at all. That is the question of the reproduction number, and it is the topic of the next chapter.</span>
+<span id="cb1-598"><a href="#cb1-598" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-599"><a href="#cb1-599" aria-hidden="true" tabindex="-1"></a><span class="fu">## Chapter References {.unnumbered .unlisted}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

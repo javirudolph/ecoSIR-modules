@@ -583,6 +583,17 @@ Go back to **Step 1** and try the following changes, re-running each step in ord
 1. Like we did when we coded MLE from scratch, try changing the value of `beta` in `model_parameters` in **Step 1** (line 24) and see if the maximum likelihood estimate for $\beta$ returned by `mle2` in **Step 3** reflects these changes.
 :::
 
+
+::: {.callout-tip title="Parameter Estimation Summary"}
+
+Just as a quick recap: 
+
+| **Parameter** | **Common Symbol** | **How Can We Estimate It?** |
+|---|---|---|
+| Transmission Rate | $\beta$ | Use an MLE algorithm coded from scratch or the function `mle2` in `bbmle` (recommended) to estimate $\beta$ to be the value that makes our observed data most probable. |
+| Recovery Rate | $\gamma$ | Read through past literature to find the average duration of infection ($D$) for the disease. Estimate the recovery rate to be $\gamma=\frac{1}{D}$. |
+:::
+
 We can now solve an SIR model and fit it to data. What we have not yet asked is what the model tells us about the structure of an epidemic, specifically, the conditions under which a disease can invade a population at all. That is the question of the reproduction number, and it is the topic of the next chapter.
 
 ## Chapter References {.unnumbered .unlisted}
