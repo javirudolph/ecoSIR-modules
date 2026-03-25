@@ -43,5 +43,8 @@
   },
   "modules/01-sir-intro/reproduction_number.qmd": {
     "reproduction_number.html": "4cd1242f"
+  },
+  "modules/01-sir-intro/case_studies.qmd": {
+    "case_studies.html": "a52ef431"
   }
 }
