@@ -1,187 +1,53 @@
 ---
 title: "Computational Literacy in Disease Ecology"
-author: "Francisca Javiera Rudolph, PhD"
-institute: "Computational Literacy Librarian - University of Florida<br>One Health Center of Excellence"
-date: "April 28, 2026"
+author: "Anjali Tomerlin & Francisca Javiera Rudolph, PhD"
+institute: "UF Health Science Center Libraries"
+date: "March 28, 2026"
 format:
   revealjs:
     slide-number: true
     progress: true
     transition: fade
     footer: "github.com/javirudolph/ecoSIR-modules"
-    scrollable: true
+    css: style.css
 execute:
   echo: false
   eval: false
 ---
 
-## Computational literacy as a new medium
+## What we built
 
-> diSessa (2000) argues that computation is not merely a tool for more efficient instruction, but the basis for a new literacy that changes how people think and learn.
-
-. . .
-
-Like written language or mathematics, computational literacy is a **representational medium** — a way of constructing, expressing, and communicating ideas.
+**An open, browser-based disease ecology module** — no installation, no prior background required.
 
 . . .
 
-It is not a skill layered on top of a discipline.  
-It is **inseparable from how the discipline thinks.**
+- We built this module with **computational literacy** in mind.
+
+. . . 
+
+
+**Module Covers:**
+
+- Epidemiological vocabulary and compartmental models
+- The SIR epidemic model and its biological assumptions
+- Solving ODE systems numerically and statistical approaches for estimation (MLE)
 
 . . .
 
-In disease ecology: you cannot fully understand an SIR model by reading its equations.  
-You have to **build it, run it, break it, and interpret it** to understand what it means.
-
---- 
-
-## Computation is reshaping scientific practice
-
-In the last 30 years, nearly every scientific field has developed a computational counterpart — bioinformatics, computational statistics, computational ecology.
-
-. . .
-
-**The question is no longer whether students will use computation. It is whether they will understand what they are doing when they do.**
+Currently in beta. Available at `github.com/javirudolph/ecoSIR-modules`. Coming to QUBES Hub.
 
 ---
-
-## Computational literacy has three dimensions
-
-Based on diSessa (2000) and Odden, Lockwood & Caballero (2019):
-
-. . .
-
-**Material** — fluency with the representational systems of computation  
-*Can you write, read, and manipulate code that reflects the biological process you are modeling?*
-
-. . .
-
-**Cognitive** — the ability to think with and about computational tools  
-*Does it matter whether there is 1 infectious person in a town of 100 versus 1 infectious person in a city of 1 million?   Can you recognize when your model assumption is biologically wrong?*
-
-. . .
-
-**Social** — creating and using computational artifacts to communicate  
-*Can you annotate code for a collaborator? Produce a visualization that persuades a public health audience? Situate your model assumptions for a non-specialist?*
-
-. . .
-
-> All three dimensions must develop together. Material literacy alone — "I can run the code" — is not computational literacy.
-
----
-
-## What computational literacy is NOT
-
-. . .
-
-**Not software training**  
-Knowing how to use R, Python, or Excel is a starting point, not an endpoint. Tool fluency without conceptual grounding produces students who can execute code they do not understand.
-
-. . .
-
-**Not generic computational thinking**  
-Frameworks that teach decomposition, abstraction, and algorithmic thinking as general skills, detached from any discipline. These are valuable foundations, but they are not sufficient for scientific practice.
-
-. . .
-
-**Not AI literacy**  
-AI literacy concerns evaluating, using, and understanding AI systems. It overlaps with computational literacy but is distinct. *(Hackl, Müller & Sailer, 2026)*
-
-. . .
-
-**Not mathematical fluency**  
-Knowing the equations is necessary but not sufficient. A student can solve the SIR system analytically and still have no understanding of what $\beta$ means biologically, or whether their code faithfully represents it.
-
-. . .
-
-> Computational literacy in a discipline means moving fluently between biological meaning, mathematical formulation, and computational implementation — in both directions.
-
----
-
-## Computational thinking practices in science
-
-Weintrop et al. (2016) identified four categories of computational thinking for science and mathematics classrooms:
-
-. . .
-
-**Data practices** — collecting, creating, manipulating, analyzing, and visualizing data  
-*In disease ecology: fitting an SIR model to flu surveillance data*
-
-. . .
-
-**Modeling and simulation practices** — using, assessing, designing, and constructing computational models  
-*In disease ecology: building an ODE system from biological assumptions, then testing whether the model's behavior is biologically plausible*
-
-. . .
-
-**Computational problem solving practices** — abstraction, decomposition, debugging, choosing tools  
-*In disease ecology: decomposing transmission into contact rate and probability of infection; debugging a model that produces negative compartment sizes*
-
-. . .
-
-**Systems thinking practices** — understanding relationships, thinking in levels, managing complexity  
-*In disease ecology: understanding how individual-level contact rates produce population-level epidemic curves*
-
----
-
-## Why domain-specific computational literacy matters
-
-Generic computational thinking tells you *how* to think computationally.
-
-Domain-specific computational literacy tells you *what to think about* and *what it means*.
-
-. . .
-
-Consider debugging. In computer science, debugging means finding why the code does not run.
-
-In disease ecology, debugging also means asking:
-
-- *Why does my epidemic never take off even when $R_0$ > 1?*
-- *Why does the recovered population exceed the population size?*
-- *Does this parameter estimate make biological sense?*
-
-. . .
-
-These questions require disciplinary knowledge. They cannot be answered by someone who only knows how to code or only sees equations.
-
-
----
-
-<!-- ## The role of the computational literacy librarian -->
-
-<!-- Libraries have always been in the business of literacy — not just access to information, but the skills to engage with it critically. -->
-
-<!-- . . . -->
-
-<!-- Computational literacy is the new frontier of that mission. -->
-
-<!-- My role sits at the intersection of: -->
-
-<!-- - **Domain expertise** in disease ecology, mathematical modeling, and reproducible research -->
-<!-- - **Pedagogical expertise** in how students learn to think with computation -->
-<!-- - **Infrastructure expertise** in open educational resources, reproducibility, and knowledge sharing -->
-
-<!-- . . . -->
-
-<!-- This is distinct from a data science librarian (tools and access) and from a CS instructor (programming and algorithms). -->
-
-<!-- . . . -->
-
-<!-- > The computational literacy librarian builds the on-ramp between disciplinary questions and computational practice, and makes that on-ramp open, reproducible, and accessible to all students. -->
-
-<!-- --- -->
 
 ## Why we built this module
 
-The SIR model is one of the most studied objects in all of applied mathematics. Resources exist.
+The SIR model is one of the most studied objects in all of applied mathematics. **The gap is not content. The gap is the on-ramp.**
 
 . . .
 
-**The gap is not content. The gap is the on-ramp.**
+Most existing resources assume the reader already thinks like a modeler:
 
-. . .
-
-Most existing resources assume the reader already thinks like a modeler. They begin with equations and ask students to follow. They treat computation as implementation of mathematics that is already understood.
+- They begin with equations and ask students to follow. 
+- They treat computation as implementation of mathematics that is already understood.
 
 . . .
 
@@ -191,63 +57,227 @@ This module starts from the other direction:
 - *What assumption produces this term in the equation?*
 - *What happens to the system if that assumption is violated?*
 
+---
+
+## Who is this module for?
+
 . . .
 
-And it is designed for students with no prior coding or disease ecology background, which means it is designed for most students in most classrooms.
+**Everyone!** 
+
+- Even students with no prior coding or disease ecology background (most students in most classrooms) can pick up this module and learn about SIR models in a way that is **accessible and interactive**.
+
+. . . 
+
+- This module is intended to be both a **self-learning resource** as well as a resource **educators can use in their lessons**.
 
 ---
 
-## Productive struggle and epistemic agency
+## What is computational literacy?
 
-When a student changes $\beta$ and watches the epidemic curve shift in real time, something happens that reading cannot produce.
-
-. . .
-
-**Productive struggle/failure** *(Kapur, 2010)* — Learning is deeper when students encounter difficulty before receiving instruction. A live model generates the questions that make explanation meaningful.
+> diSessa (2000) argues that computation is not merely a tool for more efficient instruction, but the basis for a new literacy that changes how people think and learn.
 
 . . .
 
-**Epistemic agency** *(Odden & Malthe-Sørenssen, 2021)* — Students are not consuming knowledge, they are generating it. Every time a student runs the model, adjusts a parameter, and interprets what changed, they are doing what scientists do.
+\
+
+Like written language or mathematics, computational literacy is a **representational medium** — a way of constructing, expressing, and communicating ideas.
 
 . . .
 
-This is why the interactive code blocks in this module are not optional enrichment. They are the pedagogical core.
+
+In disease ecology: you cannot fully understand an SIR model by reading its equations.  
+
+- You have to **build it, run it, break it, and interpret it** to understand what it means.
+
+--- 
+
+## Why do we care about computational literacy?
+
+In the last 30 years, nearly every scientific field has developed a computational counterpart — bioinformatics, computational statistics, computational ecology.
 
 . . .
 
-> *Change one number. Hit Run. What happened? Why?*
+\
 
+**The question is no longer whether students will use computation. It is whether they will understand what they are doing when they do.**
 
 ---
 
-## What we built
-
-**An open, browser-based disease ecology module** — no installation, no prior background required.
-
-Built using Quarto with WebR — live R code that runs in the browser.
+## What computational literacy is NOT
 
 . . .
 
-Covers:
+**Not software training**  
 
-1. Epidemiological vocabulary and compartmental models
-2. The SIR epidemic model and its biological assumptions
-3. Solving ODE systems numerically
+- Knowing how to use R, Python, or Excel is a starting point, not an endpoint. Tool fluency without conceptual grounding produces students who can execute code they do not understand.
 
 . . .
+
+**Not generic computational thinking**  
+
+- Decomposition, abstraction, and algorithmic thinking are general skills but detached from any discipline. These are valuable foundations, but they are not sufficient for scientific practice.
+
+---
+
+## What computational literacy is NOT
+
+. . .
+
+**Not AI literacy**  
+
+- AI literacy concerns evaluating, using, and understanding AI systems. It overlaps with computational literacy but is distinct. *(Hackl, Müller & Sailer, 2026)*
+
+. . .
+
+**Not mathematical fluency**
+
+- A student can solve the SIR system analytically but have no idea what $\beta$ means biologically, or whether their code faithfully represents it.
+
+. . .
+
+> Computational literacy in a discipline means moving fluently between biological meaning, mathematical formulation, and computational implementation.
+
+---
+
+## Why did we focus on computational literacy in this module?
+
+Our goal is to create a module that focuses on making complex mathematical ideas **accessible**.
+
+. . . 
+
+\
+
+Key ideas from **computational literacy** and **pedagogy** helped us accomplish this:
+
+- Instructional Scaffolding
+- Bidirectional Translation
+- Immersive Learning
+
+. . . 
+
+---
+
+## Instructional Scaffolding
+
+. . . 
+
+**What is it?** 
+
+Not overwhelming the learner with everything at once but giving them the opportunity to access more information at their own pace. *(Northern Illinois University Center for Innovative Teaching and Learning, 2012)*
+
+. . . 
+
+\
+
+**How did we implement this in our module?**
+
+Collapsible explanations
+
+. . .
+
+\ 
+
+**Why did we include this?**
+
+- Appeal to audiences of all experience levels.
+
+- Allows teachers / students to choose how "in depth" they go.
+
+. . . 
+
+---
+
+## Bidirectional Translation
+
+. . . 
+
+**What is it?** 
+
+Although it usually applies to language learning, in our module it refers to the **translation of equations and ideas into code**.
+
+. . . 
+
+\ 
+
+**How did we implement this in our module?**
+
+Sections first introduce a concept in words, then explain the mathematics behind it, and link those explanations and math to code.
+
+. . .
+
+\ 
+
+**Why did we include this?**
+
+- Builds skills in translating ideas with real-world interpretations to code.
+- Important skill in the world of "big data."
+
+. . . 
+
+---
+
+## Immersive Learning
+
+. . . 
+
+**What is it?** 
+
+Presentation of information in a way that is **interactive and engaging**. *(Center for Engaged Learning, n.d.)*
+
+. . . 
+
+\ 
+
+**How did we implement this in our module?**
+
+Embedded Shiny apps and interactive code chunks
+
+. . .
+
+\ 
+
+**Why did we include this?**
+
+- Appeal to learners that always ask the "what if" questions.
+- Applies *Piaget's constructivism*: People **learn better when they actively manipulate the material**. *(Ackermann, 2001)* 
+
+. . . 
+
+---
+
+## The future of this project and takeaways
 
 This is the **first module in a series** — a foundation for SEIR models, spillover dynamics, parameter estimation, and spatial spread.
 
-Currently in beta. Available at `github.com/javirudolph/ecoSIR-modules`. Coming to QUBES Hub.
+. . . 
+
+\
+
+While building this module, I had to "step out" of the math world. I learned valuable skills in both how and why we should make mathematical information accessible.
+
+. . . 
+
+\
+
+**This isn't only for math, though!** Think about how **you** can apply these ideas to make your research more accessible to others.
+
+. . .
+
+\ 
+
+**Research is done in isolation, but change happens collectively.**
 
 ---
 
 ## References
 
-- diSessa, A. A. (2000). *Changing Minds: Computers, Learning, and Literacy.* MIT Press.
-- Wing, J. M. (2006). Computational thinking. *Communications of the ACM*
-- Weintrop, D., et al. (2016). Defining computational thinking for mathematics and science classrooms. *Journal of Science Education and Technology*
-- Odden, T. O. B., Lockwood, E., & Caballero, M. D. (2019). Physics computational literacy: An exploratory case study using computational essays. *Physical Review Physics Education Research*
-- Farrell, K. J., Carey, C.C. (2018). Power, pitfalls, and potential for integrating computational literacy into undergraduate ecology courses. *Ecology and Evolution*
+<div style="font-size: 0.9em;">
+
+- Ackermann, Edith. (2001). *Piaget's Constructivism, Papert's Constructionism: What's the difference?*. 5.   
+- diSessa, A. A. (2000). *Changing Minds: Computers, Learning, and Literacy*. MIT Press.
+- Center for Engaged Learning. (n.d.). Immersive Learning. Elon University. www.centerforengagedlearning.org/resources/immersive-learning/.
+- Northern Illinois University Center for Innovative Teaching and Learning. (2012). Instructional Scaffolding to Improve Learning. www.niu.edu/citl/resources/guides/instructional-guide/instructional-scaffolding-to-improve-learning.shtml
 - Hackl, V., Müller, A. E., & Sailer, M. (2026). The AI literacy heptagon. *Computers and Education: Artificial Intelligence*
-- Kapur, M. (2010). Productive failure in mathematical problem solving. *Instructional Science*
+
+</div>
