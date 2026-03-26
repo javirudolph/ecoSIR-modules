@@ -96,12 +96,9 @@ These approximations are found using the following recursive formulas:
 
 $$
 \begin{aligned}
-s_{t+1} &= s_t - \Delta t \ \big( \beta \big) 
-\left( \frac{i_t}{N} \right) \big( s_t \big) \\[10pt]
-
-i_{t+1} &= i_t + \Delta t \ \left[\beta \left( \frac{i_t}{N} \right) (s_t) - \gamma (i_t) \right] \\[10pt]
-
-r_{t+1} &= r_t + \Delta t \ \big( \gamma \big) (i_t)
+s_{t+1} &= s_t - \Delta t \ (\beta) \left( \frac{i_t}{N} \right) (s_t) \\[10pt]
+i_{t+1} &= i_t + \Delta t \left[\beta \left( \frac{i_t}{N} \right) (s_t) - \gamma (i_t) \right] \\[10pt]
+r_{t+1} &= r_t + \Delta t \ (\gamma) (i_t) 
 \end{aligned}
 $$
 
