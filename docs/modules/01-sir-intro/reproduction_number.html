@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -89,15 +89,14 @@ div.csl-indent {
 <link href="../../modules/01-sir-intro/fitting_mle.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
 <link href="../../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -144,7 +143,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+      if (mathElements[i].tagName == "SPAN") {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -184,9 +183,7 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Computational Thinking with SIR Models</a> 
     </div>
@@ -293,7 +290,7 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Learning Objectives
+Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -343,7 +340,7 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Important Note
+Important Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -368,7 +365,7 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Learning Objectives
+Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -432,7 +429,7 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>The model told us this
+The model told us this
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -447,7 +444,7 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Try this
+Try this
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -472,12 +469,12 @@ R_e &gt; 1
 \end{aligned}
 \]</span></p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>What does <span class="math inline">\(\implies\)</span> mean?
+What does <span class="math inline">\(\implies\)</span> mean?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -488,12 +485,12 @@ R_e &gt; 1
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>What is the full calculation process?
+What is the full calculation process?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -523,7 +520,7 @@ R_e &amp;&lt; 1  &amp;&amp; \text{Use definition } R_e=\frac{\beta}{\gamma} \lef
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Try this
+Try this
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -545,7 +542,7 @@ R_e &amp;&lt; 1  &amp;&amp; \text{Use definition } R_e=\frac{\beta}{\gamma} \lef
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Learning Objectives
+Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -565,7 +562,7 @@ R_e &amp;&lt; 1  &amp;&amp; \text{Use definition } R_e=\frac{\beta}{\gamma} \lef
 1-\frac{1}{R_0} &amp;&lt; \phi &amp;&amp; \text{Rearranging and solving for } \phi
 \end{aligned}
 \]</span></p>
-<p>At the beginning of the outbreak, when nearly everyone is susceptible and there are very few individuals who are infectious or recovered, we can approximate the proportion <span class="math inline">\(\phi\)</span> as being equal to the proportion of individuals <strong>successfully</strong> vaccinated against the disease. This is because, generally speaking, vaccination is the most widespread source of immunity to disease <span class="citation" data-cites="who_vaccines">(<a href="#ref-who_vaccines" role="doc-biblioref">Organization 2025</a>)</span>.</p>
+<p>At the beginning of the outbreak, when nearly everyone is susceptible and there are very few individuals who are infectious or recovered, we can approximate the proportion <span class="math inline">\(\phi\)</span> as being equal to the proportion of individuals <strong>successfully</strong> vaccinated against the disease. This is because, generally speaking, vaccination is the most widespread source of immunity to disease <span class="citation" data-cites="who_vaccines">(<a href="#ref-who_vaccines" role="doc-biblioref">World Health Organization 2025</a>)</span>.</p>
 <p>Notice the emphasis on the word “successfully.” This is because most vaccines are not <span class="math inline">\(100\%\)</span> effective: there will always be a percentage of individuals, though however small, that are vaccinated but can still contract the disease. Assuming a vaccine efficacy rate of <span class="math inline">\(\epsilon\)</span> the proportion of individuals successfully vaccinated against the disease is <span class="math inline">\(\phi=\epsilon p\)</span> where <span class="math inline">\(p\)</span> is the proportion of the total population that is vaccinated (successfully or not). We can rearrange the expression from before to find the proportion of the total population <span class="math inline">\(p\)</span> that should be vaccinated to prevent an outbreak from developing into an epidemic:</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -622,7 +619,7 @@ Handel, Andreas. 2021. <span>“Reproductive Number.”</span> In <em>Infectious
 Keeling, Matt J., and Pejman Rohani. 2008. <em>Modeling <span>Infectious</span> <span>Diseases</span> in <span>Humans</span> and <span>Animals</span></em>. Princeton University Press. <a href="https://doi.org/10.2307/j.ctvcm4gk0">https://doi.org/10.2307/j.ctvcm4gk0</a>.
 </div>
 <div id="ref-who_vaccines" class="csl-entry" role="listitem">
-Organization, World Health. 2025. <span>“How Do Vaccines Work?”</span> <em>World Health Organisation</em>. <a href="https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work">https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work</a>.
+World Health Organization. 2025. <span>“How Do Vaccines Work?”</span> <em>World Health Organization</em>. <a href="https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work">https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work</a>.
 </div>
 </div>
 </section>
@@ -690,14 +687,13 @@ window._ojs.runtime.interpretFromScriptTags();
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -1102,7 +1098,7 @@ window._ojs.runtime.interpretFromScriptTags();
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Reproduction Numbers and Epidemic Thresholds"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">nocite:</span><span class="co"> |</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">  @keeling_modeling_2008</span></span>
@@ -1316,7 +1312,7 @@ window._ojs.runtime.interpretFromScriptTags();
 <span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a>With the theoretical framework in place, the next chapter applies it to real disease systems, showing how the same model structure appears across pathogens, hosts, and continents.</span>
 <span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a><span class="fu">## Chapter References {.unnumbered .unlisted}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a><span class="fu">## Chapter References {.unnumbered .unlisted}</span></span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
